@@ -2,19 +2,19 @@ spring:
   application:
     name: application
 dbMonitor:
-  sp_spaceused:
-    type: execute
-    statement: sp_spaceused
+  datasets:
+  - name: "spaceused"
+    enable: true
+    type: storedProcedure
+    statement: "sp_spaceused"
     parameters:
-      - name: objname
-      - name: updateusage
-        value: true
-      - name: mode
-        value: ALL
-      - name: oneresultset
-        value: 1
-      - name: include_total_xtp_storage
-        value: 0
-  query:
+      objname:
+      updateusage: true
+      value: true
+      mode: ALL
+      oneresultset: 1
+      include_total_xtp_storage: 0
+  - name : "query"
+    enable: true
     type: query
-    statement: "select '123' as abc"
+    statement: 'select * from dbo.spt_monitor'

@@ -5,11 +5,10 @@ using Serilog;
 using Serilog.Debugging;
 using System.Data;
 using Microsoft.IdentityModel.Tokens;
-using System;
 
-internal class DataSet
+internal class Dataset
 {
-    public async Task execute(SqlConnection conn, string Name, string Statement, string Type, Dictionary<string, string[]> Parameters)
+    public async Task execute(SqlConnection conn, string Name, string Statement, string Type, List<FieldSetting> Parameters)
     {
         if (Statement.IsNullOrEmpty())
         {
@@ -21,11 +20,10 @@ internal class DataSet
         if (Type.Equals("StoredProcedure"))
         {
             cmd.CommandType = CommandType.StoredProcedure;
-            foreach (KeyValuePair<string, string[]> entry in Parameters)
+            foreach (FieldSetting FieldSetting in Parameters)
             {
-                string Value = entry.Value[0];
-                SqlDbType DbType = (SqlDbType)Enum.Parse(typeof(SqlDbType), entry.Value[1]);
-                cmd.Parameters.Add(entry.Key, DbType).Value = Value;
+                SqlDbType DbType = (SqlDbType)Enum.Parse(typeof(SqlDbType), FieldSetting.DbType);
+                cmd.Parameters.Add(FieldSetting.Name, DbType).Value = FieldSetting.Value;
             }
         } 
         else if (!Type.Equals("Query"))
@@ -53,7 +51,8 @@ internal class DataSet
     private void writeRecord(string Name, List<string> columns, SqlDataReader dataReader)
     {
         var Fields = new Dictionary<string, string>();
-        Fields["DbMonitorName"] = Name;
+        Fields["LogLineType"] = "DbMonitorDataset";
+        Fields["DatasetName"] = Name;
         foreach (string column in columns)
         {
             Fields[column] = dataReader[column].ToString() ?? "";
@@ -62,6 +61,22 @@ internal class DataSet
         string JsonString = JsonSerializer.Serialize(Fields);
         Log.Information(JsonString.Substring(1, JsonString.Length - 2));
     }
+}
+
+internal class FieldSetting
+{
+    public string Name { get; set; } = "";
+    public string DbType { get; set; } = "VarChar";
+    public string Value { get; set; } = "";
+}
+
+internal class DatasetSetting
+{
+    public string Name { get; set; } = "";
+    public bool Enable { get; set; } = true;
+    public string Type { get; set; } = "Query";
+    public string Statement { get; set; } = "";
+    public List<FieldSetting> Parameters { get; set; } = new List<FieldSetting>();
 }
 
 internal class Program
@@ -106,40 +121,32 @@ internal class Program
 
     private static async Task runDatasets(IConfigurationSection DataSetsSection, SqlConnection Conn)
     {
-        var enm = DataSetsSection.GetChildren().GetEnumerator();
-        while (enm.MoveNext())
+        var DatasetSettings = DataSetsSection.Get<List<DatasetSetting>>();
+        if (DatasetSettings == null)
         {
-            var DataSetSection = enm.Current;
-            var Name = DataSetSection.GetSection("Name").Value ?? "";
-            var Enable = DataSetSection.GetSection("Enable").Value ?? "True";
-
-            if(!Enable.Equals("True"))
+            Log.Warning("No Datasets setup");
+            return;
+        }
+        foreach(DatasetSetting DatasetSetting in DatasetSettings)
+        {
+            if(DatasetSetting == null || string.IsNullOrEmpty(DatasetSetting.Statement))
             {
-                Log.Debug("SQL Minotor DataSet: " + Name + " does not enable to query");
+                Log.Warning("No Datasets setup or Statement does not set");
                 continue;
             }
-
-            if (string.IsNullOrEmpty(Name))
+            else if(!DatasetSetting.Enable)
+            {
+                Log.Debug("SQL Minotor DataSet: " + DatasetSetting.Name + " does not enable to query");
+                continue;
+            }
+            else if (string.IsNullOrEmpty(DatasetSetting.Name))
             {
                 Log.Warning("DataSet Name does not set");
-                Name = "Unkown";
+                DatasetSetting.Name = "Unkown";
             }
 
-            var Type = DataSetSection.GetSection("Type").Value ?? "Query";
-            var Statement = DataSetSection.GetSection("Statement").Value ?? "";
-            var ParametersSection = DataSetSection.GetSection("Parameters");
-            Dictionary<string, string[]> Parameters = new Dictionary<string, string[]>();
-            var enmParam = ParametersSection.GetChildren().GetEnumerator();
-            while (enmParam.MoveNext())
-            {
-                var ParameterSection = enmParam.Current;
-                var ParameterName = ParameterSection.GetSection("Name").Value ?? "";
-                var ParameterValue = ParameterSection.GetSection("Value").Value ?? "";
-                var ParameterDbType = ParameterSection.GetSection("DbType").Value ?? "VarChar";
-                Parameters[ParameterName] = new string[] { ParameterValue, ParameterDbType };
-            }
-            DataSet DataSet = new DataSet();
-            await DataSet.execute(Conn, Name, Statement, Type, Parameters);
+            Dataset Dataset = new Dataset();
+            await Dataset.execute(Conn, DatasetSetting.Name, DatasetSetting.Statement, DatasetSetting.Type, DatasetSetting.Parameters);
         }
     }
 }

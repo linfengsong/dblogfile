@@ -1,8 +1,5 @@
 spring:
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=master;encrypt=true;trustServerCertificate=true;
+    url: jdbc:sqlserver://localhost:1433;databaseName=master;encrypt=true;trustServerCertificate=true;integratedSecurity=true;
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    username: sa
-    password: xxxx
-dbMonitor:
-  active-monitors: sp_spaceused,query
+    username: 'DESKTOP-BON71NE\x01457492'

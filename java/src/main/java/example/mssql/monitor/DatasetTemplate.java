@@ -2,6 +2,7 @@ package example.mssql.monitor;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+//import org.apache.logging.log4j.message.StringMapMessage;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -9,7 +10,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Component;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -18,16 +22,44 @@ import java.util.List;
 import java.util.ArrayList;
 
 @Component
-public class MonitorTemplate  implements ResultSetExtractor<List<Map<String, Object>>>  {
-	private static final Logger logger = LogManager.getLogger(MonitorTemplate.class);
+public class DatasetTemplate  implements ResultSetExtractor<List<Map<String, Object>>>  {
+	private static final Logger logger = LogManager.getLogger(DatasetTemplate.class);
 
 	@Autowired
     protected JdbcTemplate jdbcTemplate;
+	
+	public void execute(String name, String type, String statement, Map<String, String> paramenters) throws SQLException {
+        if(statement == null) {
+        	logger.error("DataSet statement: " + statement + " does not set");
+        	return;
+        }
+        if("storedProcedure".equals(type)) {
+        	storedProcedure(name, statement, paramenters);
+        }
+        else if("query".equals(type)) {
+        	query(name, statement, paramenters);
+        }
+        else {
+        	logger.error("DataSet type: " + type + " does not support");
+        }
+	}
 
-    public void query(String queryName, String sql,  String[] inValues) {
-    	QuerySetter setter = new QuerySetter(inValues);
+	private void query(String queryName, String sql, Map<String, String> inParamMap) {
+		PreparedStatementSetter setter = new PreparedStatementSetter() {
+    		@Override
+    		public void setValues(PreparedStatement ps) throws SQLException {
+    			if(inParamMap == null)
+    				return;
+    			for(Map.Entry<String, String> entry : inParamMap.entrySet()) {
+    				int i = Integer.parseInt(entry.getKey());
+    				ps.setString(i, entry.getValue());
+    			}
+    		}
+    	};
     	List<Map<String, Object>> list = jdbcTemplate.query(sql, setter, this);
-    	processList(queryName, list);
+    	for(Object item: list) {
+			processItem(queryName, item);
+    	}
     }
     
 	@Override
@@ -49,8 +81,15 @@ public class MonitorTemplate  implements ResultSetExtractor<List<Map<String, Obj
 		return list;
 	}
 
-    public void execute(String executeName, String storedProcedureName, Map<String, Object> inParamMap) throws SQLException {
-    	MapSqlParameterSource in = new MapSqlParameterSource(inParamMap);
+    private void storedProcedure(String executeName, String storedProcedureName, Map<String, String> inParamMap) throws SQLException {
+    	HashMap<String, String> newParamMap = new HashMap<String, String>();
+		for(Map.Entry<String, String> entry : inParamMap.entrySet()) {
+			String value = entry.getValue();
+			if(value.isEmpty())
+				value = null;
+			newParamMap.put(entry.getKey(), value);
+		}
+    	MapSqlParameterSource in = new MapSqlParameterSource(newParamMap);
     	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
            .withProcedureName(storedProcedureName);
     	Map<String, Object> result = simpleJdbcCall.execute(in);
@@ -63,22 +102,18 @@ public class MonitorTemplate  implements ResultSetExtractor<List<Map<String, Obj
     			listName = listName + "." + entryKey;
     		if(entryVal instanceof List<?>) {
     			List<?> list = (List<?>)entryVal;
-    			processList(listName, list);
+    	    	for(Object item: list) {
+    				processItem(listName, item);
+    	    	}
     		}	
     	}
     }
     
-    private void processList(String listName, List<?> list) {
-    	for(Object item: list) {
-			processItem(listName, item);
-		}
-    }
-    
     private void processItem(String listName, Object item) {
     	HashMap<String, Object> m = new HashMap<String, Object>();
-    	m.put("logLineType", "dbMonitor");
+    	m.put("logLineType", "DbMonitorDataset");
     	if(listName != null) {
-    		m.put("rsType", listName);
+    		m.put("datasetName", listName);
     	}
     	if(item instanceof Map) {
     		Map<?,?> map = (Map<?,?>)item;
@@ -86,7 +121,6 @@ public class MonitorTemplate  implements ResultSetExtractor<List<Map<String, Obj
     			String name = String.valueOf(entry.getKey());
     			String value = String.valueOf(entry.getValue());
     			m.put(name, value);
-    			//m = m.with(name, value);
     		}
     		JSONObject jsonObject = new JSONObject(map);
     	    String jsonData = jsonObject.toString();

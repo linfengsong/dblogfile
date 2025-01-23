@@ -1,0 +1,165 @@
+single install:
+
+setup network:
+    docker network create elastic
+
+elasticsearch install:
+    docker pull docker.elastic.co/elasticsearch/elasticsearch:8.17.0
+    docker run --name es01 --net elastic -p 9200:9200 -it -m 1GB docker.elastic.co/elasticsearch/elasticsearch:8.17.0
+
+retrieve password and token:
+    docker exec -it es01 /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
+    docker exec -it es01 /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
+
+test:
+    run wsl:
+       export ELASTIC_PASSWORD="your_password"
+       docker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt .
+       curl --cacert http_ca.crt -u elastic:$ELASTIC_PASSWORD https://localhost:9200
+
+
+install Kibana:
+    docker pull docker.elastic.co/kibana/kibana:8.17.0
+    docker run --name kib01 --net elastic -p 5601:5601 docker.elastic.co/kibana/kibana:8.17.0
+
+
+enrollment token:
+    http://localhost:5601
+	paste token to screen   
+
+
+install logstash:
+    docker pull docker.elastic.co/logstash/logstash:8.17.0
+    docker run --rm -it docker.elastic.co/logstash/logstash:8.17.0
+    
+    docker cp 45549f3fb01e52df52a2faf1db4ccdbbefa576ef0a0863e4a80789925a4c53d5:/usr/share/logstash/config/jvm.options logstash/jvm.options
+    docker cp 45549f3fb01e52df52a2faf1db4ccdbbefa576ef0a0863e4a80789925a4c53d5:/usr/share/logstash/config/log4j2.file.properties logstash/log4j2.file.properties
+    docker cp 45549f3fb01e52df52a2faf1db4ccdbbefa576ef0a0863e4a80789925a4c53d5:/usr/share/logstash/config/log4j2.properties logstash/log4j2.properties
+    docker cp 45549f3fb01e52df52a2faf1db4ccdbbefa576ef0a0863e4a80789925a4c53d5:/usr/share/logstash/config/logstash-sample.conf logstash/logstash-sample.conf
+    docker cp 45549f3fb01e52df52a2faf1db4ccdbbefa576ef0a0863e4a80789925a4c53d5:/usr/share/logstash/config/logstash.yml logstash/logstash.yml
+    docker cp 45549f3fb01e52df52a2faf1db4ccdbbefa576ef0a0863e4a80789925a4c53d5:/usr/share/logstash/config/pipelines.yml logstash/pipelines.yml
+    docker cp 45549f3fb01e52df52a2faf1db4ccdbbefa576ef0a0863e4a80789925a4c53d5:/usr/share/logstash/config/startup.options logstash/startup.options
+
+    modify:
+    logstash.yml:
+    xpack.monitoring.enabled: true
+    xpack.monitoring.elasticsearch.hosts: [ "https://172.18.0.2:9200" ]
+    xpack.monitoring.elasticsearch.username: elastic
+    xpack.monitoring.elasticsearch.password: "changeme"
+    xpack.monitoring.elasticsearch.ssl.certificate_authority: "/usr/share/logstash/config/http_ca.crt"
+    logstash-sample.conf:
+    hosts => ["https://172.18.0.2:9200"]
+    data_stream => false
+    ssl_certificate_authorities => '/usr/share/logstash/config/http_ca.crt'
+    user => "elastic"
+    password => '"changeme"'
+    ssl_certificate_verification => false
+
+    docker volume create logstash
+    docker volume create logstash2
+    docker run --rm -it -v logstash:/data -v logstash2:/data2 busybox sh
+    docker cp logstash/jvm.options 73d69cb295ab4a742179b8ee557836df7fda1b716402354c1ade788a79cf01ee:/data/jvm.options
+    docker cp logstash/log4j2.file.properties 73d69cb295ab4a742179b8ee557836df7fda1b716402354c1ade788a79cf01ee:/data/log4j2.file.properties
+    docker cp logstash/log4j2.properties 73d69cb295ab4a742179b8ee557836df7fda1b716402354c1ade788a79cf01ee:/data/log4j2.properties
+    docker cp logstash/logstash-sample.conf 73d69cb295ab4a742179b8ee557836df7fda1b716402354c1ade788a79cf01ee:/data2/logstash.conf
+    docker cp logstash/logstash.yml 73d69cb295ab4a742179b8ee557836df7fda1b716402354c1ade788a79cf01ee:/data/logstash.yml
+    docker cp logstash/pipelines.yml 73d69cb295ab4a742179b8ee557836df7fda1b716402354c1ade788a79cf01ee:/data/pipelines.yml
+    docker cp logstash/startup.options 73d69cb295ab4a742179b8ee557836df7fda1b716402354c1ade788a79cf01ee:/data/startup.options
+    docker cp http_ca.crt 73d69cb295ab4a742179b8ee557836df7fda1b716402354c1ade788a79cf01ee:/data/http_ca.crt
+    
+    docker run --name logstash01 -v logstash:/usr/share/logstash/config -v logstash2:/usr/share/logstash/pipeline -p 5044:5044 -p 9600:9600 --net elastic docker.elastic.co/logstash/logstash:8.17.0
+
+remove:
+    docker network rm elastic
+    docker rm es01
+    docker rm kib01
+    docker rm logstash01
+
+
+install filebeat in window:
+    download: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.17.0-windows-x86_64.zip
+    Extract the contents of the zip file into C:\Program Files
+    Rename the filebeat-8.17.0-windows-x86_64 directory to Filebeat
+    Open a PowerShell prompt as an Administrator and run:
+        PS > cd 'C:\Program Files\Filebeat'
+        PowerShell.exe -ExecutionPolicy UnRestricted -File .\install-service-filebeat.ps1.
+
+     rename module.d/logstash.yml.disalbe to module.d/logstash.yml
+
+     Modify filebeat.yml
+     filebeat.inputs:
+     - type: filesteam
+       id: id: linfe-filestream-id
+       enabled: true
+       paths:
+         - c:\programdata\elasticsearch\logs\*
+     filebeat.config.modules:
+       reload.enabled: true
+       reload.period: 10s
+     setup.kibana:
+       host: "localhost:5601"
+
+    Modify module.d/logstash.yml
+
+    run:
+      "C:\Program Files\filebeat\filebeat.exe" -c "C:\Program Files\filebeat\filebeat.yml" --path.home "C:\Program Files\filebeat" --path.data "C:\ProgramData\filebeat" --path.logs "C:\ProgramData\filebeat\logs"  -E logging.files.redirect_stderr=true
+     
+install agent in window:
+   download https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.17.0-windows-x86_64.zip
+   extract zip file
+
+   modify elastic-agent.yml to repoace output:
+  outputs:
+    default:
+      #type: elasticsearch
+      #hosts: [127.0.0.1:9200]
+      #api_key: "example-key"
+      #username: "elastic"
+      #password: "changeme"
+      #preset: balanced
+      type: logstash
+      hosts:
+        - localhost:5044
+   Power Shell witn admin run:
+    .\elastic-agent.exe install
+
+discover for sql module:
+   event.dataset : sql*
+    : mssql or oracle
+
+
+uninstall:
+   C:\"Program Files"\Elastic\Agent\elastic-agent.exe uninstall
+
+Test logstash:
+https://github.com/magnusbaeck/logstash-filter-verifier/blob/master/README.md
+
+
+
+
+
+
+
+
+
+composit install:
+
+create project directory:
+    C:\linfeng\elastic\dockerdesktop\composit
+
+Download and save the following files in the project directory:
+	https://github.com/elastic/elasticsearch/tree/8.17/docs/reference/setup/install/docker
+    .env
+    docker-compose.yml
+
+Modify .env:
+    ELASTIC_PASSWORD=changeme
+    KIBANA_PASSWORD=changeme
+    STACK_VERSION=8.17.0
+    ES_PORT=127.0.0.1:9200
+
+Run:
+   docker-compose up -d
+
+delete:
+   docker-compose down -v

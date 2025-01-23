@@ -1,0 +1,16 @@
+docker run -d --net elastic -p 3000:3000 --name=grafana grafana/grafana-enterprise
+
+http://localhost:3000
+user: admin
+password: admin
+
+create connection: elasticsearch
+URL: https://172.18.0.2:9200
+basic auth:
+ user: elastic
+ password: changeme
+skip TLS
+
+https://hub.docker.com/r/prom/prometheus
+docker run --name prometheus -d --net elastic -p 127.0.0.1:9090:9090 prom/prometheus
+URL: http://172.18.0.6:9090

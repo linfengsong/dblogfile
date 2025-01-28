@@ -1,0 +1,33 @@
+set PWD=changeit
+elastic-agent
+
+  - type: sql/metrics
+    id: sql-input
+    name: sql-input
+    revision: 1
+    use_output: default
+    meta:
+      package:
+        name: sql
+        version: 0.3.0
+    data_stream:
+      namespace: default
+    streams:
+    - id: sql/metrics-sql.query-oracle-input
+      data_stream:
+        dataset: sql.query
+      merge_results: false
+      period: 10m
+      raw_data.enabled: false
+      driver: oracle
+      sql_queries:
+      - response_format: table
+        query: select 'oracle_xe_query' as sql_dataset, 'test' as data from dual
+      hosts:
+      - oracle://localhost:1521/XE
+      #- oracle://system:weiqing@localhost:1521/XE
+      username: system
+      #password: weiqing
+      password: ${env.PWD}
+      metricsets:
+      - query      

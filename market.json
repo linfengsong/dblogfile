@@ -1,0 +1,130 @@
+{
+  "CanvasName": "demo1",
+  "Assets": {
+    "AppIcon": "market.png"
+  },
+  "Expression" : {
+    "SpaceName": "demo1",
+    
+    "SummaryDbTitle": "Databases",
+    "SummaryDbNum": "28",
+	"SummaryDbErrorNum": "0",
+	"SummaryDbWarnningNum": "0",
+	"SummaryDbRunningNum": "26",
+	
+	"SummaryServerTitle": "Server Hosts",
+    "SummaryServerNum": "12",
+	"SummaryServerErrorNum": "0",
+	"SummaryServerWarnningNum": "2",
+	"SummaryServerRunningNum": "12",
+	
+	"SummaryJobTitle": "Jobs",
+    "SummaryJobNum": "122",
+	"SummaryJobErrorNum": "14",
+	"SummaryJobWarnningNum": "20",
+	"SummaryJobRunningNum": "96",
+	
+	"sqlServerId": "workpad-2a86214a-c8b7-4de2-81f4-f0c21f201332",
+    
+    "AppTitle": "markdown \"Market Risk\"",
+    "DescLabel": "markdown \"Space:\"",
+    "DescName": "markdown \"$[SpaceName]\"",
+    "AppProperties": [ {
+      "Name": "markdown \"Total Databases:\"", 
+      "Value": "var_set name=count value=$[SummaryDbNum] \n |markdown {var \"count\"}"
+    }, {
+      "Name": "markdown \"Total Servers:\"", 
+      "Value": "var_set name=count value=$[SummaryServerNum] \n |markdown {var \"count\"}"
+    }, {
+      "Name": "markdown \"Total Jobs:\"", 
+      "Value": "var_set name=count value=$[SummaryJobNum] \n |markdown {var \"count\"}"
+    }],
+    "Summay": [
+      {
+        "Title": "var_set name=title value=\"$[SummaryDbTitle]\" \n |",
+        "Error": "var_set name=count value=$[SummaryDbErrorNum] \n |",
+        "Warnning": "var_set name=count value=$[SummaryDbWarnningNum] \n |",
+        "Running": "var_set name=count value=$[SummaryDbRunningNum] \n |"
+      },
+      {
+        "Title": "var_set name=title value=\"$[SummaryServerTitle]\" \n |",
+        "Error": "var_set name=count value=$[SummaryServerErrorNum] \n |",
+        "Warnning": "var_set name=count value=$[SummaryServerWarnningNum] \n |",
+        "Running": "var_set name=count value=$[SummaryServerRunningNum] \n |"
+      },
+      {
+        "Title": "var_set name=title value=\"$[SummaryJobTitle]\" \n |",
+        "Error": "var_set name=count value=$[SummaryJobErrorNum] \n | var_set name=label_red_box value=\"Fail\" \n |",
+        "Warnning": "var_set name=count value=$[SummaryJobWarnningNum] \n |",
+        "Running": "var_set name=count value=$[SummaryJobRunningNum] \n | var_set name=label_green_box value=\"Success\" \n |"
+      }
+    ],
+	"History": [
+		{
+			"Config": "embeddable \n  config=\"eyJ2aWV3TW9kZSI6ImVkaXQiLCJ0aW1lUmFuZ2UiOnsiZnJvbSI6Im5vdy0xNW0iLCJ0byI6Im5vdyJ9LCJkaXNhYmxlVHJpZ2dlcnMiOnRydWUsInJlbmRlck1vZGUiOiJub0ludGVyYWN0aXZpdHkiLCJzYXZlZE9iamVjdElkIjoiNWQ0NzRiOWEtZjQwOS00OGM5LWI5MTUtNjI5OTBiMDY1NDc2IiwiZmlsdGVycyI6W10sImlkIjoiZWxlbWVudC1iYTliZTkzYi1lYzIyLTQwNDEtYjJhYi1mY2Q0OTI4NDAzMzUiLCJleGVjdXRpb25Db250ZXh0Ijp7InR5cGUiOiJjYW52YXMifX0=\" type=\"lens\"\n| render"
+		}
+	],
+	"Components+": {
+        "Name": "markdown \"[$[Title]]($[Url])\"",
+		"Error": "var_set name=count value=$[ErrorNum] \n | var_set name=url value=\"$[Url]\" \n |",
+		"Warnning": "var_set name=count value=$[WarnningNum] \n | var_set name=url value=\"$[Url]\" \n |",
+		"Running": "var_set name=count value=$[RunningNum] \n | var_set name=url value=\"$[Url]\" \n |",
+        "Message": [ {"Content": "markdown \"\""}],
+        "Attributes": [{
+		    "Name": "markdown \"Databases:\"", 
+		    "Value": "var_set name=count value=$[TotalNum] \n |markdown {var \"count\"}"
+          }      
+        ]	
+	},
+    "Components": [ 
+      {
+        "Title": "SQL Server",
+        "Url": "http://localhost:5601/s/demo1/app/canvas/workpad/$[sqlServerId]/page/1",
+        "TotalNum": "26",
+		"ErrorNum": "0",
+		"WarnningNum": "0",
+		"RunningNum": "26"
+      },
+      {
+        "Title": "Oracle Server",
+        "Url": "http://localhost",
+        "TotalNum": "30",
+		"ErrorNum": "0",
+		"WarnningNum": "0",
+		"RunningNum": "30"
+      },
+      {
+        "Title": "MogalDB Server",
+        "Url": "http://localhost",
+        "TotalNum": "9",
+		"ErrorNum": "0",
+		"WarnningNum": "0",
+		"RunningNum": "9"
+      },
+      {
+        "Title": "Window Server",
+        "Url": "http://localhost",
+        "TotalNum": "8",
+		"ErrorNum": "0",
+		"WarnningNum": "0",
+		"RunningNum": "8"
+      },
+      {
+        "Title": "BVP Server",
+        "Url": "http://localhost",
+        "TotalNum": "4",
+		"ErrorNum": "0",
+		"WarnningNum": "2",
+		"RunningNum": "4"
+      },
+      {
+        "Title": "Jobs",
+        "Url": "http://localhost",
+        "TotalNum": "122",
+		"ErrorNum": "14",
+		"WarnningNum": "20",
+		"RunningNum": "96"
+	  }
+    ]
+  }
+}

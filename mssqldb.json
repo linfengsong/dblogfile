@@ -1,0 +1,105 @@
+{
+  "CanvasName": "MSSqlServerDB",
+  "Assets": {
+    "AppIcon": "mssql.png"
+  },
+  "Expression" : {
+  
+	"SummaryDbTitle": "Databases",
+	"SummaryDbNum": "28",
+	"SummaryDbErrorNum": "0",
+	"SummaryDbWarnningNum": "0",
+	"SummaryDbRunningNum": "12",
+
+	
+    "AppTitle": "markdown \"Microsoft SQL Server Instance\"",
+    "DescLabel": "markdown \"Instance Name:\"",
+    "DescName": "markdown {urlparam param=\"InstanceName\" default=\"MSSQL_DEMO1_DEV\"}",
+    "AppProperties": [ {
+      "Name": "markdown \"Space:\"", 
+      "Value": "markdown {urlparam param=\"SpaceName\" default=\"demo1\"}"
+    },{
+      "Name": "markdown \"Cluster Name:\"", 
+      "Value": "markdown {urlparam param=\"Cluster\" default=\"DEMOCLUSTERA\"}"
+    },{
+      "Name": "markdown \"Total Databases:\"", 
+      "Value": "var_set name=count value=\"$[SummaryDbNum]\" \n|markdown {var \"count\"}"
+    }],
+    "Summay": [
+      {
+        "Title": "var_set name=title value=\"$[SummaryDbTitle]\" \n |",
+        "Error": "var_set name=count value=$[SummaryDbErrorNum] \n |",
+        "Warnning": "var_set name=count value=$[SummaryDbWarnningNum] \n |",
+        "Running": "var_set name=count value=$[SummaryDbRunningNum] \n |"
+      }
+    ],
+	"History": [
+		{
+			"Config": "embeddable \n  config=\"eyJ2aWV3TW9kZSI6ImVkaXQiLCJ0aW1lUmFuZ2UiOnsiZnJvbSI6Im5vdy0xNW0iLCJ0byI6Im5vdyJ9LCJkaXNhYmxlVHJpZ2dlcnMiOnRydWUsInJlbmRlck1vZGUiOiJub0ludGVyYWN0aXZpdHkiLCJzYXZlZE9iamVjdElkIjoiNWQ0NzRiOWEtZjQwOS00OGM5LWI5MTUtNjI5OTBiMDY1NDc2IiwiZmlsdGVycyI6W10sImlkIjoiZWxlbWVudC1iYTliZTkzYi1lYzIyLTQwNDEtYjJhYi1mY2Q0OTI4NDAzMzUiLCJleGVjdXRpb25Db250ZXh0Ijp7InR5cGUiOiJjYW52YXMifX0=\" type=\"lens\"\n| render"
+		}
+	],
+	"Components+": {
+		"ErrorNum": "0",
+		"WarnningNum": "0",
+		"RunningNum": "1",
+		
+		"SreUrl": "https://localhost",
+	    "logsUrl": "https://localhost",
+		
+		"Name": "markdown \"$[DbName]\"", 
+		"Error": "var_set name=count value=$[ErrorNum] \n | var_set name=value_invisible value=true \n |",
+		"Warnning": "var_set name=count value=$[WarnningNum] \n | var_set name=value_invisible value=true \n |",
+		"Running": "var_set name=count value=$[RunningNum] \n | var_set name=value_invisible value=true \n |",
+		"Message": [ {"Content": "markdown \"\""}],
+		"Attributes": [{
+		    "Name": "markdown \"Datail:\"", 
+		    "Value":"markdown \"[\" sremssql/ \"]($[SreUrl])\""
+		  },{
+		    "Name": "markdown \"\"", 
+		    "Value": "markdown \"[\" logs/ \"](logsUrl])\""
+		  }
+	   ]       		
+	},
+    "Components": [ 
+      {
+        "DbName": "HCEUtils"
+      },
+      {
+        "DbName": "MARSRep"
+      },
+      {
+        "DbName": "SQLDASHBOARD"
+      },
+      {
+        "DbName": "SRA_tempdb"
+      },
+      {
+        "DbName": "apputils"
+      },
+      {
+        "DbName": "mars_scratch"
+      },
+      {
+        "DbName": "master"
+      },
+      {
+        "DbName": "model"
+      },
+      {
+        "DbName":"msdb"
+      },
+      {
+        "DbName": "sharpe_exp1"
+      },
+      {
+        "DbName": "sharpe_inf1"
+      },
+      {
+        "DbName": "sharpe_ref1"
+      },
+      {
+        "DbName": "Other"
+      }
+    ]
+  }
+}

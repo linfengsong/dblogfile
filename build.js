@@ -9,8 +9,8 @@ function comparePosition( a, b ) {
   return 0;
 }
 
-function getVariableName(str) {
-	const sindex = str.indexOf("$[");
+function getVariableName(str, index = 0) {
+	const sindex = str.indexOf("$[", index);
 	if(sindex < 0) {
 		return null;
 	}
@@ -22,14 +22,37 @@ function getVariableName(str) {
 	return {key: key, begin: sindex, end: eindex + 1};
 }
 
+function createVariableObject(variablesObj, newVariablesObj, repeatObj) {
+	const rtnObj = new Object();
+	const varsKeys = Object.keys(variablesObj);
+	for(let i = 0; i < varsKeys.length; i++) {
+		rtnObj[varsKeys[i]] = variablesObj[varsKeys[i]];
+	}
+	if(repeatObj != null) {
+		const repeatVarsKeys = Object.keys(repeatObj);
+		for(let i = 0; i < repeatVarsKeys.length; i++) {
+			rtnObj[repeatVarsKeys[i]] = repeatObj[repeatVarsKeys[i]];
+		}
+	}
+	const newVarsKeys = Object.keys(newVariablesObj);
+	for(let i = 0; i < newVarsKeys.length; i++) {
+		rtnObj[newVarsKeys[i]] = newVariablesObj[newVarsKeys[i]];
+	}
+	return rtnObj;
+}
+
 function elementExpressionReplace(exp, variablesObj) {
 	var varObj = getVariableName(exp);
 	while(varObj != null) {
-		const val = variablesObj[varObj.key];
+		var val = variablesObj[varObj.key];
+		var begin = varObj.begin + 1;
 		if(val != null) {
 			exp = exp.substring(0, varObj.begin) + val + exp.substring(varObj.end);
-		} 
-		varObj = getVariableName(exp);
+			begin = varObj.begin;
+		} else {
+			console.error("Fail to get variable: " + varObj.key + " from exp: " + exp);
+		}
+		varObj = getVariableName(exp, begin);
 	}
 	return exp;
 }
@@ -144,6 +167,7 @@ function processGroupElement(variablesObj, elements, groupElement, detlaHeight, 
 		return detlaHeight - groupHeight;
 	}
 	
+	const repeatItem = variablesObj[name + "+"];
 	const horizonal = groupElement.config.x;
 	const orgDetlaHeight = detlaHeight;
 		
@@ -151,6 +175,7 @@ function processGroupElement(variablesObj, elements, groupElement, detlaHeight, 
 	var deltaHeightChanging = 0;
 	for(let i = 0; i < list.length; i++) {
 	    const item = list[i];
+		const itemVariablesObj = createVariableObject(variablesObj, item, repeatItem);
 		if(hIndex >= horizonal - 1) {
 			hIndex = -1;
 			detlaHeight = detlaHeight + groupHeight + deltaHeightChanging;
@@ -161,10 +186,10 @@ function processGroupElement(variablesObj, elements, groupElement, detlaHeight, 
 		for(const groupElem of groupElement.elements) {
 			if(groupElem.elements == null) {
 			    const elem = cloneElement(groupElem);
-				processElement(item,  elem, currentDeltaHeight, detlaWidth + hIndex * groupWidth);
+				processElement(itemVariablesObj,  elem, currentDeltaHeight, detlaWidth + hIndex * groupWidth);
 			    elemArray.push(elem);
 			} else {
-				const childrenDetailHeight = processGroupElement(item, elemArray, groupElem, currentDeltaHeight, detlaWidth + hIndex * groupWidth);
+				const childrenDetailHeight = processGroupElement(itemVariablesObj, elemArray, groupElem, currentDeltaHeight, detlaWidth + hIndex * groupWidth);
 				if(childrenDetailHeight != detlaHeight) {
 					for(const elem of elemArray) {
 					    if(elem.position.top + elem.position.height > groupElem.position.top + currentDeltaHeight){

@@ -60,6 +60,11 @@
 			"name": "color_grey",
 			"type": "string",
 			"value": "#aaaaaa"
+		},
+		{
+			"name": "value_invisible",
+			"type": "boolean",
+			"value": false
 		}
 	],
 	"id": "workpad-db8f6fbe-d235-4fd5-8ef0-23694b4fe7de",
@@ -101,7 +106,7 @@
 						}					
 					},
 					{
-						"expression": "$[SpaceLabel] \n  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=12 underline=false weight=\"normal\"}\n| render",
+						"expression": "$[DescLabel] \n  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=12 underline=false weight=\"normal\"}\n| render",
 						"id": "element-d4f3d179-45bd-4e65-b8fc-8da6b065d67f",
 						"position": {
 							"angle": 0,
@@ -113,7 +118,7 @@
 						}
 					},
 					{
-						"expression": "$[SpaceName] \n font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=24 underline=false weight=\"bold\"}\n| render",
+						"expression": "$[DescName] \n font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=24 underline=false weight=\"bold\"}\n| render",
 						"id": "element-e6bd6334-5686-464c-9911-9390da7e1073",
 						"position": {
 							"angle": 0,
@@ -137,14 +142,14 @@
 						}
 					},
 					{
-						"expression": "$[Value] \n font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=20 underline=false weight=\"normal\"}\n| render",
+						"expression": "$[Value] \n font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=18 underline=false weight=\"normal\"}\n| render",
 						"id": "element-06-d50c1da3-2ee7-47e8-beb7-dae9da19d9b7",
 						"position": {
 							"angle": 0,
-							"height": 16,
+							"height": 22,
 							"left": 580,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852042",
-							"top": 96,
+							"top": 94,
 							"width": 288
 						}
 					},
@@ -174,7 +179,7 @@
 						}
 					},
 					{
-						"expression": "$[Name] \n  font={font align=\"center\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=12 underline=false weight=\"normal\"}\n| render containerStyle={containerStyle backgroundColor=\"#FFFFFF\"}",
+						"expression": "$[Title] markdown {var title} font={font align=\"center\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=12 underline=false weight=\"normal\"}\n| render containerStyle={containerStyle backgroundColor=\"#FFFFFF\"}",
 						"id": "element-b22ce15e-f945-4419-8292-28a0e448d1a4",
 						"position": {
 							"angle": 0,
@@ -186,7 +191,7 @@
 						}
 					},
 				    {
-						"expression": "$[ErrorBackground] shape \"square\" fill={var color_red_box} border=\"rgba(255,255,255,0)\" borderWidth=0 maintainAspect=false\n| render containerStyle={containerStyle border=\"1px solid #EEEEEE\" borderRadius=\"20px\"}",
+						"expression": "$[Error] var_set name=color_red_box value={var count | if condition={eq 0} then={var \"color_grey\"} else={var \"color_red\"} } \n | shape \"square\" fill={var color_red_box} border=\"rgba(255,255,255,0)\" borderWidth=0 maintainAspect=false\n| render containerStyle={containerStyle border=\"1px solid #EEEEEE\" borderRadius=\"20px\"}",
 						"id": "element-1b31d993-fb49-4d93-8b5f-731ad671ba29",
 						"position": {
 							"angle": 0,
@@ -198,7 +203,7 @@
 						}
 					},
 					{
-						"expression": "$[WarnningBackground] shape \"square\" fill={var color_yellow_box} border=\"rgba(255,255,255,0)\" borderWidth=0 maintainAspect=false\n| render containerStyle={containerStyle border=\"1px solid #EEEEEE\" borderRadius=\"10px\"}",
+						"expression": "$[Warnning] var_set name=color_yellow_box value={var count | if condition={eq 0} then={var \"color_grey\"} else={var \"color_yellow\"} } \n | shape \"square\" fill={var color_yellow_box} border=\"rgba(255,255,255,0)\" borderWidth=0 maintainAspect=false\n| render containerStyle={containerStyle border=\"1px solid #EEEEEE\" borderRadius=\"10px\"}",
 						"id": "element-1d423f93-c1bc-43b2-b432-7381be71aa2a",
 						"position": {
 							"angle": 0,
@@ -210,7 +215,7 @@
 						}
 					},
 					{
-						"expression": "shape \"square\" fill=\"#4fbf48\" border=\"rgba(255,255,255,0)\" borderWidth=0 maintainAspect=false\n| render containerStyle={containerStyle border=\"1px solid #EEEEEE\" borderRadius=\"10px\"}",
+						"expression": "$[Running] var_set name=color_green_box value={var count_green_box_value | if condition={eq 0} then={var \"color_grey\"} else={var \"color_green\"} } \n | shape \"square\" fill={var color_green_box}  border=\"rgba(255,255,255,0)\" borderWidth=0 maintainAspect=false\n| render containerStyle={containerStyle border=\"1px solid #EEEEEE\" borderRadius=\"10px\"}",
 						"id": "element-b1fe1d28-2d46-4dea-b329-20aab1759f56",
 						"position": {
 							"angle": 0,
@@ -222,7 +227,7 @@
 						}
 					},
 					{
-						"expression": "$[ErrorBackground] shape \"cross\" fill=\"#FFFFFF\" border={var color_red_box} borderWidth=9 maintainAspect=false\n| render",
+						"expression": "$[Error] var_set name=color_red_box value={var count | if condition={eq 0} then={var \"color_grey\"} else={var \"color_red\"} } \n | shape \"cross\" fill=\"#FFFFFF\" border={var color_red_box} borderWidth=9 maintainAspect=false\n| render",
 						"id": "element-759883c0-ee58-4b39-a086-6eb74569e15f",
 						"position": {
 							"angle": 45,
@@ -234,7 +239,7 @@
 						}
 					},
 					{
-						"expression": "shape \"arrow\" fill=\"#FFFFFF\" border=\"rgba(255,255,255,0)\" borderWidth=9 maintainAspect=false\n| render",
+						"expression": "$[Warnning] shape \"arrow\" fill=\"#FFFFFF\" border=\"rgba(255,255,255,0)\" borderWidth=9 maintainAspect=false\n| render",
 						"id": "element-a92f6edf-e27b-4bf2-8ed9-da3f64e82d0d",
 						"position": {
 							"angle": -45,
@@ -258,7 +263,7 @@
 						}
 					},
 					{
-						"expression": "$[WarnningBackground] markdown \"!\" \n  font={font align=\"left\" color={var color_yellow_box} family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=36 underline=false weight=\"bold\"}\n| render",
+						"expression": "$[Warnning] var_set name=color_yellow_box value={var count | if condition={eq 0} then={var \"color_grey\"} else={var \"color_yellow\"} } \n | markdown \"!\" \n  font={font align=\"left\" color={var color_yellow_box} family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=36 underline=false weight=\"bold\"}\n| render",
 						"id": "element-2924749e-2f8d-4ccb-b532-b9041cb4d49d",
 						"position": {
 							"angle": 0,
@@ -270,7 +275,7 @@
 						}
 					},
 					{
-						"expression": "$[Error]| metric {var label_red_box}\n  metricFont={font align=\"right\" color=\"#FFFFFF\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=48 underline=false weight=\"normal\"} \n  labelFont={font align=\"right\" color=\"#FFFFFF\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=16 underline=false weight=\"bold\"} metricFormat=\"0,0.[000]\"\n| render",
+						"expression": "$[Error]  math {var count} \n | metric {var label_red_box}\n  metricFont={font align=\"right\" color=\"#FFFFFF\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=48 underline=false weight=\"normal\"} \n  labelFont={font align=\"right\" color=\"#FFFFFF\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=16 underline=false weight=\"bold\"} metricFormat=\"0,0.[000]\"\n| render",
 						"id": "element-f16442a8-af64-41a1-b47d-6982e51fb186",
 						"position": {
 							"angle": 0,
@@ -282,7 +287,7 @@
 						}
 					},
 					{
-						"expression": "$[Warnning]| metric {var \"label_yellow_box\"} \n  metricFont={font align=\"right\" color=\"#FFFFFF\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=48 underline=false weight=\"normal\"} \n  labelFont={font align=\"right\" color=\"#FFFFFF\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=16 underline=false weight=\"bold\"} metricFormat=\"0,0.[000]\"\n| render",
+						"expression": "$[Warnning] math {var count} \n | metric {var \"label_yellow_box\"} \n  metricFont={font align=\"right\" color=\"#FFFFFF\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=48 underline=false weight=\"normal\"} \n  labelFont={font align=\"right\" color=\"#FFFFFF\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=16 underline=false weight=\"bold\"} metricFormat=\"0,0.[000]\"\n| render",
 						"id": "element-fdf0db08-c63f-4bba-b77c-15032fe2b742",
 						"position": {
 							"angle": 0,
@@ -294,7 +299,7 @@
 						}
 					},
 					{
-						"expression": "$[Running]| metric {var \"label_green_box\"} \n  metricFont={font align=\"right\" color=\"#FFFFFF\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=48 underline=false weight=\"normal\"} \n  labelFont={font align=\"right\" color=\"#FFFFFF\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=16 underline=false weight=\"bold\"} metricFormat=\"0,0.[000]\"\n| render containerStyle={containerStyle}",
+						"expression": "$[Running] math {var count} \n | metric {var \"label_green_box\"} \n  metricFont={font align=\"right\" color=\"#FFFFFF\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=48 underline=false weight=\"normal\"} \n  labelFont={font align=\"right\" color=\"#FFFFFF\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=16 underline=false weight=\"bold\"} metricFormat=\"0,0.[000]\"\n| render containerStyle={containerStyle}",
 						"id": "element-bce40312-40a0-4342-9aa9-77a9757a59ba",
 						"position": {
 							"angle": 0,
@@ -346,7 +351,7 @@
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db3",
 						"position": {
 							"angle": 0,
-							"height": 46,
+							"height": 10,
 							"left": 100,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852045",
 							"top": 633,
@@ -358,10 +363,10 @@
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db7",
 						"position": {
 							"angle": 0,
-							"height": 46,
+							"height": 10,
 							"left": 35,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852046",
-							"top": 674,
+							"top": 670,
 							"width": 288
 						}
 					},
@@ -370,7 +375,7 @@
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db8",
 						"position": {
 							"angle": 0,
-							"height": 46,
+							"height": 16,
 							"left": 100,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852046",
 							"top": 663,
@@ -378,7 +383,7 @@
 						}
 					},
 					{
-						"expression": "$[Error] \n| render \n  css={string \".canvasRenderEl {\n position: relative;\n}\n\n.canvasRenderEl a {\n  background-color: \" {var \"color\"} \";\n  display: block;\n  margin: 20px;\npadding-top: 12px;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 1;\n  vertical-align: center;\nborder-radius: 4px;\nline-height: 20px;\ntext-align: center;\nfont-size: 20px;\ntext-decoration: none;\nbox-shadow: 0 2px 2px rgba(0,0,0,0.2);\ncolor: #FFFFFF;\n}\n\n.canvasRenderEl a:after {\ncontent: '\" {var    label_red_box} \"';\nfont-size: 14px;\ndisplay: block;\n}\"\n\n{var count | if condition={gt 0} then={string \"\n.canvasRenderEl a:hover {\n  background-color: #ff0000;\n  transition: all .25s;\n}\"}}\n}",
+						"expression": "$[Error] var_set name=\"color\" value={var count | if condition={eq 0} then={var color_grey} else={var color_red}} \n| var_set name=val value={var value_invisible | if condition={eq true} then=\"\" else={var count}} \n| markdown  \"[\" {var val} \"](\" {var url} \") \" \n| render \n  css={string \".canvasRenderEl {\n position: relative;\n}\n\n.canvasRenderEl a {\n  background-color: \" {var \"color\"} \";\n  display: block;\n  margin: 20px;\npadding-top: 12px;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 1;\n  vertical-align: center;\nborder-radius: 4px;\nline-height: 20px;\ntext-align: center;\nfont-size: 20px;\ntext-decoration: none;\nbox-shadow: 0 2px 2px rgba(0,0,0,0.2);\ncolor: #FFFFFF;\n}\n\n.canvasRenderEl a:after {\ncontent: '\" {var    label_red_box} \"';\nfont-size: 14px;\ndisplay: block;\n}\"\n\n{var count | if condition={gt 0} then={string \"\n.canvasRenderEl a:hover {\n  background-color: #ff0000;\n  transition: all .25s;\n}\"}}\n}",
 						"id": "element-a69d7f60-ce95-4f77-bfc9-98d41b903e6f",
 						"position": {
 							"angle": 0,
@@ -390,7 +395,7 @@
 						}
 					},
 					{
-						"expression": "$[Warnning] \n| render \n  css={string \".canvasRenderEl {\n position: relative;\n}\n\n.canvasRenderEl a {\n  background-color: \" {var \"color\"} \";\n  display: block;\n  margin: 20px;\npadding-top: 12px;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 1;\n  vertical-align: center;\nborder-radius: 4px;\nline-height: 20px;\ntext-align: center;\nfont-size: 20px;\ntext-decoration: none;\nbox-shadow: 0 2px 2px rgba(0,0,0,0.2);\ncolor: #FFFFFF;\n}\n\n.canvasRenderEl a:after {\ncontent: '\" {var label_yellow_box} \"';\nfont-size: 14px;\ndisplay: block;\n}\"\n\n{var count | if condition={gt 0} then={string \"\n.canvasRenderEl a:hover {\n  background-color: #fcf003;\n  transition: all .25s;\n}\"}}\n}",
+						"expression": "$[Warnning] var_set name=\"color\" value={var count | if condition={eq 0} then={var color_grey} else={var color_yellow}} \n| var_set name=val value={var value_invisible | if condition={eq true} then=\"\" else={var count}} \n| markdown  \"[\" {var val} \"](\" {var url} \") \" \n| render \n  css={string \".canvasRenderEl {\n position: relative;\n}\n\n.canvasRenderEl a {\n  background-color: \" {var \"color\"} \";\n  display: block;\n  margin: 20px;\npadding-top: 12px;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 1;\n  vertical-align: center;\nborder-radius: 4px;\nline-height: 20px;\ntext-align: center;\nfont-size: 20px;\ntext-decoration: none;\nbox-shadow: 0 2px 2px rgba(0,0,0,0.2);\ncolor: #FFFFFF;\n}\n\n.canvasRenderEl a:after {\ncontent: '\" {var label_yellow_box} \"';\nfont-size: 14px;\ndisplay: block;\n}\"\n\n{var count | if condition={gt 0} then={string \"\n.canvasRenderEl a:hover {\n  background-color: #fcf003;\n  transition: all .25s;\n}\"}}\n}",
 						"id": "element-5903a29d-a69b-43df-9476-056a4fe051fc",
 						"position": {
 							"angle": 0,
@@ -402,7 +407,7 @@
 						}
 					},
 					{
-						"expression": "$[Running] \n| render \n  css={string \".canvasRenderEl {\n position: relative;\n}\n\n.canvasRenderEl a {\n  background-color: \" {var \"color\"} \";\n  display: block;\n  margin: 20px;\npadding-top: 12px;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 1;\n  vertical-align: center;\nborder-radius: 4px;\nline-height: 20px;\ntext-align: center;\nfont-size: 20px;\ntext-decoration: none;\nbox-shadow: 0 2px 2px rgba(0,0,0,0.2);\ncolor: #FFFFFF;\n}\n\n.canvasRenderEl a:after {\ncontent: '\" {var  label_green_box} \"';\nfont-size: 14px;\ndisplay: block;\n}\"\n\n{var count | if condition={gt 0} then={string \"\n.canvasRenderEl a:hover {\n  background-color: #00ff00;\n  transition: all .25s;\n}\"}}\n}",
+						"expression": "$[Running] var_set name=\"color\" value={var count | if condition={eq 0} then={var color_grey} else={var color_green}} \n| var_set name=val value={var value_invisible | if condition={eq true} then=\"\" else={var count}} \n| markdown  \"[\" {var val}  \"](\" {var url} \") \" \n| render \n  css={string \".canvasRenderEl {\n position: relative;\n}\n\n.canvasRenderEl a {\n  background-color: \" {var \"color\"} \";\n  display: block;\n  margin: 20px;\npadding-top: 12px;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 1;\n  vertical-align: center;\nborder-radius: 4px;\nline-height: 20px;\ntext-align: center;\nfont-size: 20px;\ntext-decoration: none;\nbox-shadow: 0 2px 2px rgba(0,0,0,0.2);\ncolor: #FFFFFF;\n}\n\n.canvasRenderEl a:after {\ncontent: '\" {var  label_green_box} \"';\nfont-size: 14px;\ndisplay: block;\n}\"\n\n{var count | if condition={gt 0} then={string \"\n.canvasRenderEl a:hover {\n  background-color: #00ff00;\n  transition: all .25s;\n}\"}}\n}",
 						"id": "element-381a4fbe-d3de-451d-a63a-ac9187520f72",
 						"position": {
 							"angle": 0,
@@ -498,7 +503,7 @@
 						"height": 25,
 						"left": 10,
 						"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852045",
-						"top": 686,
+						"top": 661,
 						"width": 325
 					}
 				},

@@ -65,6 +65,11 @@
 			"name": "value_invisible",
 			"type": "boolean",
 			"value": false
+		},
+		{
+			"name": "component_length",
+			"type": "number",
+			"value": 14
 		}
 	],
 	"id": "workpad-db8f6fbe-d235-4fd5-8ef0-23694b4fe7de",
@@ -118,7 +123,7 @@
 						}
 					},
 					{
-						"expression": "$[DescName] \n font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=24 underline=false weight=\"bold\"}\n| render",
+						"expression": "$[DescName] \n font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=22 underline=false weight=\"bold\"}\n| render",
 						"id": "element-e6bd6334-5686-464c-9911-9390da7e1073",
 						"position": {
 							"angle": 0,
@@ -323,7 +328,7 @@
 						}
 					},
 					{
-						"expression": "shape \"square\" fill=\"none\" border=\"rgba(255,255,255,0)\" borderWidth=0 maintainAspect=false\n| render containerStyle={containerStyle backgroundColor=\"#FFFFFF\" border=\"1px solid #444444\" borderRadius=\"10px\"}",
+						"expression": "shape \"square\" fill=\"none\" border=\"rgba(255,255,255,0)\" borderWidth=0 maintainAspect=false\n| render containerStyle={containerStyle backgroundColor={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=\"transparent\" else=\"#FFFFFF\" }  border={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=\"0px\" else=\"1px solid #444444\" } borderRadius={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=\"0px\" else=\"10px\" } }\n",
 						"id": "element-b22ce15e-f945-4419-8292-28a0e448d1a2",
 						"position": {
 							"angle": 0,
@@ -335,7 +340,7 @@
 						}
 					},
 					{
-						"expression": "markdown \"Name:\"\n  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=8 underline=false weight=\"normal\"}\n| render",
+						"expression": "markdown \"Name:\"\n  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=8} underline=false weight=\"normal\"}\n| render",
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db4",
 						"position": {
 							"angle": 0,
@@ -347,11 +352,11 @@
 						}
 					},
 					{
-						"expression": "$[Name]\n  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=16 underline=false weight=\"bold\"}\n| render",
+						"expression": "$[Name]\n  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=16} underline=false weight=\"bold\"}\n| render",
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db3",
 						"position": {
 							"angle": 0,
-							"height": 10,
+							"height": 46,
 							"left": 100,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852045",
 							"top": 633,
@@ -359,7 +364,7 @@
 						}
 					},
 					{
-						"expression": "$[Name] \n  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=8 underline=false weight=\"normal\"}\n| render",
+						"expression": "$[Name] \n  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=8} underline=false weight=\"normal\"}\n| render",
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db7",
 						"position": {
 							"angle": 0,
@@ -371,7 +376,7 @@
 						}
 					},
 					{
-						"expression": "$[Value] \n font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=14 underline=false weight=\"normal\"}\n| render",
+						"expression": "$[Value] \n font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=14} underline=false weight=\"normal\"}\n| render",
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db8",
 						"position": {
 							"angle": 0,
@@ -383,7 +388,7 @@
 						}
 					},
 					{
-						"expression": "$[Error] var_set name=\"color\" value={var count | if condition={eq 0} then={var color_grey} else={var color_red}} \n| var_set name=val value={var value_invisible | if condition={eq true} then=\"\" else={var count}} \n| markdown  \"[\" {var val} \"](\" {var url} \") \" \n| render \n  css={string \".canvasRenderEl {\n position: relative;\n}\n\n.canvasRenderEl a {\n  background-color: \" {var \"color\"} \";\n  display: block;\n  margin: 20px;\npadding-top: 12px;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 1;\n  vertical-align: center;\nborder-radius: 4px;\nline-height: 20px;\ntext-align: center;\nfont-size: 20px;\ntext-decoration: none;\nbox-shadow: 0 2px 2px rgba(0,0,0,0.2);\ncolor: #FFFFFF;\n}\n\n.canvasRenderEl a:after {\ncontent: '\" {var    label_red_box} \"';\nfont-size: 14px;\ndisplay: block;\n}\"\n\n{var count | if condition={gt 0} then={string \"\n.canvasRenderEl a:hover {\n  background-color: #ff0000;\n  transition: all .25s;\n}\"}}\n}",
+						"expression": "$[Error] var_set name=\"color\" value={var count | if condition={eq 0} then={var color_grey} else={var color_red}} \n| var_set name=val value={var value_invisible | if condition={eq true} then=\"\" else={var count}} \n| markdown  \"[\" {var val} \"](\" {var url} \") \" \n| render \n  css={string \".canvasRenderEl {\n position: relative;\n}\n\n.canvasRenderEl a {\n  background-color: \" {var \"color\"} \";\n  display: \" {var ComponentsLength | if condition={lte {var ComponentsIndex}} then=none else=block} \";\n  margin: 20px;\npadding-top: 12px;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 1;\n  vertical-align: center;\nborder-radius: 4px;\nline-height: 20px;\ntext-align: center;\nfont-size: 20px;\ntext-decoration: none;\nbox-shadow: 0 2px 2px rgba(0,0,0,0.2);\ncolor: #FFFFFF;\n}\n\n.canvasRenderEl a:after {\ncontent: '\" {var    label_red_box} \"';\nfont-size: 14px;\ndisplay: block;\n}\"\n\n{var count | if condition={gt 0} then={string \"\n.canvasRenderEl a:hover {\n  background-color: #ff0000;\n  transition: all .25s;\n}\"}}\n}",
 						"id": "element-a69d7f60-ce95-4f77-bfc9-98d41b903e6f",
 						"position": {
 							"angle": 0,
@@ -395,7 +400,7 @@
 						}
 					},
 					{
-						"expression": "$[Warnning] var_set name=\"color\" value={var count | if condition={eq 0} then={var color_grey} else={var color_yellow}} \n| var_set name=val value={var value_invisible | if condition={eq true} then=\"\" else={var count}} \n| markdown  \"[\" {var val} \"](\" {var url} \") \" \n| render \n  css={string \".canvasRenderEl {\n position: relative;\n}\n\n.canvasRenderEl a {\n  background-color: \" {var \"color\"} \";\n  display: block;\n  margin: 20px;\npadding-top: 12px;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 1;\n  vertical-align: center;\nborder-radius: 4px;\nline-height: 20px;\ntext-align: center;\nfont-size: 20px;\ntext-decoration: none;\nbox-shadow: 0 2px 2px rgba(0,0,0,0.2);\ncolor: #FFFFFF;\n}\n\n.canvasRenderEl a:after {\ncontent: '\" {var label_yellow_box} \"';\nfont-size: 14px;\ndisplay: block;\n}\"\n\n{var count | if condition={gt 0} then={string \"\n.canvasRenderEl a:hover {\n  background-color: #fcf003;\n  transition: all .25s;\n}\"}}\n}",
+						"expression": "$[Warnning] var_set name=\"color\" value={var count | if condition={eq 0} then={var color_grey} else={var color_yellow}} \n| var_set name=val value={var value_invisible | if condition={eq true} then=\"\" else={var count}} \n| markdown  \"[\" {var val} \"](\" {var url} \") \" \n| render \n  css={string \".canvasRenderEl {\n position: relative;\n}\n\n.canvasRenderEl a {\n  background-color: \" {var \"color\"} \";\n  display: \" {var ComponentsLength | if condition={lte {var ComponentsIndex}} then=none else=block} \";\n  margin: 20px;\npadding-top: 12px;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 1;\n  vertical-align: center;\nborder-radius: 4px;\nline-height: 20px;\ntext-align: center;\nfont-size: 20px;\ntext-decoration: none;\nbox-shadow: 0 2px 2px rgba(0,0,0,0.2);\ncolor: #FFFFFF;\n}\n\n.canvasRenderEl a:after {\ncontent: '\" {var label_yellow_box} \"';\nfont-size: 14px;\ndisplay: block;\n}\"\n\n{var count | if condition={gt 0} then={string \"\n.canvasRenderEl a:hover {\n  background-color: #fcf003;\n  transition: all .25s;\n}\"}}\n}",
 						"id": "element-5903a29d-a69b-43df-9476-056a4fe051fc",
 						"position": {
 							"angle": 0,
@@ -407,7 +412,7 @@
 						}
 					},
 					{
-						"expression": "$[Running] var_set name=\"color\" value={var count | if condition={eq 0} then={var color_grey} else={var color_green}} \n| var_set name=val value={var value_invisible | if condition={eq true} then=\"\" else={var count}} \n| markdown  \"[\" {var val}  \"](\" {var url} \") \" \n| render \n  css={string \".canvasRenderEl {\n position: relative;\n}\n\n.canvasRenderEl a {\n  background-color: \" {var \"color\"} \";\n  display: block;\n  margin: 20px;\npadding-top: 12px;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 1;\n  vertical-align: center;\nborder-radius: 4px;\nline-height: 20px;\ntext-align: center;\nfont-size: 20px;\ntext-decoration: none;\nbox-shadow: 0 2px 2px rgba(0,0,0,0.2);\ncolor: #FFFFFF;\n}\n\n.canvasRenderEl a:after {\ncontent: '\" {var  label_green_box} \"';\nfont-size: 14px;\ndisplay: block;\n}\"\n\n{var count | if condition={gt 0} then={string \"\n.canvasRenderEl a:hover {\n  background-color: #00ff00;\n  transition: all .25s;\n}\"}}\n}",
+						"expression": "$[Running] var_set name=\"color\" value={var count | if condition={eq 0} then={var color_grey} else={var color_green}} \n| var_set name=val value={var value_invisible | if condition={eq true} then=\"\" else={var count}} \n| markdown  \"[\" {var val}  \"](\" {var url} \") \" \n| render \n  css={string \".canvasRenderEl {\n position: relative;\n}\n\n.canvasRenderEl a {\n  background-color: \" {var \"color\"} \";\n  display: \" {var ComponentsLength | if condition={lte {var ComponentsIndex}} then=none else=block} \";\n  margin: 20px;\npadding-top: 12px;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n  opacity: 1;\n  vertical-align: center;\nborder-radius: 4px;\nline-height: 20px;\ntext-align: center;\nfont-size: 20px;\ntext-decoration: none;\nbox-shadow: 0 2px 2px rgba(0,0,0,0.2);\ncolor: #FFFFFF;\n}\n\n.canvasRenderEl a:after {\ncontent: '\" {var  label_green_box} \"';\nfont-size: 14px;\ndisplay: block;\n}\"\n\n{var count | if condition={gt 0} then={string \"\n.canvasRenderEl a:hover {\n  background-color: #00ff00;\n  transition: all .25s;\n}\"}}\n}",
 						"id": "element-381a4fbe-d3de-451d-a63a-ac9187520f72",
 						"position": {
 							"angle": 0,

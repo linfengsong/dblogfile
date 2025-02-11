@@ -94,7 +94,7 @@
 		"RunningNum": "30"
       },
       {
-        "Title": "MogalDB Server",
+        "Title": "MongoDB Server",
         "Url": "http://localhost",
         "TotalNum": "9",
 		"ErrorNum": "0",

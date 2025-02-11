@@ -39,9 +39,13 @@
 		}
 	],
 	"Components+": {
+	    "MaxLength": 21,
+		"DynamicLength": "var_set name=ComponentsLength value=14",
+
 		"ErrorNum": "0",
 		"WarnningNum": "0",
 		"RunningNum": "1",
+		"DbName": "",
 		
 		"SreUrl": "https://localhost",
 	    "logsUrl": "https://localhost",

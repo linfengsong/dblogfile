@@ -34,9 +34,11 @@ function createVariableObject(variablesObj, newVariablesObj, repeatObj) {
 			rtnObj[repeatVarsKeys[i]] = repeatObj[repeatVarsKeys[i]];
 		}
 	}
-	const newVarsKeys = Object.keys(newVariablesObj);
-	for(let i = 0; i < newVarsKeys.length; i++) {
-		rtnObj[newVarsKeys[i]] = newVariablesObj[newVarsKeys[i]];
+	if(newVariablesObj != null) {
+	    const newVarsKeys = Object.keys(newVariablesObj);
+	    for(let i = 0; i < newVarsKeys.length; i++) {
+		    rtnObj[newVarsKeys[i]] = newVariablesObj[newVarsKeys[i]];
+	    }
 	}
 	return rtnObj;
 }
@@ -142,13 +144,15 @@ function processPage(variablesObj, page) {
 	return detlaHeight;
 }
 
-function processGroupElement(variablesObj, elements, groupElement, detlaHeight, detlaWidth = 0) {
+function processGroupElement(variablesObj, elements, groupElement, detlaHeight, detlaWidth = 0, prefixExp = null) {
 	const config = groupElement.config;
 	const group = groupElement.group;
 	const groupWidth = groupElement.position.width;
 	const groupHeight = groupElement.position.height;
 	
 	var name = null;
+	var maxLength = -1;
+	var dynamicLength = null;
 	if(config != null)  {
 		name = groupElement.config.name;
 	}
@@ -162,23 +166,51 @@ function processGroupElement(variablesObj, elements, groupElement, detlaHeight, 
 		}
 	} 
 	
-	const list = variablesObj[name];
-	if(list == null || list.length == 0) {
-		return detlaHeight - groupHeight;
+	const repeatItem = variablesObj[name + "+"];
+	
+	if(repeatItem != null) {
+	    if(repeatItem.MaxLength != null) {
+	        maxLength = repeatItem.MaxLength;
+		}
+		if(repeatItem.DynamicLength != null) {
+			dynamicLength = repeatItem.DynamicLength;
+		}
 	}
 	
-	const repeatItem = variablesObj[name + "+"];
+	const list = variablesObj[name];
+	if(list != null) {
+		if(maxLength < 0)
+			maxLength = list.length;
+
+	}
+	
+	if(maxLength <= 0)
+	    return detlaHeight - groupHeight;
+	
 	const horizonal = groupElement.config.x;
 	const orgDetlaHeight = detlaHeight;
+	
+	if(dynamicLength == null) {
+		dynamicLength = "var_set name=" + name + "Length value=" + maxLength
+	}
 		
 	var hIndex = -1;
 	var deltaHeightChanging = 0;
-	for(let i = 0; i < list.length; i++) {
-	    const item = list[i];
+	for(let i = 0; i < maxLength; i++) {
+	    var item = null;
+		if(list != null && i < list.length)
+		    item = list[i];
 		const itemVariablesObj = createVariableObject(variablesObj, item, repeatItem);
 		if(hIndex >= horizonal - 1) {
 			hIndex = -1;
 			detlaHeight = detlaHeight + groupHeight + deltaHeightChanging;
+		}
+		var groupIndexExp = "var_set name=" + name + "Index value=" + i +"|";
+		if(dynamicLength != null) {
+			groupIndexExp = dynamicLength + "|" + groupIndexExp;
+		}
+		if(prefixExp != null) {
+			groupIndexExp = prefixExp + groupIndexExp;
 		}
 		hIndex++;
 		const elemArray = [];
@@ -186,10 +218,10 @@ function processGroupElement(variablesObj, elements, groupElement, detlaHeight, 
 		for(const groupElem of groupElement.elements) {
 			if(groupElem.elements == null) {
 			    const elem = cloneElement(groupElem);
-				processElement(itemVariablesObj,  elem, currentDeltaHeight, detlaWidth + hIndex * groupWidth);
+				processElement(itemVariablesObj,  elem, currentDeltaHeight, detlaWidth + hIndex * groupWidth, groupIndexExp);
 			    elemArray.push(elem);
 			} else {
-				const childrenDetailHeight = processGroupElement(itemVariablesObj, elemArray, groupElem, currentDeltaHeight, detlaWidth + hIndex * groupWidth);
+				const childrenDetailHeight = processGroupElement(itemVariablesObj, elemArray, groupElem, currentDeltaHeight, detlaWidth + hIndex * groupWidth, groupIndexExp);
 				if(childrenDetailHeight != detlaHeight) {
 					for(const elem of elemArray) {
 					    if(elem.position.top + elem.position.height > groupElem.position.top + currentDeltaHeight){
@@ -215,12 +247,18 @@ function processGroupElement(variablesObj, elements, groupElement, detlaHeight, 
 	return detlaHeight;
 }
 
-function processElement(variablesObj, element, detlaHeight, deltaWidth = 0) {
+function processElement(variablesObj, element, detlaHeight, deltaWidth = 0, prefixExp = null) {
 	element.position.left = element.position.left + deltaWidth;
 	element.position.top = element.position.top + detlaHeight;
+	var exp = prefixExp;
 	if(element.expression != null) {
-		element.expression = elementExpressionReplace(element.expression, variablesObj);
-	}	
+		if(exp == null) {
+		    exp = element.expression;
+	    } else {
+		    exp = exp + element.expression;
+		}
+	}
+	element.expression = elementExpressionReplace(exp, variablesObj);
 }
 
 function processAssets(assetsVars, canvas, templateDir, dataDir) {
@@ -270,7 +308,7 @@ const dataDir = path.dirname(inputData);
 
 const jsonData = fs.readFileSync(inputData);
 const data = JSON.parse(jsonData);
-const canvasName = data["CanvasName"]
+const canvasName = data["CanvasName"];
 const expressionVariables = data["Expression"];
 const assetsVariables = data["Assets"];
 

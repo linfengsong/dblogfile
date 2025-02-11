@@ -56,11 +56,11 @@
 		    "Name": "markdown \"Databases:\"", 
 		    "Value": "var_set name=count value=$[TotalNum] \n |markdown {var count}"
 		  },{
-		    "Name": "markdown \"Detail:\"", 
+		    "Name": "markdown \"Technical Detail:\"", 
 		    "Value":"markdown \"[\" metricsmssql/ \"]($[SreUrl])\""
 		  },{
 		    "Name": "markdown \"\"", 
-		    "Value": "markdown \"[\" logs/ \"](logsUrl])\""
+		    "Value": "markdown \"[\" logs/ \"]($[logsUrl])\""
 		  }
 	   ]       		
 	},

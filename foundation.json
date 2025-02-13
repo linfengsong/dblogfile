@@ -65,11 +65,6 @@
 			"name": "value_invisible",
 			"type": "boolean",
 			"value": false
-		},
-		{
-			"name": "component_length",
-			"type": "number",
-			"value": 14
 		}
 	],
 	"id": "workpad-db8f6fbe-d235-4fd5-8ef0-23694b4fe7de",
@@ -340,7 +335,7 @@
 						}
 					},
 					{
-						"expression": "markdown \"Name:\"\n  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=8} underline=false weight=\"normal\"}\n| render",
+						"expression": "markdown \"Name:\"  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=8} underline=false weight=\"normal\"}\n| render",
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db4",
 						"position": {
 							"angle": 0,
@@ -352,7 +347,7 @@
 						}
 					},
 					{
-						"expression": "$[Name]\n  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=16} underline=false weight=\"bold\"}\n| render",
+						"expression": "$[Title] markdown {var title}  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=16} underline=false weight=\"bold\"}\n| render",
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db3",
 						"position": {
 							"angle": 0,
@@ -364,7 +359,7 @@
 						}
 					},
 					{
-						"expression": "$[Name] \n  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=8} underline=false weight=\"normal\"}\n| render",
+						"expression": "$[Name] font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=8} underline=false weight=\"normal\"}\n| render",
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db7",
 						"position": {
 							"angle": 0,
@@ -376,7 +371,7 @@
 						}
 					},
 					{
-						"expression": "$[Value] \n font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=14} underline=false weight=\"normal\"}\n| render",
+						"expression": "$[Value] font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=14} underline=false weight=\"normal\"}\n| render",
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db8",
 						"position": {
 							"angle": 0,

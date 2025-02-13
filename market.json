@@ -24,13 +24,13 @@
 	"SummaryJobWarnningNum": "20",
 	"SummaryJobRunningNum": "96",
 	
-	"sqlServerId": "workpad-2a86214a-c8b7-4de2-81f4-f0c21f201332",
+	"sqlServerId": "workpad-03e77f4a-41a5-4732-8b4d-8571d3fc1e74",
     
     "AppTitle": "markdown \"Market Risk\"",
     "DescLabel": "markdown \"Space:\"",
     "DescName": "markdown \"$[SpaceName]\"",
-    "AppProperties": [ {
-      "Name": "markdown \"Total Databases:\"", 
+    "AppProperties": [{
+      "Name": "markdown \"Total Databases:\"",
       "Value": "var_set name=count value=$[SummaryDbNum] \n |markdown {var \"count\"}"
     }, {
       "Name": "markdown \"Total Servers:\"", 
@@ -65,7 +65,7 @@
 		}
 	],
 	"Components+": {
-        "Name": "markdown \"[$[Title]]($[Url])\"",
+	    "Title": "var_set name=title value=\"[$[Name]]($[Url])\" \n |", 
 		"Error": "var_set name=count value=$[ErrorNum] \n | var_set name=url value=\"$[Url]\" \n |",
 		"Warnning": "var_set name=count value=$[WarnningNum] \n | var_set name=url value=\"$[Url]\" \n |",
 		"Running": "var_set name=count value=$[RunningNum] \n | var_set name=url value=\"$[Url]\" \n |",
@@ -78,7 +78,7 @@
 	},
     "Components": [ 
       {
-        "Title": "SQL Server",
+        "Name": "SQL Server",
         "Url": "http://localhost:5601/s/demo1/app/canvas/workpad/$[sqlServerId]/page/1",
         "TotalNum": "26",
 		"ErrorNum": "0",
@@ -86,7 +86,7 @@
 		"RunningNum": "26"
       },
       {
-        "Title": "Oracle Server",
+        "Name": "Oracle Server",
         "Url": "http://localhost",
         "TotalNum": "30",
 		"ErrorNum": "0",
@@ -94,7 +94,7 @@
 		"RunningNum": "30"
       },
       {
-        "Title": "MongoDB Server",
+        "Name": "MongoDB Server",
         "Url": "http://localhost",
         "TotalNum": "9",
 		"ErrorNum": "0",
@@ -102,7 +102,7 @@
 		"RunningNum": "9"
       },
       {
-        "Title": "Window Server",
+        "Name": "Window Server",
         "Url": "http://localhost",
         "TotalNum": "8",
 		"ErrorNum": "0",
@@ -110,7 +110,7 @@
 		"RunningNum": "8"
       },
       {
-        "Title": "BVP Server",
+        "Name": "BVP Server",
         "Url": "http://localhost",
         "TotalNum": "4",
 		"ErrorNum": "0",
@@ -118,7 +118,7 @@
 		"RunningNum": "4"
       },
       {
-        "Title": "Jobs",
+        "Name": "Jobs",
         "Url": "http://localhost",
         "TotalNum": "122",
 		"ErrorNum": "14",

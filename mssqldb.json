@@ -4,30 +4,38 @@
     "AppIcon": "mssql.png"
   },
   "Expression" : {
+	"SpaceName":  "{urlparam param=\"SpaceName\" default=\"demo1\"}",
+	"Cluster": "{urlparam param=\"Cluster\" default=\"DEMOCLUSTERA\"}",
+	"InstanceName": "{urlparam param=\"InstanceName\" default=\"MSSQL_DEMO1_DEV\"}",
+	"DatabaseNum1": "{urlparam param=\"DatabaseNum\" default=\"13\"}",
+	"DatabaseNames1": "{urlparam param=\"DatabaseNames\" default=\"'HCEUtils','MARSRep','SQLDASHBOARD','SRA_tempdb','apputils','mars_scratch','master','model','msdb','sharpe_exp1','sharpe_inf1','sharpe_ref1','Other'\"}",
+	"DatabaseNum": "{urlparam param=\"DatabaseNum\" default=\"0\"}",
+	"DatabaseNames": "{urlparam param=\"DatabaseNames\" default=\"\"}",
   
 	"SummaryDbTitle": "Databases",
-	"SummaryDbNum": "28",
 	"SummaryDbErrorNum": "0",
 	"SummaryDbWarnningNum": "0",
-	"SummaryDbRunningNum": "12",
+	"SummaryDbRunningNum": "13",
 
-	
     "AppTitle": "markdown \"Microsoft SQL Server Instance\"",
     "DescLabel": "markdown \"Instance Name:\"",
-    "DescName": "markdown {urlparam param=\"InstanceName\" default=\"MSSQL_DEMO1_DEV\"}",
+    "DescName": "markdown $[InstanceName]",
     "AppProperties": [ {
-      "Name": "markdown \"Space:\"", 
-      "Value": "markdown {urlparam param=\"SpaceName\" default=\"demo1\"}"
+      "Name": "markdown \"Space:\"",
+      "Value": "markdown $[SpaceName]"
     },{
-      "Name": "markdown \"Cluster Name:\"", 
-      "Value": "markdown {urlparam param=\"Cluster\" default=\"DEMOCLUSTERA\"}"
+      "Name": "markdown \"Cluster Name:\"",
+      "Value": "markdown $[Cluster]"
     },{
-      "Name": "markdown \"Total Databases:\"", 
-      "Value": "var_set name=count value=\"$[SummaryDbNum]\" \n|markdown {var \"count\"}"
-    }],
+      "Name": "markdown \"Total Databases:\"",
+      "Value": "var_set name=count value=$[DatabaseNum] \n|markdown {var \"count\"}"
+    }	,{
+	        "Name": "markdown \"Databases:\"",
+	        "Value": "markdown { var_set name=index value=3|var_set name=rItemindex value={math {string \"subtract(subtract(\" {math $[DatabaseNum]} \",\" {var index} \"), 1)\" }}|string $[DatabaseNames] | replace  regex={ string \"^([\\w']+,){\" {var index} \"}|(,[\\w']+){\" {var rItemindex} \"}$\" } | replace  regex=\"'\" replacement=\"\"}"
+	      }],
     "Summay": [
       {
-        "Title": "var_set name=title value=\"$[SummaryDbTitle]\" \n |",
+        "Title": "var_set name=title value=$[SummaryDbTitle] \n |",
         "Error": "var_set name=count value=$[SummaryDbErrorNum] \n |",
         "Warnning": "var_set name=count value=$[SummaryDbWarnningNum] \n |",
         "Running": "var_set name=count value=$[SummaryDbRunningNum] \n |"
@@ -40,21 +48,22 @@
 	],
 	"Components+": {
 	    "MaxLength": 21,
-		"DynamicLength": "var_set name=ComponentsLength value=14",
+		"DynamicLength": "var_set name=ComponentsLength value={math $[DatabaseNum]}",
 
 		"ErrorNum": "0",
 		"WarnningNum": "0",
 		"RunningNum": "1",
-		"DbName": "",
+		"DbName": "{var_set name=rItemindex value={math {string \"subtract(subtract(\" {math $[DatabaseNum]} \",\" {var ComponentsIndex} \"), 1)\" }}|string $[DatabaseNames] | replace  regex={ string \"^([\\w']+,){\" {var ComponentsIndex} \"}|(,[\\w']+){\" {var rItemindex} \"}$\" } | replace  regex=\"'\" replacement=\"\"}"
+,
 		
 		"SreUrl": "https://localhost",
 	    "logsUrl": "https://localhost",
 		
-		"Name": "markdown \"$[DbName]\"", 
+		"Title": "var_set name=title value=$[DbName] \n |", 
 		"Error": "var_set name=count value=$[ErrorNum] \n | var_set name=value_invisible value=true \n |",
 		"Warnning": "var_set name=count value=$[WarnningNum] \n | var_set name=value_invisible value=true \n |",
 		"Running": "var_set name=count value=$[RunningNum] \n | var_set name=value_invisible value=true \n |",
-		"Message": [ {"Content": "markdown \"\""}],
+		"Message": [{"Content": "markdown \"\""}],
 		"Attributes": [{
 		    "Name": "markdown \"Datail:\"", 
 		    "Value":"markdown \"[\" sremssql/ \"]($[SreUrl])\""
@@ -63,47 +72,6 @@
 		    "Value": "markdown \"[\" logs/ \"](logsUrl])\""
 		  }
 	   ]       		
-	},
-    "Components": [ 
-      {
-        "DbName": "HCEUtils"
-      },
-      {
-        "DbName": "MARSRep"
-      },
-      {
-        "DbName": "SQLDASHBOARD"
-      },
-      {
-        "DbName": "SRA_tempdb"
-      },
-      {
-        "DbName": "apputils"
-      },
-      {
-        "DbName": "mars_scratch"
-      },
-      {
-        "DbName": "master"
-      },
-      {
-        "DbName": "model"
-      },
-      {
-        "DbName":"msdb"
-      },
-      {
-        "DbName": "sharpe_exp1"
-      },
-      {
-        "DbName": "sharpe_inf1"
-      },
-      {
-        "DbName": "sharpe_ref1"
-      },
-      {
-        "DbName": "Other"
-      }
-    ]
+	}
   }
 }

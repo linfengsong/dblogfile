@@ -10,18 +10,18 @@
 	"SummaryDbErrorNum": "0",
 	"SummaryDbWarnningNum": "0",
 	"SummaryDbRunningNum": "12",
-	"InstanceDetailId": "workpad-c0b55252-8000-4c1e-88e5-9963ac9925b9",
+	"InstanceDetailId": "workpad-c1558159-b347-4a29-a17f-311b5788049a",
 	
     "AppTitle": "markdown \"Microsoft SQL Server\"",
     "DescLabel": "markdown \"Space:\"",
     "DescName": "markdown \"$[SpaceName]\"",
-    "AppProperties": [ {
+    "AppProperties": [{
       "Name": "markdown \"Total Databases:\"", 
       "Value": "var_set name=count value=$[SummaryDbNum] \n |markdown {var \"count\"}"
     }],
     "Summay": [
       {
-        "Title": "var_set name=title value=\"$[SummaryDbTitle]\" \n |",
+        "Title": "var_set name=title value=$[SummaryDbTitle] \n |",
         "Error": "var_set name=count value=$[SummaryDbErrorNum] \n |",
         "Warnning": "var_set name=count value=$[SummaryDbWarnningNum] \n |",
         "Running": "var_set name=count value=$[SummaryDbRunningNum] \n |"
@@ -33,33 +33,34 @@
 		}
 	],
 	"Components+": {
-		"TotalNum": "12",
+		"TotalNum": "13",
 		"ErrorNum": "0",
 		"WarnningNum": "0",
-		"RunningNum": "12",
+		"RunningNum": "13",
 
-	    "InstanceDetailUrl": "http://localhost:5601/s/$[SpaceName]/app/canvas/workpad/$[InstanceDetailId]/page/1?Cluster=$[Cluster]&InstanceName=$[InstanceName]",
+	    "InstanceDetailUrl": "http://localhost:5601/s/$[SpaceName]/app/canvas/workpad/$[InstanceDetailId]/page/1?Cluster=$[Cluster]&InstanceName=$[InstanceName]&DatabaseNum=$[TotalNum]&DatabaseNames=$[DatabaseNames]",
 	    "SreUrl": "https://localhost",
 	    "logsUrl": "https://localhost",
-		"Name": "markdown \"[$[AliasName]]($[InstanceDetailUrl])\"", 
+		
+		"Title": "var_set name=title value=\"[$[AliasName]]($[InstanceDetailUrl])\" \n |", 
 		"Error": "var_set name=count value=$[ErrorNum] \n | var_set name=url value=\"$[InstanceDetailUrl]\" \n |",
 		"Warnning": "var_set name=count value=$[WarnningNum] \n | var_set name=url value=\"$[InstanceDetailUrl]\" \n |",
 		"Running": "var_set name=count value=$[RunningNum] \n | var_set name=url value=\"$[InstanceDetailUrl]\" \n |",
 		"Message": [ {"Content": "markdown \"\""}],
 		"Attributes": [{
-		    "Name": "markdown \"Cluster Name:\"", 
+		    "Name": "markdown \"Cluster Name:\"",
 		    "Value": "markdown \"$[Cluster]\""
 		  },{
-		    "Name": "markdown \"Instance Name:\"", 
+		    "Name": "markdown \"Instance Name:\"",
 		    "Value": "markdown \"$[InstanceName]\""
 		  },{
-		    "Name": "markdown \"Databases:\"", 
+		    "Name": "markdown \"Databases:\"",
 		    "Value": "var_set name=count value=$[TotalNum] \n |markdown {var count}"
 		  },{
-		    "Name": "markdown \"Technical Detail:\"", 
+		    "Name": "markdown \"Technical Detail:\"",
 		    "Value":"markdown \"[\" metricsmssql/ \"]($[SreUrl])\""
 		  },{
-		    "Name": "markdown \"\"", 
+		    "Name": "markdown \"\"",
 		    "Value": "markdown \"[\" logs/ \"]($[logsUrl])\""
 		  }
 	   ]       		
@@ -69,13 +70,15 @@
          "AliasName": "DEV1",
 		 "InstanceName": "MSSQL_DEMO1_DEV",
 		 "Hosts": "abc,def",
-         "Cluster" : "DEMOCLUSTERA"
+         "Cluster" : "DEMOCLUSTERA",
+		 "DatabaseNames": "'HCEUtils','MARSRep','SQLDASHBOARD','SRA_tempdb','apputils','mars_scratch','master','model','msdb','sharpe_exp1','sharpe_inf1','sharpe_ref1','Other'"
       },
 	  {
 	     "AliasName": "DEV2",
 	     "InstanceName": "MSSQL_DEMO2_DEV",
 	  	  "Hosts": "abc,def",
-	      "Cluster" : "DEMOCLUSTERA"
+	      "Cluster" : "DEMOCLUSTERA",
+		  "DatabaseNames": "'HCEUtils','MARSRep','SQLDASHBOARD','SRA_tempdb','apputils','mars_scratch','master','model','msdb','sharpe_exp1','sharpe_inf1','sharpe_ref1','Other'"
 	  }
     ]
   }

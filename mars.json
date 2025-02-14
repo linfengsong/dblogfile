@@ -1,0 +1,53 @@
+{
+  "NameSpace": "demo1",
+  "Summaries": [
+      { 
+          "Title": "Databases",
+          "Components":[
+              "MS SQL SERVER", "Oracle Server", "MongoDB", "Window Server", "BVP Server", "Jobs"
+          ]
+      }
+  
+  ],
+  
+  "Components": [
+      {
+          "Title": "MS SQL SERVER",
+          "Type": "mssql",
+          "Attributes": [
+              {
+                  "AliasName": "DEV1",
+		          "InstanceName": "MSSQL_DEMO1_DEV",
+		          "Hosts": "abc,def",
+                  "Cluster" : "DEMOCLUSTERA"
+             },
+	         {
+	              "AliasName": "DEV2",
+	              "InstanceName": "MSSQL_DEMO2_DEV",
+	  	          "Hosts": "abc,def",
+	              "Cluster" : "DEMOCLUSTERA"
+	         }          
+          ]
+      },
+      {
+          "Title": "MS SQL SERVER",
+          "Type": "oracle"
+      },
+      {
+          "Title": "MongoDB",
+          "Type": "mongodb"
+      },
+      {
+          "Title": "Window Server",
+          "Type": "wins"
+      },
+      {
+          "Title": "BVP Server",
+          "Type": "bvp"
+      },
+      {
+          "Title": "Jobs",
+          "Type": "job"
+      }
+   ]
+}

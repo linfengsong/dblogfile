@@ -17,28 +17,27 @@
 	"SummaryDbWarnningNum": "0",
 	"SummaryDbRunningNum": "13",
 
-    "AppTitle": "markdown \"Microsoft SQL Server Instance\"",
-    "DescLabel": "markdown \"Instance Name:\"",
-    "DescName": "markdown $[InstanceName]",
-    "AppProperties": [ {
-      "Name": "markdown \"Space:\"",
-      "Value": "markdown $[SpaceName]"
+    "AppTitle": "var_set name=appTitle value=\"Microsoft SQL Server Instance\" \n |",
+    "DescName": "var_set name=descName value=\"Instance Name:\" \n |",
+    "DescValue": "var_set name=descValue value=$[InstanceName] \n |",
+    "AppProperties": [{
+      "Name": "var_set name=attrName value=\"Space\" \n |",
+      "Value": "var_set name=attrValue value=$[SpaceName] \n |"
     },{
-      "Name": "markdown \"Cluster Name:\"",
-      "Value": "markdown $[Cluster]"
-    },{
-      "Name": "markdown \"Total Databases:\"",
-      "Value": "var_set name=count value=$[DatabaseNum] \n|markdown {var \"count\"}"
-    }	,{
-	        "Name": "markdown \"Databases:\"",
-	        "Value": "markdown { var_set name=index value=3|var_set name=rItemindex value={math {string \"subtract(subtract(\" {math $[DatabaseNum]} \",\" {var index} \"), 1)\" }}|string $[DatabaseNames] | replace  regex={ string \"^([\\w']+,){\" {var index} \"}|(,[\\w']+){\" {var rItemindex} \"}$\" } | replace  regex=\"'\" replacement=\"\"}"
-	      }],
-    "Summay": [
+      "Name": "var_set name=attrName value=\"Cluster Name\" \n |",
+      "Value": "var_set name=attrValue value=$[Cluster] \n |"
+    }],
+    "Summaries": [
       {
         "Title": "var_set name=title value=$[SummaryDbTitle] \n |",
         "Error": "var_set name=count value=$[SummaryDbErrorNum] \n |",
         "Warnning": "var_set name=count value=$[SummaryDbWarnningNum] \n |",
-        "Running": "var_set name=count value=$[SummaryDbRunningNum] \n |"
+        "Running": "var_set name=count value=$[SummaryDbRunningNum] \n |",
+        "Attributes": [{
+		    "Name": "var_set name=attrName value=\"Total Databases:\" \n |",
+		    "Value": "var_set name=attrValue value=$[DatabaseNum] \n |"
+          }
+        ]
       }
     ],
 	"History": [
@@ -53,8 +52,7 @@
 		"ErrorNum": "0",
 		"WarnningNum": "0",
 		"RunningNum": "1",
-		"DbName": "{var_set name=rItemindex value={math {string \"subtract(subtract(\" {math $[DatabaseNum]} \",\" {var ComponentsIndex} \"), 1)\" }}|string $[DatabaseNames] | replace  regex={ string \"^([\\w']+,){\" {var ComponentsIndex} \"}|(,[\\w']+){\" {var rItemindex} \"}$\" } | replace  regex=\"'\" replacement=\"\"}"
-,
+		"DbName": "{var_set name=rItemindex value={math {string \"subtract(subtract(\" {math $[DatabaseNum]} \",\" {var ComponentsIndex} \"), 1)\" }}|string $[DatabaseNames] | replace  regex={ string \"^([\\w']+,){\" {var ComponentsIndex} \"}|(,[\\w']+){\" {var rItemindex} \"}$\" } | replace  regex=\"'\" replacement=\"\"}",
 		
 		"SreUrl": "https://localhost",
 	    "logsUrl": "https://localhost",
@@ -65,11 +63,11 @@
 		"Running": "var_set name=count value=$[RunningNum] \n | var_set name=value_invisible value=true \n |",
 		"Message": [{"Content": "markdown \"\""}],
 		"Attributes": [{
-		    "Name": "markdown \"Datail:\"", 
-		    "Value":"markdown \"[\" sremssql/ \"]($[SreUrl])\""
+		    "Name": "var_set name=attrName value=\"Datail\" \n |", 
+		    "Value": "var_set name=attrValue value=\"[sremssql/]($[SreUrl])\" \n |"
 		  },{
-		    "Name": "markdown \"\"", 
-		    "Value": "markdown \"[\" logs/ \"](logsUrl])\""
+		    "Name": "var_set name=attrName value=\"\" \n |", 
+		    "Value": "var_set name=attrValue value=\"[logs/]($[logsUrl])\" \n |"
 		  }
 	   ]       		
 	}

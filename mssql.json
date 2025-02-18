@@ -6,25 +6,27 @@
   "Expression" : {
 	"SpaceName": "demo1",
 	"SummaryDbTitle": "Databases",
+	"SummaryDbLabel": "Total Databases",
 	"SummaryDbNum": "28",
 	"SummaryDbErrorNum": "0",
 	"SummaryDbWarnningNum": "0",
 	"SummaryDbRunningNum": "12",
-	"InstanceDetailId": "workpad-c1558159-b347-4a29-a17f-311b5788049a",
+	"InstanceDetailId": "workpad-6781c287-1662-490e-9e41-9127fda7915a",
 	
-    "AppTitle": "markdown \"Microsoft SQL Server\"",
-    "DescLabel": "markdown \"Space:\"",
-    "DescName": "markdown \"$[SpaceName]\"",
-    "AppProperties": [{
-      "Name": "markdown \"Total Databases:\"", 
-      "Value": "var_set name=count value=$[SummaryDbNum] \n |markdown {var \"count\"}"
-    }],
-    "Summay": [
+    "AppTitle": "var_set name=appTitle value=\"Microsoft SQL Server\" \n |",
+    "DescName": "var_set name=descName value=\"Space\" \n |",
+    "DescValue": "var_set name=descValue value=$[SpaceName] \n |",
+    "Summaries": [
       {
         "Title": "var_set name=title value=$[SummaryDbTitle] \n |",
         "Error": "var_set name=count value=$[SummaryDbErrorNum] \n |",
         "Warnning": "var_set name=count value=$[SummaryDbWarnningNum] \n |",
-        "Running": "var_set name=count value=$[SummaryDbRunningNum] \n |"
+        "Running": "var_set name=count value=$[SummaryDbRunningNum] \n |",
+		"Attributes": [{
+		    "Name": "var_set name=attrName value=\"Total Databases\" \n |", 
+		    "Value": "var_set name=attrValue value=$[SummaryDbNum] \n |"
+		  }
+		]
       }
     ],
 	"History": [
@@ -33,6 +35,7 @@
 		}
 	],
 	"Components+": {
+		"TotalLabel": "Databases",
 		"TotalNum": "13",
 		"ErrorNum": "0",
 		"WarnningNum": "0",
@@ -48,24 +51,24 @@
 		"Running": "var_set name=count value=$[RunningNum] \n | var_set name=url value=\"$[InstanceDetailUrl]\" \n |",
 		"Message": [ {"Content": "markdown \"\""}],
 		"Attributes": [{
-		    "Name": "markdown \"Cluster Name:\"",
-		    "Value": "markdown \"$[Cluster]\""
+		    "Name": "var_set name=attrName value=\"Cluster Name:\" \n |",
+		    "Value": "var_set name=attrValue value=$[Cluster] \n |"
 		  },{
-		    "Name": "markdown \"Instance Name:\"",
-		    "Value": "markdown \"$[InstanceName]\""
+		    "Name": "var_set name=attrName value=\"Instance Name:\" \n |",
+		    "Value": "var_set name=attrValue value=$[InstanceName] \n |"
 		  },{
-		    "Name": "markdown \"Databases:\"",
-		    "Value": "var_set name=count value=$[TotalNum] \n |markdown {var count}"
+		    "Name": "var_set name=attrName value=\"$[TotalLabel]\" \n |",
+		    "Value": "var_set name=count value=$[TotalNum] \n |"
 		  },{
-		    "Name": "markdown \"Technical Detail:\"",
-		    "Value":"markdown \"[\" metricsmssql/ \"]($[SreUrl])\""
+		    "Name": "var_set name=attrName value=\"Technical Detail:\" \n |",
+		    "Value":"var_set name=attrValue value=\"[metricsmssql/]($[SreUrl])\" \n |"
 		  },{
-		    "Name": "markdown \"\"",
-		    "Value": "markdown \"[\" logs/ \"]($[logsUrl])\""
+		    "Name": "var_set name=attrName value=\"\" \n |",
+		    "Value": "var_set name=attrValue value=\"[logs/]($[logsUrl])\" \n |"
 		  }
-	   ]       		
+	   ]
 	},
-    "Components": [ 
+    "Components": [
       {
          "AliasName": "DEV1",
 		 "InstanceName": "MSSQL_DEMO1_DEV",

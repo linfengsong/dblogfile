@@ -22,6 +22,21 @@ function getVariableName(str, index = 0) {
 	return {key: key, begin: sindex, end: eindex + 1};
 }
 
+function getVariableValue(variablesObj, key) {
+	var val = variablesObj[key];
+	if(val != null)
+		return val;
+	var index = key.indexOf(".");
+	if(index > 0) {
+		const prefix = key.substring(0, index);
+		val = variablesObj[prefix];
+		if(val == null)
+			return null;
+		return getVariableValue(val, key.substring(index + 1));
+	}
+	return null;
+}
+
 function createVariableObject(variablesObj, newVariablesObj, repeatObj) {
 	const rtnObj = new Object();
 	const varsKeys = Object.keys(variablesObj);
@@ -46,7 +61,7 @@ function createVariableObject(variablesObj, newVariablesObj, repeatObj) {
 function elementExpressionReplace(exp, variablesObj) {
 	var varObj = getVariableName(exp);
 	while(varObj != null) {
-		var val = variablesObj[varObj.key];
+		var val = getVariableValue(variablesObj, varObj.key);
 		var begin = varObj.begin + 1;
 		if(val != null) {
 			exp = exp.substring(0, varObj.begin) + val + exp.substring(varObj.end);

@@ -81,7 +81,7 @@
 			"transition": {},
 			"elements": [
 				    {
-					    "expression": "$[AppTitle] \n font={font family=\"Open Sans, Helvetica, Arial, sans-serif\" size=36 align=\"center\" color=\"#444444\" weight=\"bold\" underline=false italic=false} | render css=\"\" containerStyle={containerStyle backgroundColor=\"rgba(255,255,255,0)\" opacity=\"0.9\"}",
+					    "expression": "$[AppTitle] markdown {var appTitle} font={font family=\"Open Sans, Helvetica, Arial, sans-serif\" size=36 align=\"center\" color=\"#444444\" weight=\"bold\" underline=false italic=false} | render css=\"\" containerStyle={containerStyle backgroundColor=\"rgba(255,255,255,0)\" opacity=\"0.9\"}",
 					    "id": "element-0b0441b4-1944-401c-abb1-fea5888c7e04",
 					    "position": {
 						    "angle": 0,
@@ -106,7 +106,7 @@
 						}					
 					},
 					{
-						"expression": "$[DescLabel] \n  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=12 underline=false weight=\"normal\"}\n| render",
+						"expression": "$[DescName] markdown {var descName} font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=12 underline=false weight=\"normal\"}\n| render",
 						"id": "element-d4f3d179-45bd-4e65-b8fc-8da6b065d67f",
 						"position": {
 							"angle": 0,
@@ -118,7 +118,7 @@
 						}
 					},
 					{
-						"expression": "$[DescName] \n font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=22 underline=false weight=\"bold\"}\n| render",
+						"expression": "$[DescValue] markdown {var descValue} font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=22 underline=false weight=\"bold\"}\n| render",
 						"id": "element-e6bd6334-5686-464c-9911-9390da7e1073",
 						"position": {
 							"angle": 0,
@@ -130,7 +130,7 @@
 						}
 					},
 					{
-						"expression": "$[Name] \n font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=10 underline=false weight=\"normal\"}\n| render",
+						"expression": "$[Name] markdown {var attrName} font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=10 underline=false weight=\"normal\"}\n| render",
 						"id": "element-05-fdc6684b-141f-4208-9faa-37162dd442f9",
 						"position": {
 							"angle": 0,
@@ -142,7 +142,7 @@
 						}
 					},
 					{
-						"expression": "$[Value] \n font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=18 underline=false weight=\"normal\"}\n| render",
+						"expression": "$[Value] markdown {var attrValue} font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=18 underline=false weight=\"normal\"}\n| render",
 						"id": "element-06-d50c1da3-2ee7-47e8-beb7-dae9da19d9b7",
 						"position": {
 							"angle": 0,
@@ -173,7 +173,7 @@
 							"left": 274,
 							"top": 173,
 							"width": 1042,
-							"height": 108,
+							"height": 133,
 							"angle": 0,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852044"
 						}
@@ -189,7 +189,31 @@
 							"top": 165,
 							"width": 70
 						}
+					},					
+					{
+						"expression": "$[Name] markdown {var attrName} font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=10 underline=false weight=\"normal\"}\n| render",
+						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db7",
+						"position": {
+							"angle": 0,
+							"height": 10,
+							"left": 295,
+							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852041",
+							"top": 195,
+							"width": 288
+						}
 					},
+					{
+						"expression": "$[Value] markdown {var attrValue} font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size=14 underline=false weight=\"normal\"}\n| render",
+						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db8",
+						"position": {
+							"angle": 0,
+							"height": 16,
+							"left": 380,
+							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852041",
+							"top": 191,
+							"width": 288
+						}
+					},				
 				    {
 						"expression": "$[Error] var_set name=color_red_box value={var count | if condition={eq 0} then={var \"color_grey\"} else={var \"color_red\"} } \n | shape \"square\" fill={var color_red_box} border=\"rgba(255,255,255,0)\" borderWidth=0 maintainAspect=false\n| render containerStyle={containerStyle border=\"1px solid #EEEEEE\" borderRadius=\"20px\"}",
 						"id": "element-1b31d993-fb49-4d93-8b5f-731ad671ba29",
@@ -198,7 +222,7 @@
 							"height": 80,
 							"left": 289,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852044",
-							"top": 189,
+							"top": 214,
 							"width": 319
 						}
 					},
@@ -210,7 +234,7 @@
 							"height": 80,
 							"left": 635,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852044",
-							"top": 189,
+							"top": 214,
 							"width": 319
 						}
 					},
@@ -222,7 +246,7 @@
 							"height": 80,
 							"left": 986,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852044",
-							"top": 189,
+							"top": 214,
 							"width": 319
 						}
 					},
@@ -234,7 +258,7 @@
 							"height": 60,
 							"left": 301,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852044",
-							"top": 198,
+							"top": 223,
 							"width": 60
 						}
 					},
@@ -246,7 +270,7 @@
 							"height": 57,
 							"left": 1005,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852044",
-							"top": 197,
+							"top": 222,
 							"width": 57
 						}
 					},
@@ -258,7 +282,7 @@
 							"height": 77,
 							"left": 640,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852044",
-							"top": 189,
+							"top": 214,
 							"width": 83
 						}
 					},
@@ -270,7 +294,7 @@
 							"height": 59,
 							"left": 675,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852044",
-							"top": 204,
+							"top": 229,
 							"width": 37
 						}
 					},
@@ -282,7 +306,7 @@
 							"height": 71,
 							"left": 453,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852044",
-							"top": 196,
+							"top": 221,
 							"width": 145
 						}
 					},
@@ -294,7 +318,7 @@
 							"height": 71,
 							"left": 794,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852044",
-							"top": 196,
+							"top": 221,
 							"width": 145
 						}
 					},
@@ -306,7 +330,7 @@
 							"height": 71,
 							"left": 1148,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852044",
-							"top": 196,
+							"top": 221,
 							"width": 145
 						}
 					},
@@ -318,7 +342,7 @@
 						    "height": 300,
 							"left": 10,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852043",
-							"top": 320,
+							"top": 345,
 							"width": 500			
 						}
 					},
@@ -330,19 +354,19 @@
 							"height": 180,
 							"left": 11,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852045",
-							"top": 628,
+							"top": 653,
 							"width": 319
 						}
 					},
 					{
-						"expression": "markdown \"Name:\"  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=8} underline=false weight=\"normal\"}\n| render",
+						"expression": "markdown \"Name:\"  font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=10} underline=false weight=\"normal\"}\n| render",
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db4",
 						"position": {
 							"angle": 0,
 							"height": 46,
 							"left": 35,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852045",
-							"top": 644,
+							"top": 669,
 							"width": 288
 						}
 					},
@@ -352,33 +376,33 @@
 						"position": {
 							"angle": 0,
 							"height": 46,
-							"left": 100,
+							"left": 120,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852045",
-							"top": 633,
+							"top": 658,
 							"width": 288
 						}
 					},
 					{
-						"expression": "$[Name] font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=8} underline=false weight=\"normal\"}\n| render",
+						"expression": "$[Name] markdown {var attrName} font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=10} underline=false weight=\"normal\"}\n| render",
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db7",
 						"position": {
 							"angle": 0,
 							"height": 10,
 							"left": 35,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852046",
-							"top": 670,
+							"top": 695,
 							"width": 288
 						}
 					},
 					{
-						"expression": "$[Value] font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=14} underline=false weight=\"normal\"}\n| render",
+						"expression": "$[Value] markdown {var attrValue} font={font align=\"left\" color=\"#444444\" family=\"'Open Sans', Helvetica, Arial, sans-serif\" italic=false size={var ComponentsLength | if condition={lte {var ComponentsIndex}} then=0 else=14} underline=false weight=\"normal\"}\n| render",
 						"id": "element-2233ed8d-7476-4940-b570-9b76c0071db8",
 						"position": {
 							"angle": 0,
 							"height": 16,
-							"left": 100,
+							"left": 120,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852046",
-							"top": 663,
+							"top": 688,
 							"width": 288
 						}
 					},
@@ -390,7 +414,7 @@
 							"height": 104,
 							"left": 11,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852045",
-							"top": 680,
+							"top": 705,
 							"width": 120
 						}
 					},
@@ -402,7 +426,7 @@
 							"height": 104,
 							"left": 110.5,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852045",
-							"top": 680,
+							"top": 705,
 							"width": 120
 						}
 					},
@@ -414,7 +438,7 @@
 							"height": 104,
 							"left": 210,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852045",
-							"top": 680,
+							"top": 705,
 							"width": 120
 						}
 					},
@@ -426,7 +450,7 @@
 							"height": 20,
 							"left": 35,
 							"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852047",
-							"top": 779,
+							"top": 804,
 							"width": 325
 						}
 					}
@@ -450,18 +474,33 @@
 				{
 					"id": "group-e2d68c39-d19f-4cd1-8524-e42e9f852044",
 					"config": {
-						"name": "Summay",
+						"name": "Summaries",
 						"x": 1
 					},
 					"position": {
 						"angle": 0,
-						"height": 130,
+						"height": 155,
 						"left": 270,
 						"parent": null,
 						"top": 160,
 						"width": 1050
 					}
                 },
+				{
+					"id": "group-e2d68c39-d19f-4cd1-8524-e42e9f852041",
+					"config": {
+						"name": "Attributes",
+						"x": 1
+					},
+					"position": {
+						"angle": 0,
+						"height": 25,
+						"left": 289,
+						"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852044",
+						"top": 180,
+						"width": 325
+					}
+				},
 				{
 					"id": "group-e2d68c39-d19f-4cd1-8524-e42e9f852043",
 					"config": {
@@ -473,7 +512,7 @@
 						"height": 330,
 						"left": 10,
 						"parent": null,
-						"top": 290,
+						"top": 315,
 						"width": 510
 					}
 				},
@@ -488,7 +527,7 @@
 						"height": 187,
 						"left": 10,
 						"parent": null,
-						"top": 621,
+						"top": 646,
 						"width": 326
 					}
 				},
@@ -503,7 +542,7 @@
 						"height": 25,
 						"left": 10,
 						"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852045",
-						"top": 661,
+						"top": 686,
 						"width": 325
 					}
 				},
@@ -518,7 +557,7 @@
 						"height": 20,
 						"left": 10,
 						"parent": "group-e2d68c39-d19f-4cd1-8524-e42e9f852045",
-						"top": 772,
+						"top": 797,
 						"width": 325
 					}
 				}

@@ -1,0 +1,113 @@
+{
+	"CanvasName": "$<CanvasName>",
+	"Assets": {
+		"AppIcon": "$<AppIcon>"
+	},
+	"Expression": {
+		"SpaceName": "$<SpaceName>",
+		"types": {
+			"mssql": {
+				"TotalNum": "26",
+				"ErrorNum": "0",
+				"WarnningNum": "0",
+				"RunningNum": "26"
+			},
+			"oracle": {
+				"TotalNum": "30",
+				"ErrorNum": "0",
+				"WarnningNum": "0",
+				"RunningNum": "30"
+			},
+			"mongodb": {
+				"TotalNum": "9",
+				"ErrorNum": "0",
+				"WarnningNum": "0",
+				"RunningNum": "9"
+			},
+			"windows": {
+				"TotalNum": "8",
+				"ErrorNum": "0",
+				"WarnningNum": "0",
+				"RunningNum": "8"
+			},
+			"bvp": {
+				"TotalNum": "6",
+				"ErrorNum": "0",
+				"WarnningNum": "2",
+				"RunningNum": "5"
+			},
+			"job": {
+				"TotalNum": "123",
+				"ErrorNum": "14",
+				"WarnningNum": "20",
+				"RunningNum": "98"
+			}
+		},
+		"AppTitle": "var_set name=appTitle value=$<AppTitle> \n |",
+		"DescName": "var_set name=descName value=\"Space:\" \n |",
+		"DescValue": "var_set name=descValue value=$[SpaceName] \n |",
+		"AppProperties": {
+			"_Repeat": "AppProperties",
+			"_Element": {
+				"Name": "var_set name=attrName value=\"$<_.key>\" \n |",
+				"Value": "var_set name=attrValue value\"=$<_.value>\" \n |"
+			}
+		},
+		"Summaries": {
+			"_Repeat": "Summaries",
+			"_Element": {
+				"SummaryTitle": "$<_.Title>",
+				"SummaryLabel": "$<_.TotalLabel>",
+				"SummaryNum": "{math \"add($[types.mssql.TotalNum], $[types.oracle.TotalNum], $[types.mongodb.TotalNum])\"}",
+				"SummaryErrorNum": "{math \"add($[types.mssql.ErrorNum], $[types.oracle.ErrorNum], $[types.mongodb.ErrorNum])\"}",
+				"SummaryWarnningNum": "{math \"add($[types.mssql.WarnningNum], $[types.oracle.WarnningNum], $[types.mongodb.WarnningNum])\"}",
+				"SummaryRunningNum": "{math \"add($[types.mssql.RunningNum], $[types.oracle.RunningNum], $[types.mongodb.RunningNum])\"}",
+				"Title": "var_set name=title value=$[SummaryTitle] \n |",
+				"Error": "var_set name=count value=$[SummaryErrorNum] \n |",
+				"Warnning": "var_set name=count value=$[SummaryWarnningNum] \n |",
+				"Running": "var_set name=count value=$[SummaryRunningNum] \n |",
+				"Attributes": [
+					{
+						"Name": "var_set name=attrName value=$[SummaryLabel] \n |",
+						"Value": "var_set name=attrValue value=$[SummaryNum] \n |"
+					}
+				]
+			}
+		},
+		"History": [
+			{
+				"Config": "embeddable \n  config=\"eyJ2aWV3TW9kZSI6ImVkaXQiLCJ0aW1lUmFuZ2UiOnsiZnJvbSI6Im5vdy0xNW0iLCJ0byI6Im5vdyJ9LCJkaXNhYmxlVHJpZ2dlcnMiOnRydWUsInJlbmRlck1vZGUiOiJub0ludGVyYWN0aXZpdHkiLCJzYXZlZE9iamVjdElkIjoiNWQ0NzRiOWEtZjQwOS00OGM5LWI5MTUtNjI5OTBiMDY1NDc2IiwiZmlsdGVycyI6W10sImlkIjoiZWxlbWVudC1iYTliZTkzYi1lYzIyLTQwNDEtYjJhYi1mY2Q0OTI4NDAzMzUiLCJleGVjdXRpb25Db250ZXh0Ijp7InR5cGUiOiJjYW52YXMifX0=\" type=\"lens\"\n| render"
+			}
+		],
+		"Components+": {
+			"Title": "var_set name=title value=\"[$[Name]]($[Url])\" \n |",
+			"Error": "var_set name=count value=$[ErrorNum] \n | var_set name=url value=\"$[Url]\" \n |",
+			"Warnning": "var_set name=count value=$[WarnningNum] \n | var_set name=url value=\"$[Url]\" \n |",
+			"Running": "var_set name=count value=$[RunningNum] \n | var_set name=url value=\"$[Url]\" \n |",
+			"Message": [
+				{
+					"Content": "markdown \"\""
+				}
+			],
+			"Attributes": [
+				{
+					"Name": "var_set name=attrName value=$[TotalLabel] \n |",
+					"Value": "var_set name=attrValue value=$[TotalNum] \n |"
+				}
+			]
+		},
+		"Components": {
+			"_Repeat": "Summaries.Components",
+			"_Element": {
+				"sqlServerId": "workpad-b413e276-020b-4260-974a-439f38dd220f",
+				"Name": "$<_.Name>",
+				"Url": "http://localhost:5601/s/demo1/app/canvas/workpad/$[sqlServerId]/page/1",
+				"TotalLabel": "$[types.$<_.Type>.TotalLabel]",
+				"TotalNum": "$[types.$<_.Type>.TotalNum]",
+				"ErrorNum": "$[types.$<_.Type>.ErrorNum]",
+				"WarnningNum": "$[types.$<_.Type>].WarnningNum]",
+				"RunningNum": "$[types.$<_.Type>].RunningNum]"
+			}
+		}
+	}
+}

@@ -1,53 +1,71 @@
 {
-  "NameSpace": "demo1",
-  "Summaries": [
-      { 
-          "Title": "Databases",
-          "Components":[
-              "MS SQL SERVER", "Oracle Server", "MongoDB", "Window Server", "BVP Server", "Jobs"
-          ]
-      }
-  
-  ],
-  
-  "Components": [
-      {
-          "Title": "MS SQL SERVER",
-          "Type": "mssql",
-          "Attributes": [
-              {
-                  "AliasName": "DEV1",
-		          "InstanceName": "MSSQL_DEMO1_DEV",
-		          "Hosts": "abc,def",
-                  "Cluster" : "DEMOCLUSTERA"
-             },
-	         {
-	              "AliasName": "DEV2",
-	              "InstanceName": "MSSQL_DEMO2_DEV",
-	  	          "Hosts": "abc,def",
-	              "Cluster" : "DEMOCLUSTERA"
-	         }          
-          ]
-      },
-      {
-          "Title": "MS SQL SERVER",
-          "Type": "oracle"
-      },
-      {
-          "Title": "MongoDB",
-          "Type": "mongodb"
-      },
-      {
-          "Title": "Window Server",
-          "Type": "wins"
-      },
-      {
-          "Title": "BVP Server",
-          "Type": "bvp"
-      },
-      {
-          "Title": "Jobs",
-          "Type": "job"
-      }
-   ]
+	"CanvasName": "demo1",
+	"AppTitle": "Market Risk",
+	"AppIcon": "market.png",
+	"SpaceName": "demo1",
+	"AppProperties": {
+	      "Description": "Market Risk Monitor"
+	    },
+
+	"Summaries": [
+		{
+			"Title": "Databases",
+			"TotalLabel": "Total Databases",
+			"Components": [
+				{
+					"Name": "MS SQL SERVER",
+					"Type": "mssql",
+					"Attributes": [
+						{
+							"AliasName": "DEV1",
+							"InstanceName": "MSSQL_DEMO1_DEV",
+							"Hosts": "abc,def",
+							"Cluster": "DEMOCLUSTERA"
+						},
+						{
+							"AliasName": "DEV2",
+							"InstanceName": "MSSQL_DEMO2_DEV",
+							"Hosts": "abc,def",
+							"Cluster": "DEMOCLUSTERA"
+						}
+					]
+				},
+				{
+					"Name": "Oracle Server",
+					"Type": "oracle"
+				},
+				{
+					"Name": "MongoDB",
+					"Type": "mongodb"
+				}
+			]
+		},
+		{
+			"Title": "Server Hosts",
+			"TotalLabel": "Total Servers",
+			"Components": [
+				{
+					"Name": "Window Server",
+					"Type": "mssql"
+				},
+				{
+					"Name": "BVP Server",
+					"Type": "bcp"
+				}
+			]
+		},
+		{
+			"Title": "Jobs",
+			"TotalLabel": "Total Jobs",
+			"Components": [
+				{
+					"Name": "Jobs",
+					"Type": "job"
+				}
+			]
+		}
+	],
+	"History": [
+		"eyJ2aWV3TW9kZSI6ImVkaXQiLCJ0aW1lUmFuZ2UiOnsiZnJvbSI6Im5vdy0xNW0iLCJ0byI6Im5vdyJ9LCJkaXNhYmxlVHJpZ2dlcnMiOnRydWUsInJlbmRlck1vZGUiOiJub0ludGVyYWN0aXZpdHkiLCJzYXZlZE9iamVjdElkIjoiNWQ0NzRiOWEtZjQwOS00OGM5LWI5MTUtNjI5OTBiMDY1NDc2IiwiZmlsdGVycyI6W10sImlkIjoiZWxlbWVudC1iYTliZTkzYi1lYzIyLTQwNDEtYjJhYi1mY2Q0OTI4NDAzMzUiLCJleGVjdXRpb25Db250ZXh0Ijp7InR5cGUiOiJjYW52YXMifX0=\" type=\"lens\"\n| render"
+	]
 }

@@ -1,7 +1,11 @@
 
 
-function getVariableName(str, index = 0) {
-	const sindex = str.indexOf("$<", index);
+function getVariableName(str, index = -1) {
+	var sindex = -1;
+	if(index == -1)
+		sindex = str.lastIndexOf("$<");
+	else
+	    sindex = str.lastIndexOf("$<", index);
 	if(sindex < 0) {
 		return null;
 	}
@@ -13,42 +17,100 @@ function getVariableName(str, index = 0) {
 	return {key: key, begin: sindex, end: eindex + 1};
 }
 
+function getValue(variablesObj, key) {
+	if(variablesObj == null) {
+		return null;
+	} else if(Array.isArray(variablesObj)) {
+		const array = new Array();
+		for(let i = 0; i < variablesObj.length; i++) {
+			const varObj = variablesObj[i];
+			if(varObj == null) {
+				continue;
+			}
+			const val = getValue(varObj, key);
+			if(val != null) {
+				if(Array.isArray(val)) {
+					for(let j = 0; j < val.length; j++) {
+						if(val[j] != null) {
+							array.push(val[j]);
+						}
+					}
+				} else {
+					array.push(val);
+				}
+			} else {
+				console.log("getValue: key: " + key + ", varObj: " + JSON.stringify(varObj));
+			}
+		}
+		if(array.length == 0) {
+			return null;
+		}
+		return array;
+	} else {
+		return variablesObj[key];
+	}
+}
+
+function getVariableValue2(variablesObj, key) {
+	var index = key.indexOf(".");
+	if(index > 0) {
+		var prefix = key.substring(0, index);
+		val = getValue(variablesObj, prefix);
+		if(val == null) {
+			console.log("getVariableValue: key: " + key + " prefix: " + prefix + ", variablesObj: " + JSON.stringify(variablesObj));
+			return null;
+		}
+		return getVariableValue2(val, key.substring(index + 1));
+	} else {
+		return getValue(variablesObj, key);
+	}	
+}
+
 function getVariableValue(variablesObj, key, repeatObj) {
 	if(key.startsWith("_.")) {
 		if(repeatObj == null) {
 			return null;
 		}
-		const val = repeatObj[key.substring(2, key.length)];
+		key = key.substring(2, key.length);
+		const val = getVariableValue(repeatObj, key);
+		if(val == null) {
+			console.log("getVariableValue: key: " + key + ", repeatObj: " + JSON.stringify(repeatObj));
+		}
 		return val;
+	} else {
+		return getVariableValue2(variablesObj, key);
 	}
-	var val = variablesObj[key];
-	if(val != null)
-		return val;
-	var index = key.indexOf(".");
-	if(index > 0) {
-		var prefix = key.substring(0, index);
-		val = variablesObj[prefix];
-		if(val == null)
-			return null;
-		return getVariableValue(val, key.substring(index + 1), repeatObj);
-	}
-	return null;
 }
 
 function variablesReplace(str, variablesObj, repeatObj) {
 	var varObj = getVariableName(str);
-	while(varObj != null) {
-		var val = getVariableValue(variablesObj, varObj.key, repeatObj);
-		var begin = varObj.begin + 1;
-		if(val != null) {
-			str = str.substring(0, varObj.begin) + val + str.substring(varObj.end);
-			begin = varObj.begin;
-		} else {
-			console.error("Fail to get variable: " + varObj.key + " from str: " + str);
-		}
-		varObj = getVariableName(str, begin);
+	if(varObj == null) {
+		return str;
 	}
-	return str;
+	var val = getVariableValue(variablesObj, varObj.key, repeatObj);
+	var end = varObj.end - 1;
+	if(val == null) {
+		console.error("Fail to get variable: " + varObj.key + " from str: " + str);
+		return str;
+	}
+	const prefix = str.substring(0, varObj.begin);
+	const surfix = str.substring(varObj.end);
+	const str2 = str.substring(0, varObj.begin) + "########" + str.substring(varObj.end);
+	end = varObj.end;
+	varObj = getVariableName(str2, end);
+	if(varObj == null) {
+		return prefix + val + surfix;
+	}
+	if(!varObj.key.includes("########") || !Array.isArray(val)) {
+		return	variablesReplace(prefix + val + surfix, variablesObj, repeatObj);
+	}
+	const array = new Array();
+	for(let i = 0; i < val.length; i++) {
+		const itemKey = varObj.key.replace("########", val[i])
+		const itemVal = getVariableValue(variablesObj, itemKey, repeatObj);
+		array.push(itemVal);
+	}
+	return str2.substring(0, varObj.begin) + array + str2.substring(varObj.end);
 }
 
 function isString(x) {

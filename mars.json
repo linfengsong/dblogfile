@@ -46,11 +46,11 @@
 			"Components": [
 				{
 					"Name": "Window Server",
-					"Type": "mssql"
+					"Type": "windows"
 				},
 				{
 					"Name": "BVP Server",
-					"Type": "bcp"
+					"Type": "bvp"
 				}
 			]
 		},
@@ -65,7 +65,59 @@
 			]
 		}
 	],
-	"History": [
-		"eyJ2aWV3TW9kZSI6ImVkaXQiLCJ0aW1lUmFuZ2UiOnsiZnJvbSI6Im5vdy0xNW0iLCJ0byI6Im5vdyJ9LCJkaXNhYmxlVHJpZ2dlcnMiOnRydWUsInJlbmRlck1vZGUiOiJub0ludGVyYWN0aXZpdHkiLCJzYXZlZE9iamVjdElkIjoiNWQ0NzRiOWEtZjQwOS00OGM5LWI5MTUtNjI5OTBiMDY1NDc2IiwiZmlsdGVycyI6W10sImlkIjoiZWxlbWVudC1iYTliZTkzYi1lYzIyLTQwNDEtYjJhYi1mY2Q0OTI4NDAzMzUiLCJleGVjdXRpb25Db250ZXh0Ijp7InR5cGUiOiJjYW52YXMifX0=\" type=\"lens\"\n| render"
-	]
+	"Histories": [
+		{
+			"embeddableId": "eyJ2aWV3TW9kZSI6ImVkaXQiLCJ0aW1lUmFuZ2UiOnsiZnJvbSI6Im5vdy0xNW0iLCJ0byI6Im5vdyJ9LCJkaXNhYmxlVHJpZ2dlcnMiOnRydWUsInJlbmRlck1vZGUiOiJub0ludGVyYWN0aXZpdHkiLCJzYXZlZE9iamVjdElkIjoiNWQ0NzRiOWEtZjQwOS00OGM5LWI5MTUtNjI5OTBiMDY1NDc2IiwiZmlsdGVycyI6W10sImlkIjoiZWxlbWVudC1iYTliZTkzYi1lYzIyLTQwNDEtYjJhYi1mY2Q0OTI4NDAzMzUiLCJleGVjdXRpb25Db250ZXh0Ijp7InR5cGUiOiJjYW52YXMifX0="
+		}
+	],
+	"types": {
+		"mssql": {
+			"WorkpadId": "workpad-b413e276-020b-4260-974a-439f38dd220f",
+			"TotalLabel": "Total Databases",
+			"TotalNum": "26",
+			"ErrorNum": "0",
+			"WarnningNum": "0",
+			"RunningNum": "26"
+		},
+		"oracle": {
+			"WorkpadId": "workpad-unknown",
+			"TotalLabel": "Total Databases",
+			"TotalNum": "30",
+			"ErrorNum": "0",
+			"WarnningNum": "0",
+			"RunningNum": "30"
+		},
+		"mongodb": {
+			"WorkpadId": "workpad-unknown",
+			"TotalLabel": "Total Databases",
+			"TotalNum": "9",
+			"ErrorNum": "0",
+			"WarnningNum": "0",
+			"RunningNum": "9"
+		},
+		"windows": {
+			"WorkpadId": "workpad-unknown",
+			"TotalLabel": "Total Servers",
+			"TotalNum": "8",
+			"ErrorNum": "0",
+			"WarnningNum": "0",
+			"RunningNum": "8"
+		},
+		"bvp": {
+			"WorkpadId": "workpad-unknown",
+			"TotalLabel": "Total Servers",
+			"TotalNum": "6",
+			"ErrorNum": "0",
+			"WarnningNum": "2",
+			"RunningNum": "5"
+		},
+		"job": {
+			"WorkpadId": "workpad-unknown",
+			"TotalLabel": "Total Jobss",
+			"TotalNum": "123",
+			"ErrorNum": "14",
+			"WarnningNum": "20",
+			"RunningNum": "98"
+		}
+	}
 }

@@ -9,12 +9,27 @@ function getVariableName(str, index = -1) {
 	if(sindex < 0) {
 		return null;
 	}
+	var defaultValue = null;
+	var cindex = str.indexOf(",", sindex);
 	const eindex = str.indexOf(">", sindex);
+	if(cindex >= 0 && cindex < eindex) {
+		var tindex = -1;
+		do {
+		    defaultValue = str.substring(cindex + 1, eindex);
+		    tindex = defaultValue.indexOf("$<");
+		    if(tindex >=0) {
+				eindex = str.indexOf(">", sindex + 1);
+			}
+		} while(tindex > 0);
+	} else {
+		cindex = eindex;
+	}
+	
 	if(eindex < 0) {
 		return null;
 	}
-	const key = str.substring(sindex+2, eindex);
-	return {key: key, begin: sindex, end: eindex + 1};
+	const key = str.substring(sindex+2, cindex);
+	return {key: key, begin: sindex, end: eindex + 1, default: defaultValue};
 }
 
 function getValue(variablesObj, key) {
@@ -38,8 +53,6 @@ function getValue(variablesObj, key) {
 				} else {
 					array.push(val);
 				}
-			} else {
-				console.log("getValue: key: " + key + ", varObj: " + JSON.stringify(varObj));
 			}
 		}
 		if(array.length == 0) {
@@ -57,7 +70,6 @@ function getVariableValue2(variablesObj, key) {
 		var prefix = key.substring(0, index);
 		val = getValue(variablesObj, prefix);
 		if(val == null) {
-			console.log("getVariableValue: key: " + key + " prefix: " + prefix + ", variablesObj: " + JSON.stringify(variablesObj));
 			return null;
 		}
 		return getVariableValue2(val, key.substring(index + 1));
@@ -67,16 +79,14 @@ function getVariableValue2(variablesObj, key) {
 }
 
 function getVariableValue(variablesObj, key, repeatObj) {
-	if(key.startsWith("_.")) {
+	if(key == "_") {
+		return repeatObj;
+	} else if(key.startsWith("_.")) {
 		if(repeatObj == null) {
 			return null;
 		}
 		key = key.substring(2, key.length);
-		const val = getVariableValue(repeatObj, key);
-		if(val == null) {
-			console.log("getVariableValue: key: " + key + ", repeatObj: " + JSON.stringify(repeatObj));
-		}
-		return val;
+		return getVariableValue(repeatObj, key);
 	} else {
 		return getVariableValue2(variablesObj, key);
 	}
@@ -88,9 +98,12 @@ function variablesReplace(str, variablesObj, repeatObj) {
 		return str;
 	}
 	var val = getVariableValue(variablesObj, varObj.key, repeatObj);
+	if(val == null) {
+		val = varObj.default;
+	}
 	var end = varObj.end - 1;
 	if(val == null) {
-		console.error("Fail to get variable: " + varObj.key + " from str: " + str);
+		console.error("Fail to get variable: " + varObj.key + ", default: " + varObj.default + ", from str: " + str);
 		return str;
 	}
 	const prefix = str.substring(0, varObj.begin);
@@ -99,16 +112,28 @@ function variablesReplace(str, variablesObj, repeatObj) {
 	end = varObj.end;
 	varObj = getVariableName(str2, end);
 	if(varObj == null) {
-		return prefix + val + surfix;
-	}
-	if(!varObj.key.includes("########") || !Array.isArray(val)) {
+		if(Array.isArray(val)) {
+			const array = new Array();
+			for(let i = 0; i < val.length; i++) {
+				array.push(prefix + val[i] + surfix);
+			}
+			return array;
+		} else {
+			return prefix + val + surfix;
+		}
+	} 
+	if(!Array.isArray(val)) {
 		return	variablesReplace(prefix + val + surfix, variablesObj, repeatObj);
 	}
 	const array = new Array();
 	for(let i = 0; i < val.length; i++) {
-		const itemKey = varObj.key.replace("########", val[i])
-		const itemVal = getVariableValue(variablesObj, itemKey, repeatObj);
-		array.push(itemVal);
+		const itemKey = varObj.key.replace("########", val[i]);
+		const defaultValue = varObj.default.replace("########", val[i])
+		var itemVal = getVariableValue(variablesObj, itemKey, repeatObj);
+		if(itemVal == null) {
+			itemVal = defaultValue;
+		}
+	    array.push(itemVal);
 	}
 	return str2.substring(0, varObj.begin) + array + str2.substring(varObj.end);
 }
@@ -194,7 +219,6 @@ function processRepeat(variablesObj, obj, repeatPath, dataDir, repeatObj = null)
 function processArray(variablesObj, array, dataDir, repeatObj) {
 	for(let i = 0; i < array.length; i++) {
 		const child = array[i];
-		//console.log("child: " + child);
 		array[i] = processObj(variablesObj, child, dataDir, repeatObj);
 	}
 	return array;
@@ -204,7 +228,6 @@ function processObj(variablesObj, obj, dataDir, repeatObj = null) {
 	if(obj == null) {
 		return null;
 	} else if(isString(obj)) {
-		//console.log("string: " + obj);
 		return variablesReplace(obj, variablesObj, repeatObj);
 	} else if(Array.isArray(obj)) {
 		return processArray(variablesObj, obj, dataDir, repeatObj);
@@ -212,7 +235,6 @@ function processObj(variablesObj, obj, dataDir, repeatObj = null) {
 		return processRepeat(variablesObj, obj["_Element"], obj["_Repeat"], dataDir, repeatObj)
 	} else {
 	    for(const [key, value] of Object.entries(obj)) {
-		    //console.log("key: " + key + ", value: " + value);
 			obj[key] = processObj(variablesObj, value, dataDir, repeatObj);
 	    }
 		return obj;

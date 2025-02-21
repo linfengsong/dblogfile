@@ -1,0 +1,31 @@
+{
+	"Env": "DEV",
+	"SpaceName": "demo1",
+	"Instances": [
+		{
+			"AliasName": "DEV1",
+			"InstanceName": "MSSQL_DEMO1_DEV",
+			"Hosts": "abc,def",
+			"Cluster": "DEMOCLUSTERA"
+		},
+		{
+			"AliasName": "DEV2",
+			"InstanceName": "MSSQL_DEMO2_DEV",
+			"Hosts": "abc,def",
+			"Cluster": "DEMOCLUSTERA"
+		}
+	],
+	"MaxDatabases": 21,
+	"Histories": {
+		"Instance": [
+			{
+				"embeddableId": "eyJ2aWV3TW9kZSI6ImVkaXQiLCJ0aW1lUmFuZ2UiOnsiZnJvbSI6Im5vdy0xNW0iLCJ0byI6Im5vdyJ9LCJkaXNhYmxlVHJpZ2dlcnMiOnRydWUsInJlbmRlck1vZGUiOiJub0ludGVyYWN0aXZpdHkiLCJzYXZlZE9iamVjdElkIjoiNWQ0NzRiOWEtZjQwOS00OGM5LWI5MTUtNjI5OTBiMDY1NDc2IiwiZmlsdGVycyI6W10sImlkIjoiZWxlbWVudC1iYTliZTkzYi1lYzIyLTQwNDEtYjJhYi1mY2Q0OTI4NDAzMzUiLCJleGVjdXRpb25Db250ZXh0Ijp7InR5cGUiOiJjYW52YXMifX0="
+			}
+		],
+		"Database": [
+			{
+				"embeddableId": "eyJ2aWV3TW9kZSI6ImVkaXQiLCJ0aW1lUmFuZ2UiOnsiZnJvbSI6Im5vdy0xNW0iLCJ0byI6Im5vdyJ9LCJkaXNhYmxlVHJpZ2dlcnMiOnRydWUsInJlbmRlck1vZGUiOiJub0ludGVyYWN0aXZpdHkiLCJzYXZlZE9iamVjdElkIjoiNWQ0NzRiOWEtZjQwOS00OGM5LWI5MTUtNjI5OTBiMDY1NDc2IiwiZmlsdGVycyI6W10sImlkIjoiZWxlbWVudC1iYTliZTkzYi1lYzIyLTQwNDEtYjJhYi1mY2Q0OTI4NDAzMzUiLCJleGVjdXRpb25Db250ZXh0Ijp7InR5cGUiOiJjYW52YXMifX0="
+			}
+		]
+	}
+}

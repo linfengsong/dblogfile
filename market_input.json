@@ -1,0 +1,32 @@
+{
+	"CanvasName": "demo1",
+	"AppTitle": "Market Risk",
+	"AppIcon": "market.png",
+	"SpaceName": "demo1",
+	"AppProperties": {
+	      "Description": "Market Risk Monitor"
+	    },
+
+	"Summaries": [
+		{
+			"Title": "Databases",
+			"TotalLabel": "Total Databases",
+			"Components": ["mssql","oracle","mongodb"]
+		},
+		{
+			"Title": "Server Hosts",
+			"TotalLabel": "Total Servers",
+			"Components": ["windows","bvp"]
+		},
+		{
+			"Title": "Jobs",
+			"TotalLabel": "Total Jobs",
+			"Components": ["job"]
+		}
+	],
+	"Histories": [
+		{
+			"embeddableId": "eyJ2aWV3TW9kZSI6ImVkaXQiLCJ0aW1lUmFuZ2UiOnsiZnJvbSI6Im5vdy0xNW0iLCJ0byI6Im5vdyJ9LCJkaXNhYmxlVHJpZ2dlcnMiOnRydWUsInJlbmRlck1vZGUiOiJub0ludGVyYWN0aXZpdHkiLCJzYXZlZE9iamVjdElkIjoiNWQ0NzRiOWEtZjQwOS00OGM5LWI5MTUtNjI5OTBiMDY1NDc2IiwiZmlsdGVycyI6W10sImlkIjoiZWxlbWVudC1iYTliZTkzYi1lYzIyLTQwNDEtYjJhYi1mY2Q0OTI4NDAzMzUiLCJleGVjdXRpb25Db250ZXh0Ijp7InR5cGUiOiJjYW52YXMifX0="
+		}
+	]
+}

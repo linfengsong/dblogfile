@@ -1,0 +1,115 @@
+{
+	"CanvasName": "MSSqlServer",
+	"Assets": {
+		"AppIcon": "mssql.png"
+	},
+	"Expression": {
+		"SpaceName": "$<SpaceName>",
+		"types": {
+			"mssql": {
+				"Name": "MS SQL Server",
+				"TotalTitle": "Databases",
+				"TotalLabel": "Total Databases",
+				"WorkpadId": "workpad-aed441ba-06cb-45e7-86f6-72eeab3b76da",
+				"Space": {
+					"TotalNum": "26",
+					"ErrorNum": "0",
+					"WarnningNum": "0",
+					"RunningNum": "26",
+					"Message": ""
+				},
+				"Instance": {
+					"TotalNum": "13",
+					"ErrorNum": "0",
+					"WarnningNum": "0",
+					"RunningNum": "13",
+					"WorkpadId": "workpad-138238d8-9df8-490a-8435-0861ce422948",
+					"DatabaseNames": "'HCEUtils','MARSRep','SQLDASHBOARD','SRA_tempdb','apputils','mars_scratch','master','model','msdb','sharpe_exp1','sharpe_inf1','sharpe_ref1','Other'",
+					"Message": ""
+				},
+				"Database": {
+					"ErrorNum": "0",
+					"WarnningNum": "0",
+					"RunningNum": "1",
+					"Message": ""
+				}
+			}
+		},
+		"AppTitle": "var_set name=appTitle value=\"$[types.mssql.Name]\" \n |",
+		"DescName": "var_set name=descName value=\"Space\" \n |",
+		"DescValue": "var_set name=descValue value=$[SpaceName] \n |",
+		"Summaries": [
+			{
+				"SummaryTitle": "$[types.mssql.TotalTitle]",
+				"SummaryLabel": "$[types.mssql.TotalLabel]",
+				"SummaryNum": "$[types.mssql.Space.TotalNum]",
+				"SummaryErrorNum": "$[types.mssql.Space.ErrorNum]",
+				"SummaryWarnningNum": "$[types.mssql.Space.WarnningNum]",
+				"SummaryRunningNum": "$[types.mssql.Space.RunningNum]",
+				"Title": "var_set name=title value=$[SummaryTitle] \n |",
+				"Error": "var_set name=count value=$[SummaryErrorNum] \n |",
+				"Warnning": "var_set name=count value=$[SummaryWarnningNum] \n |",
+				"Running": "var_set name=count value=$[SummaryRunningNum] \n |",
+				"Attributes": [
+					{
+						"Name": "var_set name=attrName value=\"$[SummaryLabel]\" \n |",
+						"Value": "var_set name=attrValue value=$[SummaryNum] \n |"
+					}
+				]
+			}
+		],
+		"Histories": {
+			"_Repeat": "Histories.Instance",
+			"_Element": {
+				"Config": "embeddable \n  config=\"$<_.embeddableId>\" type=\"lens\"\n| render"
+			}
+		},
+		"Components+": {
+			"TotalLabel": "$[types.mssql.TotalLabel]",
+			"TotalNum": "$[types.mssql.Instance.TotalNum]",
+			"ErrorNum": "$[types.mssql.Instance.ErrorNum]",
+			"WarnningNum": "$[types.mssql.Instance.WarnningNum]",
+			"RunningNum": "$[types.mssql.Instance.RunningNum]",
+			"DatabaseNames": "$[types.mssql.Instance.DatabaseNames]",
+			"InstanceDetailUrl": "http://localhost:5601/s/$[SpaceName]/app/canvas/workpad/$[types.mssql.Instance.WorkpadId]/page/1?Cluster=$[Cluster]&InstanceName=$[InstanceName]&DatabaseNum=$[TotalNum]&DatabaseNames=$[DatabaseNames]",
+			"SreUrl": "https://localhost",
+			"logsUrl": "https://localhost",
+			"Title": "var_set name=title value=\"[$[AliasName]]($[InstanceDetailUrl])\" \n |",
+			"Error": "var_set name=count value=$[ErrorNum] \n | var_set name=url value=\"$[InstanceDetailUrl]\" \n |",
+			"Warnning": "var_set name=count value=$[WarnningNum] \n | var_set name=url value=\"$[InstanceDetailUrl]\" \n |",
+			"Running": "var_set name=count value=$[RunningNum] \n | var_set name=url value=\"$[InstanceDetailUrl]\" \n |",
+			"Attributes": [
+				{
+					"Name": "var_set name=attrName value=\"Cluster Name:\" \n |",
+					"Value": "var_set name=attrValue value=$[Cluster] \n |"
+				},
+				{
+					"Name": "var_set name=attrName value=\"Instance Name:\" \n |",
+					"Value": "var_set name=attrValue value=$[InstanceName] \n |"
+				},
+				{
+					"Name": "var_set name=attrName value=\"$[TotalLabel]\" \n |",
+					"Value": "var_set name=attrValue value=$[TotalNum] \n |"
+				},
+				{
+					"Name": "var_set name=attrName value=\"Technical Detail:\" \n |",
+					"Value": "var_set name=attrValue value=\"[metricsmssql/]($[SreUrl])\" \n |"
+				},
+				{
+					"Name": "var_set name=attrName value=\"\" \n |",
+					"Value": "var_set name=attrValue value=\"[logs/]($[logsUrl])\" \n |"
+				}
+			],
+			"Message": "var_set name=message value=\"Test MESSAGE\" \n|"
+		},
+		"Components": {
+			"_Repeat": "Instances",
+			"_Element": {
+				"AliasName": "$<_.AliasName>",
+				"InstanceName": "$<_.InstanceName>",
+				"Hosts": "$<_.Hosts>",
+				"Cluster": "$<_.Cluster>"
+			}
+		}
+	}
+}

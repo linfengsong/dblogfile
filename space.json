@@ -1,0 +1,149 @@
+{
+	"CanvasName": "$<SpaceName>",
+	"Assets": {
+		"AppIcon": "$<AppIcon>"
+	},
+	"Expression": {
+		"SpaceName": "$<SpaceName>",
+		"types": {
+			"mssql": {
+				"Name": "MS SQL Server",
+				"TotalLabel": "Total Databases",
+				"WorkpadId": "workpad-aed441ba-06cb-45e7-86f6-72eeab3b76da",
+				"space": {
+					"TotalNum": "26",
+					"ErrorNum": "0",
+					"WarnningNum": "0",
+					"RunningNum": "26",
+					"Message": ""
+				}
+			},
+			"oracle": {
+				"Name": "Oracle Server",
+				"TotalLabel": "Total Databases",
+				"WorkpadId": "workpad-unknown",
+				"space": {
+					"TotalNum": "30",
+					"ErrorNum": "0",
+					"WarnningNum": "0",
+					"RunningNum": "30",
+					"Message": ""
+				}
+			},
+			"mongodb": {
+				"Name": "MongoDB Server",
+				"TotalLabel": "Total Databases",
+				"WorkpadId": "workpad-unknown",
+				"space": {
+					"TotalNum": "9",
+					"ErrorNum": "0",
+					"WarnningNum": "0",
+					"RunningNum": "9",
+					"Message": ""
+				}
+			},
+			"windows": {
+				"Name": "Window Server",
+				"TotalLabel": "Total Servers",
+				"WorkpadId": "workpad-unknown",
+				"space": {
+					"TotalNum": "8",
+					"ErrorNum": "0",
+					"WarnningNum": "0",
+					"RunningNum": "8",
+					"Message": ""
+				}
+			},
+			"bvp": {
+				"Name": "BVP Server",
+				"TotalLabel": "Total Servers",
+				"WorkpadId": "workpad-unknown",
+				"space": {
+					"TotalNum": "6",
+					"ErrorNum": "0",
+					"WarnningNum": "2",
+					"RunningNum": "5",
+					"Message": "Disk usage is 80%"
+				}
+			},
+			"job": {
+				"Name": "Jobs",
+				"TotalLabel": "Total Jobs",
+				"WorkpadId": "workpad-unknown",
+				"space": {
+					"TotalNum": "123",
+					"ErrorNum": "14",
+					"WarnningNum": "20",
+					"RunningNum": "98",
+					"Message": "Password expired"
+				}
+			}
+		},
+		"AppTitle": "var_set name=appTitle value=\"$<AppTitle>\" \n |",
+		"DescName": "var_set name=descName value=\"Space:\" \n |",
+		"DescValue": "var_set name=descValue value=$[SpaceName] \n |",
+		"AppProperties": {
+			"_Repeat": "AppProperties",
+			"_Element": {
+				"Name": "var_set name=attrName value=\"$<_.key>\" \n |",
+				"Value": "var_set name=attrValue value=\"$<_.value>\" \n |"
+			}
+		},
+		"Summaries+": {
+				"Title": "var_set name=title value=$[SummaryTitle] \n |",
+				"Error": "var_set name=count value=$[SummaryErrorNum] \n |",
+				"Warnning": "var_set name=count value=$[SummaryWarnningNum] \n |",
+				"Running": "var_set name=count value=$[SummaryRunningNum] \n |",
+				"Attributes": [
+					{
+						"Name": "var_set name=attrName value=$[SummaryLabel] \n |",
+						"Value": "var_set name=attrValue value=$[SummaryNum] \n |"
+					}
+				]
+		},
+		"Summaries": {
+			"_Repeat": "Summaries",
+			"_Element": {
+				"SummaryTitle": "\"$<_.Title>\"",
+				"SummaryLabel": "\"$<_.TotalLabel>\"",
+				"SummaryNum": "{math \"add($<,$[types.$<_.Components>.space.TotalNum]>)\"}",
+				"SummaryErrorNum": "{math \"add($<,$[types.$<_.Components>.space.ErrorNum]>)\"}",
+				"SummaryWarnningNum": "{math \"add($<,$[types.$<_.Components>.space.WarnningNum]>)\"}",
+				"SummaryRunningNum": "{math \"add($<,$[types.$<_.Components>.space.RunningNum]>)\"}"
+			}
+		},
+		"Histories": {
+			"_Repeat": "Histories",
+			"_Element": {
+				"Config": "embeddable \n  config=\"$<_.embeddableId>\" type=\"lens\"\n| render"
+			}
+		},
+		"Components+": {
+			"Title": "var_set name=title value=\"[$[Name]]($[Url])\" \n |",
+			"Url": "http://localhost:5601/s/$[SpaceName]/app/canvas/workpad/$[workpadId]/page/1",
+			"Error": "var_set name=count value=$[ErrorNum] \n | var_set name=url value=\"$[Url]\" \n |",
+			"Warnning": "var_set name=count value=$[WarnningNum] \n | var_set name=url value=\"$[Url]\" \n |",
+			"Running": "var_set name=count value=$[RunningNum] \n | var_set name=url value=\"$[Url]\" \n |",
+			"Attributes": [
+				{
+					"Name": "var_set name=attrName value=$[TotalLabel] \n |",
+					"Value": "var_set name=attrValue value=$[TotalNum] \n |"
+				}
+			],
+			"Message": "var_set name=message value=\"$[Msg]\" \n|"
+		},
+		"Components": {
+			"_Repeat": "Summaries.Components",
+			"_Element": {
+				"Name": "$[types.$<_>.Name]",
+				"workpadId": "$[types.$<_>.WorkpadId]",
+				"TotalLabel": "$[types.$<_>.TotalLabel]",
+				"TotalNum": "$[types.$<_>.space.TotalNum]",
+				"ErrorNum": "$[types.$<_>.space.ErrorNum]",
+				"WarnningNum": "$[types.$<_>.space.WarnningNum]",
+				"RunningNum": "$[types.$<_>.space.RunningNum]",
+				"Msg": "$[types.$<_>.space.Message]"
+			}
+		}
+	}
+}

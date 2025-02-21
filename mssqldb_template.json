@@ -1,0 +1,103 @@
+{
+	"CanvasName": "MSSqlServerDB",
+	"Assets": {
+		"AppIcon": "mssql.png"
+	},
+	"Expression": {
+		"SpaceName": "{urlparam param=\"SpaceName\" default=\"demo1\"}",
+		"Cluster": "{urlparam param=\"Cluster\" default=\"DEMOCLUSTERA\"}",
+		"InstanceName": "{urlparam param=\"InstanceName\" default=\"MSSQL_DEMO1_DEV\"}",
+		"DatabaseNum1": "{urlparam param=\"DatabaseNum\" default=\"13\"}",
+		"DatabaseNames1": "{urlparam param=\"DatabaseNames\" default=\"'HCEUtils','MARSRep','SQLDASHBOARD','SRA_tempdb','apputils','mars_scratch','master','model','msdb','sharpe_exp1','sharpe_inf1','sharpe_ref1','Other'\"}",
+		"DatabaseNum": "{urlparam param=\"DatabaseNum\" default=\"0\"}",
+		"DatabaseNames": "{urlparam param=\"DatabaseNames\" default=\"\"}",
+		"types": {
+			"mssql": {
+				"Name": "MS SQL Server",
+				"TotalTitle": "Databases",
+				"TotalLabel": "Total Databases",
+				"WorkpadId": "workpad-aed441ba-06cb-45e7-86f6-72eeab3b76da",
+				"Space": {
+					"TotalNum": "26",
+					"ErrorNum": "0",
+					"WarnningNum": "0",
+					"RunningNum": "26",
+					"Message": ""
+				},
+				"Instance": {
+					"TotalNum": "13",
+					"ErrorNum": "0",
+					"WarnningNum": "0",
+					"RunningNum": "13",
+					"WorkpadId": "workpad-138238d8-9df8-490a-8435-0861ce422948",
+					"DatabaseNames": "'HCEUtils','MARSRep','SQLDASHBOARD','SRA_tempdb','apputils','mars_scratch','master','model','msdb','sharpe_exp1','sharpe_inf1','sharpe_ref1','Other'",
+					"Message": ""
+				},
+				"Database": {
+					"ErrorNum": "0",
+					"WarnningNum": "0",
+					"RunningNum": "1",
+					"Message": "Test MESSAGE"
+				}
+			}
+		},
+		"AppTitle": "var_set name=appTitle value=\"Microsoft SQL Server Instance\" \n |",
+		"DescName": "var_set name=descName value=\"Instance Name:\" \n |",
+		"DescValue": "var_set name=descValue value=$[InstanceName] \n |",
+		"AppProperties": [
+			{
+				"Name": "var_set name=attrName value=\"Space\" \n |",
+				"Value": "var_set name=attrValue value=$[SpaceName] \n |"
+			},
+			{
+				"Name": "var_set name=attrName value=\"Cluster Name\" \n |",
+				"Value": "var_set name=attrValue value=$[Cluster] \n |"
+			}
+		],
+		"Summaries": [
+			{
+				"Title": "var_set name=title value=$[types.mssql.TotalTitle] \n |",
+				"Error": "var_set name=count value=$[types.mssql.Instance.ErrorNum] \n |",
+				"Warnning": "var_set name=count value=$[types.mssql.Instance.WarnningNum] \n |",
+				"Running": "var_set name=count value=$[types.mssql.Instance.RunningNum] \n |",
+				"Attributes": [
+					{
+						"Name": "var_set name=attrName value=\"$[types.mssql.TotalLabel]\" \n |",
+						"Value": "var_set name=attrValue value=$[DatabaseNum] \n |"
+					}
+				]
+			}
+		],
+		"Histories": {
+			"_Repeat": "Histories.Database",
+			"_Element": {
+				"Config": "embeddable \n  config=\"$<_.embeddableId>\" type=\"lens\"\n| render"
+			}
+		},
+		"Components+": {
+			"MaxLength": "$<MaxDatabases>",
+			"DynamicLength": "var_set name=ComponentsLength value={math $[DatabaseNum]}",
+			"ErrorNum": "$[types.mssql.Database.ErrorNum]",
+			"WarnningNum": "$[types.mssql.Database.WarnningNum]",
+			"RunningNum": "$[types.mssql.Database.RunningNum]",
+			"DbName": "{var_set name=rItemindex value={math {string \"subtract(subtract(\" {math $[DatabaseNum]} \",\" {var ComponentsIndex} \"), 1)\" }}|string $[DatabaseNames] | replace  regex={ string \"^([\\w']+,){\" {var ComponentsIndex} \"}|(,[\\w']+){\" {var rItemindex} \"}$\" } | replace  regex=\"'\" replacement=\"\"}",
+			"SreUrl": "https://localhost",
+			"logsUrl": "https://localhost",
+			"Title": "var_set name=title value=$[DbName] \n |",
+			"Error": "var_set name=count value=$[ErrorNum] \n | var_set name=value_invisible value=true \n |",
+			"Warnning": "var_set name=count value=$[WarnningNum] \n | var_set name=value_invisible value=true \n |",
+			"Running": "var_set name=count value=$[RunningNum] \n | var_set name=value_invisible value=true \n |",
+			"Attributes": [
+				{
+					"Name": "var_set name=attrName value=\"Datail\" \n |",
+					"Value": "var_set name=attrValue value=\"[sremssql/]($[SreUrl])\" \n |"
+				},
+				{
+					"Name": "var_set name=attrName value=\"\" \n |",
+					"Value": "var_set name=attrValue value=\"[logs/]($[logsUrl])\" \n |"
+				}
+			],
+			"Message": "var_set name=message value=\"$[types.mssql.Database.Message]\" \n|"
+		}
+	}
+}

@@ -30,3 +30,5 @@ select "Dorothy and the Wizard in Oz"
 select text file and save as: wizard_of_oz
 
 edit that file remove line: 1-49 and line 5424 to end
+
+https://colab.research.google.com/drive/1eiUBpmQ4m7Lbxqi2xth1jBaL61XTKdxp?usp=sharing#scrollTo=eID-YTrgqNUn

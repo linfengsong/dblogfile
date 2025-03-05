@@ -36,3 +36,7 @@ https://colab.research.google.com/drive/1eiUBpmQ4m7Lbxqi2xth1jBaL61XTKdxp?usp=sh
 https://www.youtube.com/watch?v=KRcwQRn-_NU&t=9s
 https://drive.google.com/file/d/10-QVPDA16O8er_gAiF5NWGCsri8KIBhp/view
 https://colab.research.google.com/github/wandb/examples/blob/master/colabs/intro/Intro_to_Weights_%26_Biases.ipynb
+
+https://github.com/patrickloeber/pytorchTutorial
+
+https://download.pytorch.org/tutorial/hymenoptera_data.zip

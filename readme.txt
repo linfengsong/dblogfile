@@ -40,3 +40,4 @@ https://colab.research.google.com/github/wandb/examples/blob/master/colabs/intro
 https://github.com/patrickloeber/pytorchTutorial
 
 https://download.pytorch.org/tutorial/hymenoptera_data.zip
+pip install scikit-learn

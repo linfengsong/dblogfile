@@ -39,5 +39,7 @@ https://colab.research.google.com/github/wandb/examples/blob/master/colabs/intro
 
 https://github.com/patrickloeber/pytorchTutorial
 
+Get-Date -Date (Get-Date).ToUniversalTime() -format "ddd MMM d HH:mm:ss tt yyyy UTC"
+
 https://download.pytorch.org/tutorial/hymenoptera_data.zip
 pip install scikit-learn

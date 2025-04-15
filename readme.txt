@@ -44,3 +44,5 @@ https://www.redhat.com/en/blog/formatting-date-command
 
 https://download.pytorch.org/tutorial/hymenoptera_data.zip
 pip install scikit-learn
+
+http://speech.ee.ntu.edu.tw/~tlkagk/courses_ML20.html

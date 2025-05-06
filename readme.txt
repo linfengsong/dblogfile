@@ -46,3 +46,6 @@ https://download.pytorch.org/tutorial/hymenoptera_data.zip
 pip install scikit-learn
 
 http://speech.ee.ntu.edu.tw/~tlkagk/courses_ML20.html
+
+Machine Learning 2022 Spring
+https://speech.ee.ntu.edu.tw/~hylee/ml/2022-spring.php

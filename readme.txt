@@ -49,3 +49,15 @@ http://speech.ee.ntu.edu.tw/~tlkagk/courses_ML20.html
 
 Machine Learning 2022 Spring
 https://speech.ee.ntu.edu.tw/~hylee/ml/2022-spring.php
+
+
+releaseVersion='%ReleaseVersion%'
+nexusVersion=${releaseVersion#*_}
+if [[ $env == DEV* ]]; 
+then
+  nexusVersion="${nexusVersion}-SNAPSHOT"
+else
+  nexusVersion="${nexusVersion}.1"
+fi
+echo "nexusVersion:$nexusVersion"
+echo "##teamcity[setParameter name='nexus_version' value='$nexusVersion']"

@@ -1,0 +1,60 @@
+- hosts: host.example.com
+  tasks:
+    # Copy remote file (host.example.com:/tmp/somefile) into
+    # /tmp/fetched/host.example.com/tmp/somefile on local machine
+    - fetch:
+        src: /tmp/somefile
+        dest: /tmp/fetche
+		
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/script_module.html
+
+- name: register version check
+  shell: cat /root/versions.js | grep -q {{VERSION}}
+  register: current_version
+  failed_when: current_version.rc == 2
+  
+  https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_error_handling.html
+  
+  https://github.com/rahulwagh/ansible-examples
+  
+  https://github.com/JamesTurland/JimsGarage/tree/main/Ansible/SSH
+  
+login to linux
+ssh-keygen
+ls -l $HOME/.ssh
+
+ssh-copy-id 192.168.1.174
+
+edit hosts
+add:
+192.168.1.174
+
+control:
+test hosts
+ansible all -m ping -i hosts
+
+run playbook
+ansible-playbook -i hosts playbook.yml
+
+hosts
+[appservers]
+192.168.1.174
+
+playbook.yml
+---
+- name: install Apache web server
+  hosts: all
+  vars:
+    directory: "/tmp"
+  tasks:
+    - name: "Check directories"
+      ansible.builtin.stat:
+        path: "{{ directory }}"
+      register: dir_to_check
+
+    - name: Directory found
+      ansible.builtin.debug:
+        msg: "Directory {{ directory }} does not exist"
+      failed_when: not dir_to_check.stat.isdir is defined or not dir_to_check.stat.isdir
+
+

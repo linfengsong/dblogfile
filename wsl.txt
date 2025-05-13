@@ -1,0 +1,56 @@
+https://zoom.us/j/92107843294/#success
+
+https://codesensei.nl/courses/di-ansible-barclays/exercises/setup.html
+
+wsl -v
+WSL version: 2.1.5.0
+Kernel version: 5.15.146.1-2
+WSLg version: 1.0.60
+MSRDC version: 1.2.5105
+Direct3D version: 1.611.1-81528511
+DXCore version: 10.0.25131.1002-220531-1700.rs-onecore-base2-hyp
+Windows version: 10.0.19045.5131
+
+wsl --set-default-version 1
+
+wsl -v
+WSL version: 2.1.5.0
+Kernel version: 5.15.146.1-2
+WSLg version: 1.0.60
+MSRDC version: 1.2.5105
+Direct3D version: 1.611.1-81528511
+DXCore version: 10.0.25131.1002-220531-1700.rs-onecore-base2-hyp
+Windows version: 10.0.19045.5131
+
+
+Linfeng Song	ubuntu@44.243.230.235	ec2-user@35.162.104.60
+
+ssh ubuntu@44.243.230.235
+
+linfe@lenovo:~$ ansible --version
+ansible [core 2.17.6]
+  config file = None
+  configured module search path = ['/home/linfe/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /home/linfe/.local/pipx/venvs/ansible-core/lib/python3.10/site-packages/ansible
+  ansible collection location = /home/linfe/.ansible/collections:/usr/share/ansible/collections
+  executable location = /home/linfe/.local/bin/ansible
+  python version = 3.10.12 (main, Nov  6 2024, 20:22:13) [GCC 11.4.0] (/home/linfe/.local/pipx/venvs/ansible-core/bin/python)
+  jinja version = 3.1.4
+  libyaml = True
+
+sudo apt install ansible-lint
+
+https://training.datacouch.io/pluralsight/
+student-lab-02
+student-101#5
+
+ansible-config init --disabled > ansible.cfg
+
+edit ansible.cfg
+inventory=<path>/hosts.ini
+
+ansible-inventory -y --list > hosts.yaml
+
+ansible server1 -m ansible.builtin.copy -a "src=hosts.yaml dest=/tmp/hosts.yml" --become
+
+ansible-playbook d.yaml -i hosts.ini

@@ -1,0 +1,76 @@
+https://github.com/dotnet/sdk/issues/16165
+
+https://github.com/dotnet/sdk/issues/11820#issuecomment-1715557506
+
+mkdir \temp\d5 
+cd \temp\d5
+set NUGET_PACKAGES=C:\temp\d5\.nuget\packages
+
+C:\temp\d5>notepad .config\dotnet-tools.json
+{
+  "version": 1,
+  "isRoot": true,
+  "sdk": {
+    "version": "8.0.0",
+    "rollForward": "latestMinor"
+  },
+  "tools": {
+    "trx2junit": {
+      "version": "2.1.0",
+      "commands": [
+        "trx2junit"
+      ],
+      "rollForward": false
+    },
+    "dotnet-coverage": {
+      "version": "17.14.2",
+      "commands": [
+        "dotnet-coverage"
+      ],
+      "rollForward": false
+    }
+  }
+}
+
+dotnet tool restore
+dotnet tool run trx2junit
+
+rename .nuget .nuget.org
+
+mkdir \temp\d6
+cd \temp\d6
+mkdir .config
+copy ..\d5\.config\* .config
+
+set NUGET_PACKAGES=C:\temp\d5\.nuget\packages
+
+dotnet tool restore
+dotnet tool run trx2junit
+
+
+job.ps1
+#Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser
+
+#PREPARE project directory
+$project_dir = $args[0]
+if(Test-Path -Path $project_dir) {
+  rm -r $project_dir
+}
+mkdir $project_dir
+cd $project_dir
+$project_dir_full = $PWD.Path
+echo "project_dir: $project_dir_full"
+
+Set-Location $project_dir_full
+$env:NUGET_PACKAGES = "$project_dir_full\.nuget\packages"
+
+dotnet new tool-manifest
+dotnet tool install trx2junit
+dotnet tool restore
+try {
+  dotnet tool run trx2junit
+}
+catch { 
+}
+cd ..
+rm -r $project_dir_full

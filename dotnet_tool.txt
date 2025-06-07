@@ -74,3 +74,9 @@ catch {
 }
 cd ..
 rm -r $project_dir_full
+
+(Get-ItemProperty "HKLM:Software\Microsoft\NET Framework Setup\NDP\v4\Full").Version
+
+msiexec /package Application.msi /quiet
+
+msiexec /uninstall Application.msi /quiet

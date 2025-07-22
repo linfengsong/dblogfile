@@ -61,3 +61,7 @@ else
 fi
 echo "nexusVersion:$nexusVersion"
 echo "##teamcity[setParameter name='nexus_version' value='$nexusVersion']"
+
+https://github.com/mrdbourke/simple-local-rag/
+
+https://www.youtube.com/watch?v=qN_2fnOPY-M&t=58s

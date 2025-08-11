@@ -1,52 +1,61 @@
-## Implementation Risks & Testing Strategy
+## .NET Build Pipeline Refactor - Implementation Details
 
-The existing `dotnet.yml` file is exceptionally large (1500+ lines) and heavily relies on cloning and patching, resulting in significant code duplication with minimal differences. This makes fundamental changes extremely challenging.
+The .NET build pipeline introduces two inputs for platform selection and a new testing framework.
 
-A complete .NET regression test suite is crucial for this refactoring; however, historically, Toolkit .NET has lacked comprehensive test coverage. Previous feature implementations relied primarily on modifying existing end-to-end (e2e) tests or conducting sandbox testing. Current known test cases cover a low percentage of the functionality, creating significant risk during implementation.
+### Introduction of `dotnet_build_platform` Input
 
-**Purpose:** This task aims to simplify our .NET build process by removing complex conditional logic related to runner and image selection, supporting multiple target frameworks, and significantly improving the maintainability of the `dotnet.yml` file (currently exceeding 1500 lines). A key component is a new testing strategy designed for speed, reliability, and comprehensive coverage.
-
-**Current Challenges:** The existing `dotnet.yml` file is exceptionally large and relies heavily on cloning and patching, resulting in significant code duplication with minimal differences. This makes fundamental changes extremely challenging. Furthermore, our current .NET regression test suite lacks comprehensive coverage; previous feature implementations relied primarily on modifying existing end-to-end (e2e) tests or conducting sandbox testing. Current known test cases cover a low percentage of the functionality, creating significant risk during implementation. Adding more traditional e2e tests would significantly slow down release processing due to their lengthy execution time.
-
-**Proposed Solution:** Leverage Toolkit to dynamically select the appropriate runner tag and build image based on information within the application's project files (`*.csproj`). This will eliminate the need for manual configuration of these settings. Crucially, this is coupled with a new testing strategy centered around *configuration-driven pipelines* and pre-built test cases.
-
----
-
-## Architectural Shift: Configuration-Driven Pipelines
-
-To streamline the implementation process, enhance testability, and overcome the limitations of our current testing approach, we propose introducing an additional configuration stage. This stage will receive inputs and produce parameters that control how the build, test, and publish processes execute. By doing so, we can significantly reduce conditional logic within the pipeline code itself.
-
-Categorize inputs into two distinct groups:
-
-* **Static Values:** Inputs that do not influence pipeline behavior (e.g., project name, repository URL).
-* **Dynamic Configuration:** Inputs that *dictate* how the pipeline behaves. These dynamic values will be moved to a dedicated `dotnet-config.yml` file.
-
-This approach enables us to generate a set of variables that control the pipeline, eliminating if or not conditional statements in pipelines.
-
----
-
-## Enhanced Testing Strategy: From E2E to Unit & Configuration Validation**
-
-Recognizing that achieving 100% coverage of the entire .NET pipeline with its 58 potential inputs using traditional methods is impractical, we propose a shift toward configuration validation and pre-built test cases. Many current test scenarios are not automated and require manual setup and execution.
-
-**Key Components:**
+*   **Purpose:** To enable building .NET applications on either Linux or Windows, moving away from reliance on runner tags (which are now solely used to determine the operating system).
+*   **Default Value:** `""` (empty string) – This maintains backward compatibility with existing pipelines. Pipelines without explicitly setting this input will continue to use the original `.NET` build process.
+*   **Options:**
+    *   `""`: Original .NET build (using `dotnet.yml`). Backward compatible.
+    *   `legacy`: Uses `dotnet2.yml` for building with the new feature set. This becomes the default after final release and produce same behave as original version of implementation.
+    *   `windows`: Builds specifically for Windows using `dotnet-win.yml`.
+    *   `linux`: Builds specifically for Linux using `dotnet-linux.yml`.
+    
 
 
+## .NET Build Pipeline Refactor - Implementation Details
 
-1. **Pre-Built Test Utility:**  
-   Create a base implementation for these test cases within this task, outlining how to set up and add new tests. Full execution will occur in the e2e job. This includes defining clear input/output expectations, error handling strategies and observability monitor.
-   
-2. **Build test cases to allow 100% test coverage:**  
-   With approximately 20 inputs in `dotnet-config.yml`, Generate 10 key variables that drive pipeline behavior. We will create a comprehensive suite of tests to validate all possible combinations of these inputs, ensuring the generated output is as expected. This allows for 100% coverage testing *of the configuration itself*—regardless of how long the pipeline takes to execute.
+The .NET build pipeline introduces two inputs for platform selection and a new testing framework.
 
-3. **Pipeline Configuration Testing:**  
-   Pass `dotnet-config.yml`, the generated variables, and other necessary inputs to a dedicated `.NET profile` job that executes the pipeline. The focus of this job is simply to verify that each step in the pipeline is executed as defined by the configuration. This simplifies testing significantly.
+### .NET Build Platform Input(`dotnet_build_platform`)
 
-4. **Pipeline Unit Testing:**  
-   Run unit tests on the build stage to test configuration output variables and execute .NET build processing.
+*   **Purpose:** To enable building .NET applications on either Linux or Windows, moving away from reliance on runner tags (which are now solely used to determine the operating system).
+*   **Default Value:** `""` (empty string) – This maintains backward compatibility with existing pipelines. Pipelines without explicitly setting this input will continue to use the original `.NET` build process.
+*   **Options:**
+    *   `""`: Original .NET build (using `dotnet.yml`). Backward compatible.
+    *   `legacy`: Uses `dotnet2.yml` for building with the new feature set. This becomes the default after final release and produces the same behavior as the original version of implementation.
+    *   `windows`: Builds specifically for Windows using `dotnet-win.yml`.
+    *   `linux`: Builds specifically for Linux using `dotnet-linux.yml`.
 
-5. **E2E Testing:**  
-   Run end-to-end (E2E) testing once initially to capture the expected output from a known-good configuration. This output will serve as the “golden standard” for comparison. Future configuration and unit tests will compare generated configurations against this baseline, enabling rapid and reliable validation of changes.
 
-This strategy ensures clarity, consistency, and thoroughness in testing, enhancing overall reliability and maintainability.
----
+### Test Mode Inputs (`dotnet_internal_test_mode`)
+
+*   **Purpose:** To provide different levels of testing within the pipeline, allowing focused validation of changes.
+*   **Default Value:** `""` (empty string) – No test mode is active by default.
+*   **Options:**
+    *   `""`: No tests are executed. Standard build and deploy process.
+    *   `config_test`: Tests the configuration stage, validating input values and ensuring proper parameter setup. This can be implemented using custom scripts or assertions within the pipeline. Useful for pre-policy checks not fully covered by existing validation.
+    *   `unit_test`: Executes unit tests for the .NET build and test stages. Requires a defined unit testing framework within the .NET solution.
+    *   `e2e_test`: Performs end-to-end tests, covering publish steps, Docker image creation, and Kubernate deployment.
+
+*   **Test Stage Insertion:** When `dotnet_internal_test_mode` is set, an additional stage will be inserted into the pipeline to execute the selected test level.
+*   **Observability:** Test results should be tracked for observability – consider integrating with a testing reporting tool.
+
+### Pipeline File Structure
+
+The original `dotnet.yml` is being split into five files within the `templates/dotnet` directory:
+
+*   **`dotnet2.yml`:** Main pipeline entry point for the new feature set. Contains common details like zip publish, sonarqube scan, veracode scan.
+*   **`dotnet-linux.yml`:** Specific tasks for Linux builds. Likely includes build and nuget publish stage related to Linux environments (e.g., package management).
+*   **`dotnet-win.yml`:** Specific tasks for Windows builds. Includes build and nuget publish stage specific to the Windows environment.
+*   **`dotnet-config-linux.yml`:** Prepares pipeline parameters specifically for Linux configurations.
+*   **`dotnet-config-win.yml`:** Prepares pipeline parameters specifically for Windows configurations.
+
+### Test Cases & Coverage
+
+*   **Location:** Test YAML files are located in the `tests/dotnet` directory.
+*   **Reuse of Existing Projects:** The tests will leverage existing .NET solution projects to build test cases, minimizing code duplication.
+*   **Coverage:**
+    *   23 Linux test cases aim for 85% code coverage.
+    *   2 Windows test cases demonstrate configuration-driven pipeline testing on windows.

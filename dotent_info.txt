@@ -1,3 +1,64 @@
-.NET information
+## .NET Build Pipeline Refactor - Implementation Details
+
+The .NET build pipeline introduces two inputs for platform selection and a new testing framework.
+
+### Introduction of `dotnet_build_platform` Input
+
+*   **Purpose:** To enable building .NET applications on either Linux or Windows, moving away from reliance on runner tags (which are now solely used to determine the operating system).
+*   **Default Value:** `""` (empty string) – This maintains backward compatibility with existing pipelines. Pipelines without explicitly setting this input will continue to use the original `.NET` build process.
+*   **Options:**
+    *   `""`: Original .NET build (using `dotnet.yml`). Backward compatible.
+    *   `legacy`: Uses `dotnet2.yml` for building with the new feature set. This becomes the default after final release and produce same behave as original version of implementation.
+    *   `windows`: Builds specifically for Windows using `dotnet-win.yml`.
+    *   `linux`: Builds specifically for Linux using `dotnet-linux.yml`.
+    
+
+
+## .NET Build Pipeline Refactor - Implementation Details
+
+The .NET build pipeline introduces two inputs for platform selection and a new testing framework.
+
+### .NET Build Platform Input(`dotnet_build_platform`)
+
+*   **Purpose:** To enable building .NET applications on either Linux or Windows, moving away from reliance on runner tags (which are now solely used to determine the operating system).
+*   **Default Value:** `""` (empty string) – This maintains backward compatibility with existing pipelines. Pipelines without explicitly setting this input will continue to use the original `.NET` build process.
+*   **Options:**
+    *   `""`: Original .NET build (using `dotnet.yml`). Backward compatible.
+    *   `legacy`: Uses `dotnet2.yml` for building with the new feature set. This becomes the default after final release and produces the same behavior as the original version of implementation.
+    *   `windows`: Builds specifically for Windows using `dotnet-win.yml`.
+    *   `linux`: Builds specifically for Linux using `dotnet-linux.yml`.
+
+
+### Test Mode Inputs (`dotnet_internal_test_mode`)
+
+*   **Purpose:** To provide different levels of testing within the pipeline, allowing focused validation of changes.
+*   **Default Value:** `""` (empty string) – No test mode is active by default.
+*   **Options:**
+    *   `""`: No tests are executed. Standard build and deploy process.
+    *   `config_test`: Tests the configuration stage, validating input values and ensuring proper parameter setup. This can be implemented using custom scripts or assertions within the pipeline. Useful for pre-policy checks not fully covered by existing validation.
+    *   `unit_test`: Executes unit tests for the .NET build and test stages. Requires a defined unit testing framework within the .NET solution.
+    *   `e2e_test`: Performs end-to-end tests, covering publish steps, Docker image creation, and BCP deployment.
+
+*   **Test Stage Insertion:** When `dotnet_internal_test_mode` is set, an additional stage will be inserted into the pipeline to execute the selected test level.
+*   **Observability:** Test results should be tracked for observability – consider integrating with a testing reporting tool.
+
+### Pipeline File Structure
+
+The original `dotnet.yml` is being split into five files within the `templates/dotnet` directory:
+
+*   **`dotnet2.yml`:** Main pipeline entry point for the new feature set. Contains common details like zip publish, sonarqube scan, veracode scan.
+*   **`dotnet-linux.yml`:** Specific tasks for Linux builds. Likely includes build and nuget publish stage related to Linux environments (e.g., package management).
+*   **`dotnet-win.yml`:** Specific tasks for Windows builds. Includes build and nuget publish stage specific to the Windows environment.
+*   **`dotnet-config-linux.yml`:** Prepares pipeline parameters specifically for Linux configurations.
+*   **`dotnet-config-win.yml`:** Prepares pipeline parameters specifically for Windows configurations.
+
+### Test Cases & Coverage
+
+*   **Location:** Test YAML files are located in the `tests/dotnet` directory.
+*   **Reuse of Existing Projects:** The tests will leverage existing .NET solution projects to build test cases, minimizing code duplication.
+*   **Coverage:**
+    *   23 Linux test cases aim for 85% code coverage.
+    *   2 Windows test cases demonstrate configuration-driven pipeline testing on windows.
+
 
 

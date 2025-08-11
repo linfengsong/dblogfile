@@ -1,66 +1,45 @@
-## .NET build/publish/test & msbuild/vstest Integration**
+---
 
-Merging the Build/Publish, and Test stages into a single stage, aligning with the approach used in Maven builds. This consolidation aims to reduce artifact (e.g., `*.obj` files), minimize cache reloads for dependency libraries, and streamline initial setup time.
+# Development Plan
 
-### **Output of this Combined Stage:**
+### Proof-of-Concept Branch
+1. **Create a proof-of-concept branch**: Establish the foundational structure and implement necessary coding changes for the new feature or update.
 
-- Publish Files
-- Project Bin Directory
-- NuGet Package (`.nupkg``) Files
-- Veracode Zip File
-- Test Coverage Result
+2. **Review and Testing**:
+   - Ensure backward compatibility by verifying that the changes do not disrupt existing functionality (e.g., confirming that `dotnet_platform_build=""` remains unchanged).
+   - Test the implementation by running the updated `dotnet.yml` pipeline to confirm it executes successfully without errors.
+   - Ensure that the updated pipeline does not inadvertently trigger `dotnet2.yml`.
 
-The process involves executing the following commands in order:
+3. **Release to EA and Main**: Once the proof-of-concept branch passes all reviews and tests, merge it into the EA (Early Access) environment for further validation before deploying it to the main production environment.
 
-**dotnet:**
+### Remaining Enhancements
+- Implement additional enhancement tasks incrementally through the standard deployment process from the `develop` branch to EA and then to main.
+- The changes should modify `build.yml` and `dotnet.yml` in a way that has no unintended consequences on existing functionality.
+- These changes are designed to be non-breaking, meaning they should not interfere with or alter existing application functionality when using `dotnet.yml`.
 
-```bash
-dotnet build/publish ...
-dotnet test ...
-dotnet package ...
-```
-
-**msbuild/vstest:**
-
-```bash
-msbuild /t:Build;Test;Publish ...
-```
+By following this structured approach, we ensure a smooth transition of new features while maintaining stability across all environments.
 
 ---
 
-## Recommended Changes (Risk Reduction for Future Enhancements)
+# Proof-of-Concept Branch Implementation State
 
-The following changes are recommended to mitigate risks during future releases, as this Documentation's execution requires a completely new implementation. These adjustments provide an opportunity to address potential issues proactively through regression and application testing. Additionally, they allow the possibility of requesting applications to switch to this Documentation release specifically to resolve bugs blocking their pipeline processing.
+To demonstrate this request, code changes have been implemented in a dedicated branch based on the requirements outlined above. The branch includes the following updates:
 
-- **.NET Tool Installation:** Install .NET tools into the `$CI_PROJECT_DIR` as a shared global directory when necessary.
-- **Wix Library Handling:** Use the Wix extension tool to add Wix libraries instead of relying on custom code that checks NuGet locations.
-- **Log Statements:** Replace `HostWrite` log statements with a standardized logging function for consistency and improved readability.
-- **Backward Compatibility:** Introduce a `dotnet_framework_build` setting (Windows or Linux). If set to "legacy," the existing build logic will remain unchanged, ensuring compatibility with current pipelines.
-- **Code Coverage:** Toolkit will *not* add coverage libraries to application projects. Applications are responsible for adding these references themselves before running the pipeline. This avoids dependency on Toolkit for coverage and reduces support overhead.  
-Coverage checks have been moved from the Test stage to the combined Build/Test stage. For backward compatibility with `dotnet_build_framework="legacy"`, add the required coverage package (with the latest version) *before* the build command; this can prevent version conflict issues in some cases.
-- **Wix Versioning:** The Wix version should be read directly from the Wix project file, rather than relying on a default value or input parameter within Toolkit.
-- **NuGet Publish and Zip Publish:** NuGet publish will *only* upload `.nupkg` files to Nexus when `NUGET_PKG_API` is configured. Zip publish will only handle Nexus artifact setup.The existing implementation handles publish and nuget publish both together.
-- **Observability Monitor:** Some .NET jobs do not include the `begin observability` step. This omission causes the `begin observability` entry to be added after the `after observability` entry, resulting in an improper pairing of observability monitor logs.
+### Included Features:
+- **Splitting the large `dotnet.yml` file**: The large `dotnet.yml` file has been divided into smaller, more manageable components.
+- **Configuration-driven pipeline**: A configuration-driven pipeline has been implemented to streamline operations.
+- **Removal of redundant implementation**: Redundant code and processes have been removed to improve efficiency.
+- **Test utility pipeline**: A test utility pipeline has been added to facilitate building and running test cases.
+- **Windows compatibility testing**: Two test cases for Windows have been added to ensure compatibility.
+- **Linux test coverage**: Twenty-three (23) test cases for Linux have been added, covering approximately 85% of the codebase to demonstrate testing functionality.
+- **Existing e2e tests**: All existing built-in .NET end-to-end (e2e) tests are passing.
+- **New Linux test cases**: Twenty-two (22) new test cases for Linux are passing. One test case is currently failing due to an implementation issue, as documented above.
+- **Manual testing on Windows**: Known manual testing on Windows has been successfully completed.
+
+### Excluded Items:
+The branch does *not* include the following items:
+- Cleanup of the Windows test stage code.
+- Handling of all deprecated inputs.
+- Replacement of global tool installation.
+
 ---
-
-## Deprecation of Certain Inputs
-
-Increasing the number of inputs does not result in a linear increase in project setup complexity. To reduce the effort required for project setup and Toolkit support, we will eliminate unnecessary inputs. Although these inputs are still used in builds when `dotnet_platform_build` is set to `legacy`, they will no longer be utilized by the pipeline for `windows` or `linux` environments.
-
-The following inputs are being deprecated:
-
-- **dotnet_publish_project_file:** Replaced with 'Solution Filter'.
-- **dotnet_source_folder:** The solution (`*.csproj`) will now be read to determine the list of project directories.
-- **dotnet_tests_folder and dotnet_test_filter:** Project lists will be extracted from the solution file, and tests will be identified based on these projects.
-- **dotnet_test_proj_pattern:** Application setup coverage packages should now be configured directly within the project (`*.csproj`) instead of being added by the Toolkit pipeline using this pattern.
-- **dotnet_microsoft_testing_platform_enable:** The project (`*.csproj`) will now be read to determine whether the Microsoft Testing Platform is in use.
-- **dotnet_publish:** This input is no longer necessary since publish is now automated for TargetFramework builds. For `zip publish`, use the `nexus_artifact` input, and for NuGet publishing, provide the `nuget_publish_key`.
-- **dotnet_pack_cmdline_options:** Customization of packing options should now be handled directly within the project (`*.csproj`) to maintain consistency across local testing and the Toolkit pipeline.
-- **dotnet_build_runner and dotnet_win_runner_tag:** These inputs are no longer utilized to decide which window runner to employ.
-- **dotnet_build_method:** The project  (`*.csproj`) configuration will determine whether to use 'dotnet' or 'msbuild' for building. Ensure all projects within the solution share consistent build settings.
-- **dotnet_publish_mode:** The project (`*.csproj`) will now indicate whether it's a web publish.
-- **dotnet_wix_enable:** Use the `wix_project_path` input to decide if WIX should be built.
-- **dotnet_wix_output_name:** The output name will be read from the wix project settings.
-- **dotnet_wix_bindpath:** It's advisable to reference WIX projects via the standard `bin` directory rather than using this bindpath setting, ensuring consistency in both local tests and the Toolkit pipeline.
-
-This update aims to streamline the project setup process by reducing unnecessary inputs and enhancing consistency across different environments.

@@ -1,0 +1,43 @@
+# .NET Code Refactoring
+
+---
+
+## Purpose
+This task aims to simplify our .NET build process by removing complex conditional logic related to runner and image selection. It also seeks to support multiple target frameworks while significantly improving the maintainability of the `dotnet.yml` file.
+
+---
+
+## Current Challenges
+The current implementation relies on numerous settings (`dotnet`) to determine which runner or build image to use for .NET builds. This complexity hinders maintainability and scalability.
+
+---
+
+## Proposed Solution
+Leverage Toolkit to dynamically select the appropriate runner tag and build image based on information within application project files (`*.csproj`). This will eliminate the need for manual configuration of these settings.
+
+### .NET SDK & Multiple Target Frameworks Support
+
+#### Key Required Features:
+- **Dynamic Runner/Image Selection:** Determine the runner tag or build image by inspecting the target framework(s) specified in the `.csproj` file(s).
+- **Configuration Flag Retirement:** Remove all code related to `dotnet_runner_tag`, `dotnet_build_runner`, and `dotnet_win_version`. These flags will remain for backward compatibility, solely to determine Windows/Linux builds.
+- **Linux Support:** Due to Docker image limitations (supporting only one SDK version – net6.0 or net8.0), Linux builds will select the appropriate image based on the target SDK version. Multiple Target Frameworks are *not* supported on Linux in this design.
+- **Windows Support:** Windows builds require a specific .NET SDK version installed on the runner. Several options were considered:
+    - **Option 1 (Discouraged):** Always use Windows/2019/2022 with net6.0 and net8.0 frameworks. This does not meet Manager requirements for retiring .NET 6.0, as Toolkit would always select this version.
+    - **Option 2 (Problematic):** Manually set up the .NET SDK on Windows/2019/2022 runners. This approach cannot automatically incorporate new patch updates from GFED Nexus repositories.
+    - **Option 3 (Recommended):** Dynamically determine the runner tag at runtime based on the `.csproj` file's specified SDK version.  
+   This is the preferred solution.
+
+#### Technical Limitations & Solution: Dynamic Runner Selection on Windows
+
+The current Toolkit design only supports static inputs for runner selection. To achieve dynamic runner tag selection at runtime, we need to utilize a trigger job that calls the .NET build process, allowing dynamic input values to be passed to child processes. This introduces several challenges:
+
+- **Artifact Persistence:** Artifacts created in the child job are not carried over to the parent job. To address this:
+    - **Add a task within the child job to collect all artifact data and upload it to a cache.
+    - **Add a task within the parent job to restore artifacts from the cache.
+
+- **Local Reference YML Files:** Inside trigger pipelines, local reference `yml` files do not function as expected. This requires setting up a GITLAB URL with branch version to include additional `yml` files in Toolkit projects when Toolkit pipeline is used in application projects:
+    - **For Beta releases, we’ve configured this as the `ea` branch.
+    - **For final versions, it’s set to `main`.
+    - **When testing Toolkit feature releases for .NET builds, a specific variable (`TRIGGER_VERSION`) must be provided to specify the desired version.
+
+---

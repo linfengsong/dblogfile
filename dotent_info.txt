@@ -1,45 +1,18 @@
----
+# Release Plan
 
-# Development Plan
+This is a phased rollout strategy designed to minimize risk.
 
-### Proof-of-Concept Branch
-1. **Create a proof-of-concept branch**: Establish the foundational structure and implement necessary coding changes for the new feature or update.
+### Phase 1: Initial Release & Beta Testing
 
-2. **Review and Testing**:
-   - Ensure backward compatibility by verifying that the changes do not disrupt existing functionality (e.g., confirming that `dotnet_platform_build=""` remains unchanged).
-   - Test the implementation by running the updated `dotnet.yml` pipeline to confirm it executes successfully without errors.
-   - Ensure that the updated pipeline does not inadvertently trigger `dotnet2.yml`.
+- **Preservation of Original `dotnet.yml`:** The original `dotnet.yml` file remains unchanged, ensuring that existing applications continue to function without modification.
+- **Opt-In for New Implementation:** Applications can opt into the new implementation by setting `dotnet_build_platform` to `legacy`, `windows`, or `linux`. This allows controlled testing and validation of the changes.
 
-3. **Release to EA and Main**: Once the proof-of-concept branch passes all reviews and tests, merge it into the EA (Early Access) environment for further validation before deploying it to the main production environment.
+### Phase 2: Final Release
 
-### Remaining Enhancements
-- Implement additional enhancement tasks incrementally through the standard deployment process from the `develop` branch to EA and then to main.
-- The changes should modify `build.yml` and `dotnet.yml` in a way that has no unintended consequences on existing functionality.
-- These changes are designed to be non-breaking, meaning they should not interfere with or alter existing application functionality when using `dotnet.yml`.
+- **Default Value Update:** The default value of `dotnet_build_platform` is changed to `legacy`.
+- **Fallback Option (`v1`):** A new option, `v1`, is added to `dotnet_build_platform`. If an application encounters issues with the new implementation, it can revert to the original behavior by setting `dotnet_build_platform="v1"`.
 
-By following this structured approach, we ensure a smooth transition of new features while maintaining stability across all environments.
+### Phase 3: Cleanup Release
 
----
-
-# Proof-of-Concept Branch Implementation State
-
-To demonstrate this request, code changes have been implemented in a dedicated branch based on the requirements outlined above. The branch includes the following updates:
-
-### Included Features:
-- **Splitting the large `dotnet.yml` file**: The large `dotnet.yml` file has been divided into smaller, more manageable components.
-- **Configuration-driven pipeline**: A configuration-driven pipeline has been implemented to streamline operations.
-- **Removal of redundant implementation**: Redundant code and processes have been removed to improve efficiency.
-- **Test utility pipeline**: A test utility pipeline has been added to facilitate building and running test cases.
-- **Windows compatibility testing**: Two test cases for Windows have been added to ensure compatibility.
-- **Linux test coverage**: Twenty-three (23) test cases for Linux have been added, covering approximately 85% of the codebase to demonstrate testing functionality.
-- **Existing e2e tests**: All existing built-in .NET end-to-end (e2e) tests are passing.
-- **New Linux test cases**: Twenty-two (22) new test cases for Linux are passing. One test case is currently failing due to an implementation issue, as documented above.
-- **Manual testing on Windows**: Known manual testing on Windows has been successfully completed.
-
-### Excluded Items:
-The branch does *not* include the following items:
-- Cleanup of the Windows test stage code.
-- Handling of all deprecated inputs.
-- Replacement of global tool installation.
-
----
+- **Removal of v1 Files:** Once all applications have successfully migrated to the new implementation, the original `dotnet.yml` file will be deleted.
+- **Removal of `v1` Option:** The `v1` option from `dotnet_build_platform` will also be removed.

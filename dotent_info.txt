@@ -1,43 +1,52 @@
-# .NET Code Refactoring
+## Implementation Risks & Testing Strategy
+
+The existing `dotnet.yml` file is exceptionally large (1500+ lines) and heavily relies on cloning and patching, resulting in significant code duplication with minimal differences. This makes fundamental changes extremely challenging.
+
+A complete .NET regression test suite is crucial for this refactoring; however, historically, Toolkit .NET has lacked comprehensive test coverage. Previous feature implementations relied primarily on modifying existing end-to-end (e2e) tests or conducting sandbox testing. Current known test cases cover a low percentage of the functionality, creating significant risk during implementation.
+
+**Purpose:** This task aims to simplify our .NET build process by removing complex conditional logic related to runner and image selection, supporting multiple target frameworks, and significantly improving the maintainability of the `dotnet.yml` file (currently exceeding 1500 lines). A key component is a new testing strategy designed for speed, reliability, and comprehensive coverage.
+
+**Current Challenges:** The existing `dotnet.yml` file is exceptionally large and relies heavily on cloning and patching, resulting in significant code duplication with minimal differences. This makes fundamental changes extremely challenging. Furthermore, our current .NET regression test suite lacks comprehensive coverage; previous feature implementations relied primarily on modifying existing end-to-end (e2e) tests or conducting sandbox testing. Current known test cases cover a low percentage of the functionality, creating significant risk during implementation. Adding more traditional e2e tests would significantly slow down release processing due to their lengthy execution time.
+
+**Proposed Solution:** Leverage Toolkit to dynamically select the appropriate runner tag and build image based on information within the application's project files (`*.csproj`). This will eliminate the need for manual configuration of these settings. Crucially, this is coupled with a new testing strategy centered around *configuration-driven pipelines* and pre-built test cases.
 
 ---
 
-## Purpose
-This task aims to simplify our .NET build process by removing complex conditional logic related to runner and image selection. It also seeks to support multiple target frameworks while significantly improving the maintainability of the `dotnet.yml` file.
+## Architectural Shift: Configuration-Driven Pipelines
+
+To streamline the implementation process, enhance testability, and overcome the limitations of our current testing approach, we propose introducing an additional configuration stage. This stage will receive inputs and produce parameters that control how the build, test, and publish processes execute. By doing so, we can significantly reduce conditional logic within the pipeline code itself.
+
+Categorize inputs into two distinct groups:
+
+* **Static Values:** Inputs that do not influence pipeline behavior (e.g., project name, repository URL).
+* **Dynamic Configuration:** Inputs that *dictate* how the pipeline behaves. These dynamic values will be moved to a dedicated `dotnet-config.yml` file.
+
+This approach enables us to generate a set of variables that control the pipeline, eliminating if or not conditional statements in pipelines.
 
 ---
 
-## Current Challenges
-The current implementation relies on numerous settings (`dotnet`) to determine which runner or build image to use for .NET builds. This complexity hinders maintainability and scalability.
+## Enhanced Testing Strategy: From E2E to Unit & Configuration Validation**
 
----
+Recognizing that achieving 100% coverage of the entire .NET pipeline with its 58 potential inputs using traditional methods is impractical, we propose a shift toward configuration validation and pre-built test cases. Many current test scenarios are not automated and require manual setup and execution.
 
-## Proposed Solution
-Leverage Toolkit to dynamically select the appropriate runner tag and build image based on information within application project files (`*.csproj`). This will eliminate the need for manual configuration of these settings.
+**Key Components:**
 
-### .NET SDK & Multiple Target Frameworks Support
 
-#### Key Required Features:
-- **Dynamic Runner/Image Selection:** Determine the runner tag or build image by inspecting the target framework(s) specified in the `.csproj` file(s).
-- **Configuration Flag Retirement:** Remove all code related to `dotnet_runner_tag`, `dotnet_build_runner`, and `dotnet_win_version`. These flags will remain for backward compatibility, solely to determine Windows/Linux builds.
-- **Linux Support:** Due to Docker image limitations (supporting only one SDK version – net6.0 or net8.0), Linux builds will select the appropriate image based on the target SDK version. Multiple Target Frameworks are *not* supported on Linux in this design.
-- **Windows Support:** Windows builds require a specific .NET SDK version installed on the runner. Several options were considered:
-    - **Option 1 (Discouraged):** Always use Windows/2019/2022 with net6.0 and net8.0 frameworks. This does not meet Manager requirements for retiring .NET 6.0, as Toolkit would always select this version.
-    - **Option 2 (Problematic):** Manually set up the .NET SDK on Windows/2019/2022 runners. This approach cannot automatically incorporate new patch updates from GFED Nexus repositories.
-    - **Option 3 (Recommended):** Dynamically determine the runner tag at runtime based on the `.csproj` file's specified SDK version.  
-   This is the preferred solution.
 
-#### Technical Limitations & Solution: Dynamic Runner Selection on Windows
+1. **Pre-Built Test Utility:**  
+   Create a base implementation for these test cases within this task, outlining how to set up and add new tests. Full execution will occur in the e2e job. This includes defining clear input/output expectations, error handling strategies and observability monitor.
+   
+2. **Build test cases to allow 100% test coverage:**  
+   With approximately 20 inputs in `dotnet-config.yml`, Generate 10 key variables that drive pipeline behavior. We will create a comprehensive suite of tests to validate all possible combinations of these inputs, ensuring the generated output is as expected. This allows for 100% coverage testing *of the configuration itself*—regardless of how long the pipeline takes to execute.
 
-The current Toolkit design only supports static inputs for runner selection. To achieve dynamic runner tag selection at runtime, we need to utilize a trigger job that calls the .NET build process, allowing dynamic input values to be passed to child processes. This introduces several challenges:
+3. **Pipeline Configuration Testing:**  
+   Pass `dotnet-config.yml`, the generated variables, and other necessary inputs to a dedicated `.NET profile` job that executes the pipeline. The focus of this job is simply to verify that each step in the pipeline is executed as defined by the configuration. This simplifies testing significantly.
 
-- **Artifact Persistence:** Artifacts created in the child job are not carried over to the parent job. To address this:
-    - **Add a task within the child job to collect all artifact data and upload it to a cache.
-    - **Add a task within the parent job to restore artifacts from the cache.
+4. **Pipeline Unit Testing:**  
+   Run unit tests on the build stage to test configuration output variables and execute .NET build processing.
 
-- **Local Reference YML Files:** Inside trigger pipelines, local reference `yml` files do not function as expected. This requires setting up a GITLAB URL with branch version to include additional `yml` files in Toolkit projects when Toolkit pipeline is used in application projects:
-    - **For Beta releases, we’ve configured this as the `ea` branch.
-    - **For final versions, it’s set to `main`.
-    - **When testing Toolkit feature releases for .NET builds, a specific variable (`TRIGGER_VERSION`) must be provided to specify the desired version.
+5. **E2E Testing:**  
+   Run end-to-end (E2E) testing once initially to capture the expected output from a known-good configuration. This output will serve as the “golden standard” for comparison. Future configuration and unit tests will compare generated configurations against this baseline, enabling rapid and reliable validation of changes.
 
+This strategy ensures clarity, consistency, and thoroughness in testing, enhancing overall reliability and maintainability.
 ---

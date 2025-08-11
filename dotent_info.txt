@@ -1,61 +1,46 @@
-## .NET Build Pipeline Refactor - Implementation Details
+# Implementation Refactoring - .NET Build Pipeline
 
-The .NET build pipeline introduces two inputs for platform selection and a new testing framework.
+This Documentation outlines a refactoring of the existing .NET build pipeline, leveraging a new implementation to address identified issues and improve overall convenience. This change presents an opportunity to enhance the current pipeline based on learnings from its operation.
 
-### Introduction of `dotnet_build_platform` Input
+## Core Principles for .NET Builds in Toolkit
 
-*   **Purpose:** To enable building .NET applications on either Linux or Windows, moving away from reliance on runner tags (which are now solely used to determine the operating system).
-*   **Default Value:** `""` (empty string) – This maintains backward compatibility with existing pipelines. Pipelines without explicitly setting this input will continue to use the original `.NET` build process.
-*   **Options:**
-    *   `""`: Original .NET build (using `dotnet.yml`). Backward compatible.
-    *   `legacy`: Uses `dotnet2.yml` for building with the new feature set. This becomes the default after final release and produce same behave as original version of implementation.
-    *   `windows`: Builds specifically for Windows using `dotnet-win.yml`.
-    *   `linux`: Builds specifically for Linux using `dotnet-linux.yml`.
-    
+The following principles guide the design of the new .NET build process and problem area in the existing Toolkit .NET pipeline:
 
+* **Visual Studio Compatibility:** When building, testing, or publishing a .NET application in Visual Studio, it should function identically within Toolkit without requiring any additional configuration. Developers should not use Toolkit for troubleshooting project build/test/publish issues; those should be resolved locally in Visual Studio. Any Toolkit .NET pipeline error on build/test/publish should be reproducible in local Visual Studio.
 
-## .NET Build Pipeline Refactor - Implementation Details
+* **Faithful Reproduction of VS Build:** Toolkit will replicate the Visual Studio build process exactly, whether building an entire solution or a solution filter. This includes generating identical error messages to those produced by Visual Studio. Toolkit will not introduce any custom build processing.
 
-The .NET build pipeline introduces two inputs for platform selection and a new testing framework.
+* **Solution-Driven Builds:** Toolkit builds and publishes solely based on the `.sln` (solution) file or `.slnf` (solution filter) file. Direct project build/publish is not supported. This aligns with how Visual Studio operates when building projects.
 
-### .NET Build Platform Input(`dotnet_build_platform`)
+* **Pre-validated Application Code:** Toolkit assumes that applications have already passed basic syntax checks and unit tests in a local Visual Studio environment. It is not designed to identify these fundamental issues in the pipeline.
 
-*   **Purpose:** To enable building .NET applications on either Linux or Windows, moving away from reliance on runner tags (which are now solely used to determine the operating system).
-*   **Default Value:** `""` (empty string) – This maintains backward compatibility with existing pipelines. Pipelines without explicitly setting this input will continue to use the original `.NET` build process.
-*   **Options:**
-    *   `""`: Original .NET build (using `dotnet.yml`). Backward compatible.
-    *   `legacy`: Uses `dotnet2.yml` for building with the new feature set. This becomes the default after final release and produces the same behavior as the original version of implementation.
-    *   `windows`: Builds specifically for Windows using `dotnet-win.yml`.
-    *   `linux`: Builds specifically for Linux using `dotnet-linux.yml`.
+* **Support Platform Build:** Visual Studio allows setting up the build platform (e.g., `ANY`, `x64`). While this feature could be enhanced in future releases, implementing it would not introduce high risk. Once implemented, Toolkit will automatically clean up codes and test over 100% test coverage.
 
+* **Standard Compliance**
 
-### Test Mode Inputs (`dotnet_internal_test_mode`)
+Applications must comply with Microsoft and company coding standards for project setup. Toolkit will adhere to these standards but will not enforce them. No Toolkit-specific settings are required within solution or project files.
 
-*   **Purpose:** To provide different levels of testing within the pipeline, allowing focused validation of changes.
-*   **Default Value:** `""` (empty string) – No test mode is active by default.
-*   **Options:**
-    *   `""`: No tests are executed. Standard build and deploy process.
-    *   `config_test`: Tests the configuration stage, validating input values and ensuring proper parameter setup. This can be implemented using custom scripts or assertions within the pipeline. Useful for pre-policy checks not fully covered by existing validation.
-    *   `unit_test`: Executes unit tests for the .NET build and test stages. Requires a defined unit testing framework within the .NET solution.
-    *   `e2e_test`: Performs end-to-end tests, covering publish steps, Docker image creation, and Kubernate deployment.
+* **Single Publish Output**
 
-*   **Test Stage Insertion:** When `dotnet_internal_test_mode` is set, an additional stage will be inserted into the pipeline to execute the selected test level.
-*   **Observability:** Test results should be tracked for observability – consider integrating with a testing reporting tool.
+Due to limitations in Nexus zip publish and Docker image uploads, the Toolkit .NET pipeline currently supports only a single publish output. For multiple outputs, applications must use solution filters to divide the build into separate solution filter files for each publish target.
 
-### Pipeline File Structure
+* **.NET Publish and Nuget Publish**
 
-The original `dotnet.yml` is being split into five files within the `templates/dotnet` directory:
+The current version of the Toolkit .NET setup combines `dotnet publish` and `nuget publish`. To reduce unnecessary tasks and avoid requiring application setup with two different secret access rights, these processes should be made independent. Additionally, currently NuGet publish does not use the build stage output to create the `.nupkg` file; instead, it rebuilds the entire solution build, causing duplicate build processing and potential conflicts with build outputs.
 
-*   **`dotnet2.yml`:** Main pipeline entry point for the new feature set. Contains common details like zip publish, sonarqube scan, veracode scan.
-*   **`dotnet-linux.yml`:** Specific tasks for Linux builds. Likely includes build and nuget publish stage related to Linux environments (e.g., package management).
-*   **`dotnet-win.yml`:** Specific tasks for Windows builds. Includes build and nuget publish stage specific to the Windows environment.
-*   **`dotnet-config-linux.yml`:** Prepares pipeline parameters specifically for Linux configurations.
-*   **`dotnet-config-win.yml`:** Prepares pipeline parameters specifically for Windows configurations.
+* **WIX Project Setup**
 
-### Test Cases & Coverage
+The Toolkit pipeline currently requires applications to write WIX settings that reference the publish output directory (_app). This should be changed to reference the .NET build output directory (bin) instead. This change will allow the WIX project to run locally and produce the same results as those generated by the Toolkit pipeline.
 
-*   **Location:** Test YAML files are located in the `tests/dotnet` directory.
-*   **Reuse of Existing Projects:** The tests will leverage existing .NET solution projects to build test cases, minimizing code duplication.
-*   **Coverage:**
-    *   23 Linux test cases aim for 85% code coverage.
-    *   2 Windows test cases demonstrate configuration-driven pipeline testing on windows.
+* **Veracode Scan**
+Veracode scans only published files and does not scan WIX output or NuGet package files.
+
+* **Veracode Test**
+
+Since GCP projects do not support Veracode scans, there are no test cases to verify Veracode scans. A test stage should be added to validate the required Veracode parameters and ensure that the Veracode zip file is generated correctly in the pipeline.
+
+* **SonarQube Duplicate Build**
+
+The SonarQube implementation in Toolkit should be re-implemented to replace the Manager SonarQube version, avoiding duplicate solution builds. This will allow the same SonarQube scans as configured in Visual Studio by developers, reducing support questions. This task is significant and can be executed as a standalone effort.
+
+---

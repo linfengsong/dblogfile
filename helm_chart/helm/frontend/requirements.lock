@@ -1,0 +1,6 @@
+dependencies:
+- name: backend
+  repository: http://192.168.1.135:8081/repository/helm/
+  version: 1.0.0
+digest: sha256:aa2c0a36080acdadcf9b468887087d64970c2032999006e6d3f45f87d9c1cffb
+generated: "2025-08-17T15:37:28.942089229-04:00"

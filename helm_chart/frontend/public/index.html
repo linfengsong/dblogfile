@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java-Node Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        #value {
+            font-size: 1.2rem;
+            color: #666;
+            min-height: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Java-Node Communication Example</h1>
+        <p id="value">Loading...</p>
+    </div>
+
+    <script>
+        // Fetch data from Java backend
+        fetch('http://localhost:8080/api/value')
+            .then(response => response.text())
+            .then(value => {
+                document.getElementById('value').textContent = value;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('value').textContent = 'Error fetching data';
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+image:
+  repository: backend
+  tag: latest
+replicaCount: 2
+service:
+  port: 8080

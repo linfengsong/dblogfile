@@ -20,5 +20,10 @@ helm dependency update .
 https://developer.hashicorp.com/terraform/install
 extract to bin for both window and linux
 
-terraform apply -var=nexus_username=admin -var=nexus_password=xxxx -auto-approve
-terraform destroy -var=nexus_username=admin -var=nexus_password=xxxx -auto-approve
+#terraform apply -var=nexus_username=admin -var=nexus_password=xxxx -auto-approve
+#terraform destroy -var=nexus_username=admin -var=nexus_password=xxxx -auto-approve
+export TF_VAR_nexus_username=admin
+export TF_VAR_nexus_password=weiqing
+export TF_VAR_chart_version="0.1.0"
+terraform apply -auto-approve
+terraform destroy -auto-approve

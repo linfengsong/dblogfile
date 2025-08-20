@@ -33,9 +33,15 @@ variable "nexus_password" {
  type        = string
 }
 
+variable "chart_version" {
+ description = "This is a variable of nexus username"
+ type        = string
+}
+
 resource "helm_release" "frontend" {
   name  = "frontend"
   chart = "../helm/frontend"
+  version = var.chart_version
   values = [templatefile("../helm/frontend/values.yaml", {})]
   dependency_update = true
   repository            = "http://192.168.1.135:8081/"

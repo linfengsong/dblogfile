@@ -1,8 +1,16 @@
-- **Linux Support:** Due to Docker image limitations (supporting only one SDK version - net6.0 or net8.0), Linux builds will select the appropriate image based on the target SDK version. Multiple Target Frameworks are supported on Linux in this design but it only can test one Target Framework since restriction of .NET SDK.
-- **Windows Support:** Windows builds require a specific .NET SDK version installed on the runner. Several options were considered:
-  - **Option 3 (Recommended with Risk):** Dynamically determine the runner tag at runtime based on the `.csproj` file's specified SDK version. To use this option, it need launch .NET build processing by trigger child pipeline. GITLAB has limitation of artifact support between parent and child pipeline. The Detail risk issue has been documented at Risk Assessment
-  - **Option 4 (Recommended): To reduce implementation risk and avoid to trigger child pipeline, the Runner Tag and step rule condition cannot dynamic setup from application `csproj` `TargetFramework`,  add two additional inputs: `dotnet_win_runner` and `dotnet_nuget_publish` to cover this restriction. 
+- **Linux Support:** Due to Docker image limitations (supporting only one SDK version—net6.0 or net8.0), Linux builds will select the appropriate image based on the target SDK version. While multiple Target Frameworks are supported on Linux in this design, only one Target Framework can be tested at a time due to .NET SDK restrictions.
+  - **Option 3 (Recommended with Risk):** Dynamically determine the runner tag at runtime based on the `*.csproj` file's specified SDK version. To use this option, it needs to launch .NET build processing by triggering a child pipeline. GitLab has limitations regarding artifact support between parent and child pipelines. The detailed risk issues have been documented in the Risk Assessment.
+  - **Option 4 (Recommended):** To reduce implementation risk and avoid triggering a child pipeline, the Runner Tag and GITLAB job stage rule condition cannot be dynamically set from the application '*.csproj' TargetFramework. Instead, add two additional inputs: `dotnet_win_runner` and `dotnet_nuget_publish` to cover this restriction.
 
-The recommended solution is Option 3 or 4, as it allows for automatic selection and keeps things updated without manual intervention with minium inputs. Option 4 solution is to choice to reduce risk of option 3 solution.
+The recommended solution is Option 3 or 4, as both allow for automatic selection and keep things updated without manual intervention with minimal inputs. However, Option 4 is preferred to reduce the risk associated with Option 3.
+
+The following inputs are deprecated due to high support issues, and the rest can execute consecutively following the initial release.
+- **`dotnet_publish_project_file`:** This input can replace by .NET solution filter.
+- **`dotnet_build_runner` and `dotnet_win_runner_tag`:** These inputs have been replaced. Instead, check the `TargetFramework` or `TargetFrameworks` attributes in the .csproj file or use the dotnet_win_runner input in option 4.
+- **`dotnet_publish`:** The `*.csproj` attribute IsPackable indicates whether a project requires NuGet publishing. When using SDK Option 4, this can be replaced with the `dotnet_nuget_publish` input.
+- **`dotnet_tests_folder`:** The '*.csproj' attribute IsTestProject indicates whether a project is a test project instead of using this input.
+- **`dotnet_test_filter`:** If your .NET solution file contains multiple test projects but you only want to select specific ones for testing, use the .NET solution filter instead of this input.
+- **`dotnet_build_method`:** This input can be replaced by checking `*.csproj` attribute `SDK`.  If the value is Microsoft.NET.Sdk, it indicates `dotnet` building. Otherwise, it uses `msbuild`.
 
 
+- **Deprecate Inputs:** The following inputs require analysis and solutions to replace: dotnet_publish_project_file, dotnet_source_folder, dotnet_microsoft_testing_platform_enable, dotnet_pack_cmdline_options, dotnet_publish_mode, dotnet_wix_enable, dotnet_wix_output_name, dotnet_wix_bindpath

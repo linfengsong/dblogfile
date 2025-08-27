@@ -14,3 +14,19 @@ The following inputs are deprecated due to high support issues, and the rest can
 
 
 - **Deprecate Inputs:** The following inputs require analysis and solutions to replace: dotnet_publish_project_file, dotnet_source_folder, dotnet_microsoft_testing_platform_enable, dotnet_pack_cmdline_options, dotnet_publish_mode, dotnet_wix_enable, dotnet_wix_output_name, dotnet_wix_bindpath
+
+#### .Net Windows Runner (`dotnet_win_runner`)
+
+- **Purpose:** For SDK Option 4, configures the runner type for .NET builds by providing specific options.
+- **Default Value:** `"default"`
+- **Options:**
+  - `default`: Uses the Windows-2019/2022 runner for building projects.
+  - `legacy`:  Uses the windows-2019/vs-2022-legacy runner, which is recommended for .NET 6.0 project builds.
+  
+#### .NET NuGet Publish (`dotnet_nuget_publish`)
+
+- **Purpose:** Determines whether to enable or disable NuGet package publishing during the build process.
+- **Default Value:** `"no"`
+- **Options:**
+  - `yes`: Enables NuGet package publishing
+  - `no`:  Disables NuGet package publishing.

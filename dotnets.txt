@@ -1,7 +1,5 @@
 - **Linux Support:** Due to Docker image limitations (supporting only one SDK version - net6.0 or net8.0), Linux builds will select the appropriate image based on the target SDK version. Multiple Target Frameworks are supported on Linux in this design but it only can test one Target Framework since restriction of .NET SDK.
 - **Windows Support:** Windows builds require a specific .NET SDK version installed on the runner. Several options were considered:
-  - **Option 1 (Discouraged):** Always use windows-2019/vs-2022-legacy-beta with net6.0 and net8.0 frameworks. This does not meet CTO requirements for retiring .NET 6.0, as CGP would always select this version.
-  - **Option 2 (Problematic):** Manually set up the .NET SDK on Windows-2019/2022 runners. This approach cannot automatically incorporate new patch updates from GFED Nexus repositories.
   - **Option 3 (Recommended with Risk):** Dynamically determine the runner tag at runtime based on the `.csproj` file's specified SDK version. To use this option, it need launch .NET build processing by trigger child pipeline. GITLAB has limitation of artifact support between parent and child pipeline. The Detail risk issue has been documented at Risk Assessment
   - **Option 4 (Recommended): To reduce implementation risk and avoid to trigger child pipeline, the Runner Tag and step rule condition cannot dynamic setup from application `csproj` `TargetFramework`,  add two additional inputs: `dotnet_win_runner` and `dotnet_nuget_publish` to cover this restriction. 
 

@@ -1,2 +1,2 @@
-There are no end-to-end test cases to cover dotnet_win_runner_tag and .NET 6.0 of dotnet_build_runner. As a limitation of the end-to-end test cases in APPLICATION pipeline, we will implement test code in e2e to cover those test cases, but it can only be run manually.
+Further implementation of coding clean up for runner-related codes are addressed by different tasks.
 

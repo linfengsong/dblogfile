@@ -1,2 +1,2 @@
-`dotnet-coverage` .NET Tool version depends on .NET SDK version. Since this ADR needs to support both .NET 6.0 and .NET 8.0, `dotnet-coverage` only uses version: `17.13.1`, which works for both .NET 6.0 and .NET 8.0.
+There are no end-to-end test cases to cover dotnet_win_runner_tag and .NET 6.0 of dotnet_build_runner. As a limitation of the end-to-end test cases in APPLICATION pipeline, we will implement test code in e2e to cover those test cases, but it can only be run manually.
 

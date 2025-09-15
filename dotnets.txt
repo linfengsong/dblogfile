@@ -1,9 +1,2 @@
-It is highly recommended that applications retire .NET 6.0 as soon as possible. When all applications no longer use .NET 6.0, switch to using `windows-2019/vs-2022` for .NET SDK versions.
-
-Since the ADR solution uses `windows-2019/vs-legacy` with net6.0 and net8.0 frameworks, when .NET adds more SDK versions for support (like SDK 10.0), it will require the CTO to create new runner servers to support .NET SDK 6.0, .NET SDK 8.0, and .NET 10.0.
-
-APPLICATION pipeline would not support customized Windows runner versions. Some applications might request that the CTO team build additional Windows runner servers for special purposes like adding patches or features. Those Windows runner servers cannot be used for APPLICATION pipelines. APPLICATION pipeline only uses formal release versions of `windows-2019/vs-legacy`.
-
-`dotnet_win_runner_tag` and `dotnet_build_runner` have been used in dotnet.yml in more than 20 different places. To reduce the risk of changes and make minimal alterations for this task, we will not change any logic of these two inputs in the dotnet.yml file.
-
+`dotnet-coverage` .NET Tool version depends on .NET SDK version. Since this ADR needs to support both .NET 6.0 and .NET 8.0, `dotnet-coverage` only uses version: `17.13.1`, which works for both .NET 6.0 and .NET 8.0.
 

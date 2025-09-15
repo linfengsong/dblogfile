@@ -1,4 +1,9 @@
-**`dotnet_win_runner_tag`:** This input has been deprecated in `build.yml`. For backward compatibility, it is still used to determine .NET builds using the Windows build when set up, but the value of this input is ignored when setting job `runner_tag`.
+It is highly recommended that applications retire .NET 6.0 as soon as possible. When all applications no longer use .NET 6.0, switch to using `windows-2019/vs-2022` for .NET SDK versions.
 
-**`dotnet_build_runner`:** Add an additional option value "windows" to `build.yml`. Existing options of `windows_dotnet6` and `windows_dotnet8` have been deprecated in `build.yml`. Only pass `windows_dotnet6` to `dotnet.yml` for all `windows_dotnet6`, `windows_dotnet8` and `windows`.
+Since the ADR solution uses `windows-2019/vs-legacy` with net6.0 and net8.0 frameworks, when .NET adds more SDK versions for support (like SDK 10.0), it will require the CTO to create new runner servers to support .NET SDK 6.0, .NET SDK 8.0, and .NET 10.0.
+
+APPLICATION pipeline would not support customized Windows runner versions. Some applications might request that the CTO team build additional Windows runner servers for special purposes like adding patches or features. Those Windows runner servers cannot be used for APPLICATION pipelines. APPLICATION pipeline only uses formal release versions of `windows-2019/vs-legacy`.
+
+`dotnet_win_runner_tag` and `dotnet_build_runner` have been used in dotnet.yml in more than 20 different places. To reduce the risk of changes and make minimal alterations for this task, we will not change any logic of these two inputs in the dotnet.yml file.
+
 

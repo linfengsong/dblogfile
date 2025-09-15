@@ -1,2 +1,2 @@
-There should not be any support issues related to Windows Runner setup after implementing this
+It will be able to move .NET tools from a Global tool to a Project path tool setup by a single version of the tool.
 

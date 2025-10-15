@@ -1,17 +1,1 @@
-2. **Current Application Team Status Collection:**  Currently, most teams only send developers to meetings, which hinders accurate project status reporting. Discussions tend to focus solely on tasks requested rather than providing an overall view of the project (including all production deployment setup and testing). Follow-up discussions with application owners are needed to obtain correct status updates and their plans. I will contact application owners or technical leaders to gather this information and then update Zhe’s Excel file.
-
-3. **Mifetonsie Issue:** The Mifetonsie issue reported in Zhe's Excel file is not considered within the scope of developer tasks and requires further discussion with the technical leader and owner.  The ASKEDP/AWS Data Warehouse team, when questioned about their use of the Rationale tool, stated that GitLab would fulfill its functionality.
-
-4. **Migration Project Scope Verification:** Several aspects of the migration project require verification:
-    * **a.** Since the CGP does not currently support AWS, many existing AWS projects do not meet requirements, even if teams claim development work is complete (refer to requirement 2).  These teams have built GitLab pipelines for AWS Service Catalog provisioning.
-    * **b.** Historically, applications have directly checked in AWS Service Catalog YAML files into CTO Bitbucket repositories and used CTO Jenkins jobs to deploy these files to AWS Service Catalog. Recently, CTO provided a utility for deployment to AWS. Should applications retire the existing CTO Bitbucket repository and utilize this new utility instead?
-    * **c.** The application Kibana deployment uses eSaaS’ Bitbucket repositories.  The eSaaS team has not provided a date for moving these repositories to GitLab. What is the plan for this task? Should an exemption be considered?
-    * **d.** EDP maintains its own Bitbucket repository (referred to as BB) to host source code for other applications' EDP jobs. There’s no timeline currently available regarding when and how these applications will migrate to GitLab.
-
-5. Several applications are awaiting the Abinitio solution. While Ansible was initially proposed, it is not ready at this time. The current plan indicates readiness by 2025 Q4 within the CGP.
-
-6. Some applications require an Oracle GitLab deployment process, which is based on a Liquibase solution. Application teams will need assistance in learning how to use this solution.
-
-7. The SAS application remains on my list, and the application team reports it cannot be completed within the scope of 2026 Q1.
-
-8.  The CGP does not support Tableau deployments; application teams have built their own customized pipelines
+test

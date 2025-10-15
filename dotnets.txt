@@ -1,1 +1,36 @@
-Further implementation of coding cleanup for runner-related codes will be carried out as part of different tasks within the scope of future cleaning up projects.
+| Num |  | Size        | Status/Plan Finish Date | Technical Block item         | Technical Blocks Requiring Assistance 
+|-----|------------------------------------------------|-------------|-------------------------|------------------------------|-------------------------------------------------------------------------------------------------------------------------------
+| 45  |  | Small       | Prod next month         | AWS                          | confirm release plan date
+| 59  |  |             | Pending on GTIS         | AWS, GTIS Tool               | application use GTIS utility tool and it hard to migrate to Gitlab, report this issue to Guy
+| 60  |  | Middle      | Jan 2026                | Schedule, Notification       | confirm plan date but it requires support Gitlab Schedule and notification
+| 34* |  |             |                         | AWS                          | 
+| 35* |  |             |                         | AWS                          | 
+| 40  |  |             | Done                    | AWS                          | confirm done                       |
+| 4*  |  | Large       |                         | AWS, EDP onboarding (4.d)    | 
+| 42  |  | Large       | 2026 Q1                 | Gitlab branch strategy       | application requires a meaingfull branch name instead numbers. The branch name distingushes different environments (e.g., bdh4dev, bdh4sit, bdh4uat).                 |
+| 51* |  |             | Not attend              | need further contact         |
+| 53  |  | Middle      |                         | Service Mesh                 | 19 projects migrated, 3 remain with Service Mesh block
+| 55* |  | Middle      | 2025 Oct                |                              |       |
+| 56  |  | Large       | 2026 Q1                 | Abinitio                     | confirm plan date. Requires access to customized image location for internal discussion.
+| 57  |  | Not in scope| AWS, Java, SAS          | SAS dependency, Abinitio     | claim out of scope of 2026 Q1 with SAS dependency      |
+| 58  |  | Large       | 2026 Q1                 | Abinitio                     | confirm plan date
+| 61  |  | Large       | 2026 Q1                 | Abinitio                     | confirm plan date              
+| 64  |  | Large       | 2026 Q1                 |                              | confirm plan date      
+| 52  |  | Large       | 2026 Q1                 | Oracle Liquibase             | confirm plan date                
+| 54  |  | Large       | 2026 Q1                 | Oracle Liquibase             | confirm plan date                
+| 63  |  |             | Decommission            |                              | application does not need any more
+| 64  |  | Large       | 2026 Q1                 |                              | confirm plan date
+| 65  |  | Large       | 2026 Q1                 |                              | confirm plan date
+| 66  |  | Not in scope| Request Exception       | Require support Node 10      | old Web Server to request node 10. Fercus look at
+| 37  |  | Large       | 2026 Q1                 | EDP onboarding (4.d)         | confirm plan date. One project require EDP onboarding
+| 39  |  | Small       | Done                    |                              | confirm done. One project customized pipeline for Tableau deploy 
+| 29  |  |             | Decommission            |                              | application decommission                |
+| 46* |  |             | Not attend              | need further contact         |          |
+| 50  |  | Large       | 2026 Q1                 |                              | team is busy with CDH to BDH migration. Plan to start Gitlab migration from 2026 Dec                |
+| 36  |  |             | Done                    |                              | migration is done
+| 38  |  |             | Done                    |                              | migration is done                |
+| 3x  |  |             |                         | Service Mesh                 | CI is done and CD uses Service Mesh and pending
+| 32* |  |             |                         |                              | confirmed most components in GitLab except the DH part      |
+| 67  |  |             | Decommission, Pending   |                              | Juice 2.0 would replace this applcation and plan to release prod end of Nov. In 2026 Jan, it will know this application discommonsion or not. When not, start do gitlab migration.
+| 68* |  |             | Not attend              | need further contact         | 
+| 61  |  | Not in scope| 2026 Q3                 |                              | application is too large to fit in 2026 Q1

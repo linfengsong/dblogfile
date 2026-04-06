@@ -1,107 +1,45 @@
+# RDX Template System: User Guide
 
-## Best Practices
+## Introduction to RDX Templates
 
-### IDE Selection Guidance
-
-| Use Case | Recommended IDE | Notes |
-|----------|----------------|-------|
-| **Python/JavaScript/TypeScript** | VS Code | Lightweight, excellent language support |
-| **Java/Kotlin/Scala** | IntelliJ | Superior Java tooling, refactoring |
-| **AI/ML with Jupyter** | VS Code | Integrated notebook support |
-| **Polyglot projects** | Either | Both support multiple languages |
-| **Resource-constrained** | VS Code | Lower memory footprint |
-
-### Performance Optimization
-
-1. **Use warm starts**: Restart workspace instead of creating new when possible
-2. **Right-size resources**: Select appropriate VM size for your workload
-3. **Monitor resource usage**: Use workspace metrics to identify bottlenecks
-4. **Clean up unused workspaces**: Delete inactive workspaces to free resources
+RDX templates provide standardized, on-demand development environments tailored to different business needs. Instead of choosing a template based on programming language, you now select templates based on your work function—making it easier to get the right tools for your specific task.
 
 <details>
-<summary><strong>Resource Monitoring Tips</strong></summary>
+<summary><strong>What's New in the Template System</strong></summary>
 
-- **Check `/proc/meminfo`** for memory usage
-- **Use `nvidia-smi`** for GPU utilization
-- **Monitor `/home/coder`** storage with `df -h`
-- **RDX portal** shows real-time CPU/memory metrics
+- **Business-Focused Selection**: Choose templates based on what you need to do (general development, analytics, etc.) rather than technical stack
+- **Multi-Language Support**: All programming languages (Python, Java, Go, .NET) available in every workspace
+- **Tenant-Based Deployment**: Workspace location automatically determined by your team/tenant
+- **Capability Injection**: AI and other capabilities automatically added based on your entitlements
+- **Simplified Experience**: Reduced from 8 separate templates to 3 focused options
 </details>
 
-## Troubleshooting Common Issues
+## Available Templates
 
-### Connection Problems
+### RDX-General Template
+**Purpose**: General-purpose development for any programming language
 
-| Symptom | Likely Cause | Solution |
-|---------|--------------|----------|
-| **"Cannot connect to workspace"** | Network/firewall | Verify network allows connections to RDX domain |
-| **JetBrains Gateway fails** | Local IntelliJ missing | Install IntelliJ locally with Gateway plugin |
-| **VSCode browser connection fails** | Browser restrictions | Try different browser or use desktop client |
+**Best For**: Software development, prototyping, multi-language projects, team collaboration
 
-### Performance Issues
+**Includes**:
+- Python, Java, Go, .NET toolchains
+- VS Code and IntelliJ IDE support
+- JupyterLab for notebooks
+- Git integration with SSH key setup
+- Standard development tools and libraries
 
-| Symptom | Likely Cause | Solution |
-|---------|--------------|----------|
-| **Slow IDE startup** | Cold start | First startup takes ~61s; subsequent are near-instant |
-| **High memory usage** | Insufficient resources | Upgrade workspace VM size |
-| **GPU not detected** | Resource allocation | Ensure GPU-enabled template selected |
+**Resource Allocation**: Configurable CPU, memory, and storage based on your needs
 
-### IDE-Specific Issues
+### RDX-Analysis Template
+**Purpose**: Specialized workspace for data analytics and data science
 
-<details>
-<summary><strong>IntelliJ Issues</strong></summary>
+**Best For**: Data analysis, machine learning, statistical modeling, business intelligence
 
-- **"Remote IDE not found"**: Wait for IntelliJ extraction to complete (58s on cold start)
-- **Plugin compatibility**: Some plugins may not support remote development
-- **Indexing slow**: Initial project indexing may take time with large codebases
-</details>
+**Includes**:
+- Everything in RDX-General plus:
+- Conda environment management
+- Additional data science libraries (pandas, numpy, scikit-learn, etc.)
+- Analytics-specific tooling
+- Pre-configured Jupyter environments
 
-<details>
-<summary><strong>VS Code Issues</strong></summary>
-
-- **Extension host terminated**: Workspace may be out of memory; increase resources
-- **Terminal not responding**: Check workspace health in RDX portal
-- **File sync delays**: Network latency between client and workspace
-</details>
-
-## Frequently Asked Questions
-
-<details>
-summary><strong>Q: Can I use both VSCode and IntelliJ in the same workspace?</strong></summary>
-
-**A:** Yes, you can select both IDEs during workspace creation. The workspace will provision both binaries, though this increases storage requirements.
-</details>
-
-<details>
-<summary><strong>Q: How do I update my IDE to the latest version?</strong></strong></summary>
-
-**A:** IDE updates are automatic. New workspaces receive the latest version. Existing workspaces continue with their current version until you create a new workspace or the operations team triggers an update cycle.
-</details>
-
-<details>
-summary><strong>Q: What happens to my settings and extensions?</strong></summary>
-
-**A:** Both VSCode and IntelliJ settings/extensions are stored in your home directory (`/home/coder`) and persist across workspace restarts. They are tied to your user account, not the IDE version.
-</details>
-
-<details>
-<summary><strong>Q: Can I install custom IDE versions?</strong></summary>
-
-**A:** No, RDX provides standardized, supported IDE versions. Custom versions would break the evergreen update model and N-1 caching. If you need a specific version, contact the RDX team.
-</details>
-
-<details>
-<summary><strong>Q: How is this different from the old S3-based approach?</strong></summary>
-
-**A:** The new init-container approach:
-- Works identically across all environments (AWS, on-premise, etc.)
-- No S3 dependency or organizational policy restrictions
-- Faster startup (no download latency)
-- Better version management with N-1 caching
-- Lower operational overhead
-</details>
-
-<details>
-<summary><strong>Q: What if I need an IDE not currently supported?</strong></summary>
-
-**A:** Contact the RDX team with your use case. The architecture supports adding new IDEs via the same init-container pattern.
-</details>
+**Resource Allocation**: Optimized for data-intensive workloads

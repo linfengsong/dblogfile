@@ -1,45 +1,86 @@
-# RDX Template System: User Guide
+### Deploy-Self-Service Template
+**Purpose**: Streamlined terminal-only workspace for quick tasks
 
-## Introduction to RDX Templates
+**Best For**: Infrastructure management, deployment tasks, CLI operations, quick edits
 
-RDX templates provide standardized, on-demand development environments tailored to different business needs. Instead of choosing a template based on programming language, you now select templates based on your work function—making it easier to get the right tools for your specific task.
+**Includes**:
+- Terminal access only (no IDE)
+- Claude Read-Only access
+- Automatic dotfiles configuration
+- Fixed resources (1 CPU, 2GB RAM, 1GB Storage)
+
+**Resource Allocation**: Fixed minimal resources for cost-effective operations
 
 <details>
-<summary><strong>What's New in the Template System</strong></summary>
+<summary><strong>Template Comparison Matrix</strong></summary>
 
-- **Business-Focused Selection**: Choose templates based on what you need to do (general development, analytics, etc.) rather than technical stack
-- **Multi-Language Support**: All programming languages (Python, Java, Go, .NET) available in every workspace
-- **Tenant-Based Deployment**: Workspace location automatically determined by your team/tenant
-- **Capability Injection**: AI and other capabilities automatically added based on your entitlements
-- **Simplified Experience**: Reduced from 8 separate templates to 3 focused options
+| Feature | RDX-General | RDX-Analysis | Deploy-Self-Service |
+|---------|--------------|--------------|---------------------|
+| **IDEs Supported** | VS Code, IntelliJ | VS Code, IntelliJ | Terminal only |
+| **Languages** | Python, Java, Go, .NET | Python, Java, Go, .NET | All (via CLI) |
+| **Specialized Tools** | General development | Conda, data science libraries | Claude Read-Only |
+| **Resource Flexibility** | Fully configurable | Optimized for analytics | Fixed minimal |
+| **Best For** | Multi-language development | Data science/analytics | Quick CLI tasks |
+| **Workspace Size** | 20GB+ (configurable) | 40GB+ (recommended) | 1GB (fixed) |
 </details>
 
-## Available Templates
+## How to Choose the Right Template
 
-### RDX-General Template
-**Purpose**: General-purpose development for any programming language
+### Decision Flow
 
-**Best For**: Software development, prototyping, multi-language projects, team collaboration
+```mermaid
+graph TD
+    A[Start Workspace Creation] --> B{What is your primary task?}
+    B --> C[General Software Development]
+    B --> D[Data Analysis / Data Science]
+    B --> E[Quick CLI / Deployment Tasks]
+    
+    C --> F[Choose RDX-General]
+    D --> G[Choose RDX-Analysis]
+    E --> H[Choose Deploy-Self-Service]
+    
+    F --> I[Configure resources as needed]
+    G --> J[Use analytics-optimized settings]
+    H --> K[Fixed resources - ready to go]
+```
 
-**Includes**:
-- Python, Java, Go, .NET toolchains
-- VS Code and IntelliJ IDE support
-- JupyterLab for notebooks
-- Git integration with SSH key setup
-- Standard development tools and libraries
+### Selection Guidelines
 
-**Resource Allocation**: Configurable CPU, memory, and storage based on your needs
+<details>
+summary><strong>When to Use Each Template</strong></summary>
 
-### RDX-Analysis Template
-**Purpose**: Specialized workspace for data analytics and data science
+**Choose RDX-General if you:**
+- Develop applications in multiple programming languages
+- Need full IDE support (VS Code or IntelliJ)
+- Work on general software engineering tasks
+- Collaborate with teams using different tech stacks
+- Need customizable resource allocation
 
-**Best For**: Data analysis, machine learning, statistical modeling, business intelligence
+**Choose RDX-Analysis if you:**
+- Primarily work with data analysis or data science
+- Use Jupyter notebooks extensively
+- Need Conda for environment management
+- Work with large datasets
+- Perform statistical modeling or machine learning
 
-**Includes**:
-- Everything in RDX-General plus:
-- Conda environment management
-- Additional data science libraries (pandas, numpy, scikit-learn, etc.)
-- Analytics-specific tooling
-- Pre-configured Jupyter environments
+**Choose Deploy-Self-Service if you:**
+- Need quick terminal access for deployment tasks
+- Are managing infrastructure or configurations
+- Want minimal resource usage for cost savings
+- Perform CLI operations without IDE overhead
+- Need Claude Read-Only access for assistance
+</details>
 
-**Resource Allocation**: Optimized for data-intensive workloads
+## Template Parameters and Configuration
+
+### Common Parameters (All Templates)
+
+| Parameter | Description | Type | Required |
+|-----------|-------------|------|----------|
+| **workspace_name** | Name for your workspace | Text | Yes |
+| **tenant** | Team/tenant selection (from entitlements) | Dropdown | Yes |
+| **cpu** | CPU cores allocation | Slider | Yes |
+| **memory** | Memory allocation (GB) | Slider | Yes |
+| **gitlab_token** | GitLab personal access token | Secret | Yes |
+| **gitlab_repo** | Optional GitLab repository URL | Text | No |
+| **dotfile_repo** | Optional dotfiles repository URL | Text | No |

@@ -1,86 +1,53 @@
-### Deploy-Self-Service Template
-**Purpose**: Streamlined terminal-only workspace for quick tasks
-
-**Best For**: Infrastructure management, deployment tasks, CLI operations, quick edits
-
-**Includes**:
-- Terminal access only (no IDE)
-- Claude Read-Only access
-- Automatic dotfiles configuration
-- Fixed resources (1 CPU, 2GB RAM, 1GB Storage)
-
-**Resource Allocation**: Fixed minimal resources for cost-effective operations
+### Template-Specific Parameters
 
 <details>
-<summary><strong>Template Comparison Matrix</strong></summary>
+summary><strong>RDX-General Additional Parameters</strong></summary>
 
-| Feature | RDX-General | RDX-Analysis | Deploy-Self-Service |
-|---------|--------------|--------------|---------------------|
-| **IDEs Supported** | VS Code, IntelliJ | VS Code, IntelliJ | Terminal only |
-| **Languages** | Python, Java, Go, .NET | Python, Java, Go, .NET | All (via CLI) |
-| **Specialized Tools** | General development | Conda, data science libraries | Claude Read-Only |
-| **Resource Flexibility** | Fully configurable | Optimized for analytics | Fixed minimal |
-| **Best For** | Multi-language development | Data science/analytics | Quick CLI tasks |
-| **Workspace Size** | 20GB+ (configurable) | 40GB+ (recommended) | 1GB (fixed) |
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **selected_tools** | Array of tools to enable (e.g., ["intellij"]) | ["vscode"] |
+| **enable_docker** | Enable Docker daemon in workspace | false |
+| **additional_storage** | Extra storage beyond base allocation | 0GB |
 </details>
-
-## How to Choose the Right Template
-
-### Decision Flow
-
-```mermaid
-graph TD
-    A[Start Workspace Creation] --> B{What is your primary task?}
-    B --> C[General Software Development]
-    B --> D[Data Analysis / Data Science]
-    B --> E[Quick CLI / Deployment Tasks]
-    
-    C --> F[Choose RDX-General]
-    D --> G[Choose RDX-Analysis]
-    E --> H[Choose Deploy-Self-Service]
-    
-    F --> I[Configure resources as needed]
-    G --> J[Use analytics-optimized settings]
-    H --> K[Fixed resources - ready to go]
-```
-
-### Selection Guidelines
 
 <details>
-summary><strong>When to Use Each Template</strong></summary>
+<summary><strong>RDX-Analysis Additional Parameters</strong></summary>
 
-**Choose RDX-General if you:**
-- Develop applications in multiple programming languages
-- Need full IDE support (VS Code or IntelliJ)
-- Work on general software engineering tasks
-- Collaborate with teams using different tech stacks
-- Need customizable resource allocation
-
-**Choose RDX-Analysis if you:**
-- Primarily work with data analysis or data science
-- Use Jupyter notebooks extensively
-- Need Conda for environment management
-- Work with large datasets
-- Perform statistical modeling or machine learning
-
-**Choose Deploy-Self-Service if you:**
-- Need quick terminal access for deployment tasks
-- Are managing infrastructure or configurations
-- Want minimal resource usage for cost savings
-- Perform CLI operations without IDE overhead
-- Need Claude Read-Only access for assistance
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **conda_environment** | Pre-configured Conda environment | "base" |
+| **jupyter_lab_extensions** | Additional JupyterLab extensions | [] |
+| **data_volume_size** | Size of attached data volume | 50GB |
 </details>
 
-## Template Parameters and Configuration
+## Tenant-Based Workspace Deployment
 
-### Common Parameters (All Templates)
+### How Tenants Work
 
-| Parameter | Description | Type | Required |
-|-----------|-------------|------|----------|
-| **workspace_name** | Name for your workspace | Text | Yes |
-| **tenant** | Team/tenant selection (from entitlements) | Dropdown | Yes |
-| **cpu** | CPU cores allocation | Slider | Yes |
-| **memory** | Memory allocation (GB) | Slider | Yes |
-| **gitlab_token** | GitLab personal access token | Secret | Yes |
-| **gitlab_repo** | Optional GitLab repository URL | Text | No |
-| **dotfile_repo** | Optional dotfiles repository URL | Text | No |
+Your workspace location is automatically determined by your selected tenant:
+
+1. **Tenant Selection**: Choose your tenant from the dropdown (populated from your entitlements)
+2. **Automatic Deployment**: Workspace deploys to the infrastructure associated with that tenant
+3. **Resource Isolation**: Each tenant has dedicated resources and configurations
+
+<details>
+summary><strong>Available Tenants</strong></summary>
+
+| Tenant | Purpose | Infrastructure Location |
+|--------|---------|-------------------------|
+| **default** | General development | Primary AWS region |
+| **region-*** | Regional-specific work | Corresponding AWS region |
+| **tenant1** | Specialized team | Dedicated infrastructure |
+| **tenant2** | Another specialized team | Dedicated infrastructure |
+
+> **Note**: Your available tenants are determined by your SES entitlements. Contact your manager if you need access to additional tenants.
+</details>
+
+### Tenant Benefits
+
+- **Consistent Environments**: Same tools and configurations across your team
+- **Data Sovereignty**: Workspaces deploy to appropriate regions based on data requirements
+- **Resource Optimization**: Efficient use of shared infrastructure
+- **Security Boundaries**: Isolated environments for different business units
+
+## Capability Injection

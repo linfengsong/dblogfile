@@ -1,57 +1,55 @@
+### Step-by-Step Workspace Creation
 
-### Automatic Capability Assignment
-
-Based on your entitlements, capabilities are automatically injected into your workspace:
-
-| Capability | Description | How It's Added |
-|------------|-------------|----------------|
-| **AI** | AI/ML tooling and GPU access | Based on AI entitlement |
-| **Advanced Analytics** | Additional data science tools | Based on analytics role |
-| **Security Tools** | Security scanning and analysis | Based on security clearance |
-| **Compliance Tools** | Regulatory compliance tooling | Based on compliance requirements |
-
-<details>
-<summary><strong>How Capability Injection Works</strong></summary>
-
-1. **Entitlement Check**: During workspace creation, RDX checks your SES entitlements
-2. **Capability Mapping**: Maps entitlements to specific capabilities
-3. **Tool Injection**: Appropriate tools and configurations are added to your workspace
-4. **Resource Adjustment**: Additional resources (like GPUs) are allocated if needed
-
-**Example**: If you have "AI" entitlement, your workspace automatically gets:
-- NVIDIA GPU access
-- AI/ML frameworks (TensorFlow, PyTorch)
-- Model training tools
-- Additional memory allocation
-</details>
-
-## SES Entitlements Integration
-
-### Entitlement-Based Access
-
-Your template access and capabilities are determined by SES (Service Entitlement System):
+1. **Access RDX Portal**: Navigate to the RDX web interface
+2. **Select Template**: Choose from available templates based on your task
+3. **Configure Parameters**:
+   - Enter workspace name
+   - Select tenant from dropdown
+   - Adjust CPU, memory, and storage as needed
+   - Provide GitLab token
+   - Add optional repository URLs
+4. **Review Entitlements**: Verify automatically injected capabilities
+5. **Create Workspace**: Click "Create" and wait for provisioning (typically 2-5 minutes)
 
 <details>
-<summary><strong>Default Entitlements</strong></summary>
+summary><strong>Workspace Creation Tips</strong></summary>
 
-All users approved for RDX access automatically receive:
-- **RDX-General template** within their default tenant
-- **Basic capabilities** (standard development tools)
-
-**Specialized templates require additional entitlements:**
-- **RDX-Analysis**: Requires "Analytics" entitlement
-- **Specialized tenants**: Require specific team/role entitlements
-
-**Request Process:** Additional entitlements can be requested through the Request Portal.
+- **Name Convention**: Use descriptive names like `project-feature-branch`
+- **Resource Sizing**: Start with recommended defaults, adjust based on usage
+- **GitLab Token**: Use a token with "api" and "read_repository" scope
+- **Dotfiles**: Use your personal dotfiles repo for custom shell configurations
+- **Tenant Selection**: Choose the tenant matching your team/project requirements
 </details>
 
-### Template ID Format
+### Workspace Management
 
-Templates are identified using the format: `${tenant}_${template}`
+| Action | How To | Notes |
+|--------|--------|-------|
+| **Start/Stop** | Portal toggle or auto-stop after inactivity | Saves resources when not in use |
+| **Resize** | Edit workspace parameters | Some changes require restart |
+| **Clone** | Create copy from existing workspace | Useful for testing configurations |
+| **Delete** | Remove from portal | Irreversible - backup code first |
+| **Share** | Generate shareable link | Granular permission controls |
 
-**Examples:**
-- `default_rdx-general` - General template in default tenant
-- `tenant1_elastic` - Elastic template in tenant1
-- `region-us-east-1_rdx-analysis` - Analysis template in US East region
+## Best Practices
 
-## Creating and Managing Workspaces
+### Template Selection Guidelines
+
+1. **Start General**: Begin with RDX-General unless you have specific analytics needs
+2. **Specialize Gradually**: Move to specialized templates as requirements become clear
+3. **Consider Team Needs**: Choose templates that match your team's common workflows
+4. **Evaluate Resource Usage**: Monitor workspace metrics and adjust template/resource selection
+
+### Resource Optimization
+
+<details>
+<summary><strong>Resource Recommendations</strong></summary>
+
+| Workload Type | CPU | Memory | Storage | Recommended Template |
+|---------------|-----|--------|---------|---------------------|
+| **Light Development** | 2-4 cores | 4-8GB | 20GB | RDX-General |
+| **Medium Development** | 4-8 cores | 8-16GB | 40GB | RDX-General |
+| **Heavy Development** | 8+ cores | 16+GB | 80GB+ | RDX-General |
+| **Data Analysis** | 4-8 cores | 16-32GB | 100GB+ | RDX-Analysis |
+| **Quick Tasks** | 1 core | 2GB | 1GB | Deploy-Self-Service |
+</details>

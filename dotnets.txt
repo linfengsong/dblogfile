@@ -1,60 +1,60 @@
-### First-Time Startup Performance
+### Connecting via JetBrains Gateway
 
-| Scenario | Expected Time | What Happens |
-|----------|---------------|--------------|
-| **Cold Start** (new workspace) | ~61 seconds | IDE binaries are extracted from the init-container |
-| **VSCode extraction** | ~3.5 seconds | Minimal overhead for VSCode provisioning |
-| **IntelliJ extraction** | ~58 seconds | Larger binary size requires more time |
-| **Warm Start** (restart) | ~0 seconds | N-1 version caching bypasses extraction |
+1. **Ensure IntelliJ is installed locally** with JetBrains Gateway
+2. **From RDX portal**, click "Connect" and select "IntelliJ"
+3. **Copy the connection parameters** or use the direct link
+4. **JetBrains Gateway will automatically**:
+   - Detect the remote IntelliJ installation
+   - Establish a secure connection
+   - Launch the remote IDE interface
 
-<details>
-<summary><strong>How N-1 Caching Works</strong></summary>
+### Workspace Configuration for IntelliJ
 
-RDX uses a `VERSION` file tracking system to detect when IDE versions haven't changed:
+When you select IntelliJ during workspace creation:
 
-1. On first workspace creation, IDE binaries are extracted and a version fingerprint is stored
-2. On subsequent restarts, RDX compares the current version with the cached version
-3. If identical, extraction is skipped entirely
-4. This enables **near-instant workspace restarts** after initial provisioning
-</details>
-
-## Using Visual Studio Code
-
-### Connecting to VSCode
-
-1. **From the RDX portal**, click "Connect" on your workspace
-2. **Select "VS Code"** as your connection method
-3. **Open in browser** or use the provided connection URL
-
-### Key Features
-
-- **Full Extension Support**: Install any VS Code extension from the marketplace
-- **Integrated Terminal**: Access to container shell with your development tools
-- **Remote Development**: All code execution happens in the remote workspace
-- **GPU Access**: Direct access to NVIDIA GPUs for AI/ML workloads
+1. **Automatic resource allocation**: Workspace receives minimum 10GB VM, 8GB RAM
+2. **IntelliJ binary provisioning**: 1.7GB IDE package downloaded during startup
+3. **Auto-registration**: Remote IntelliJ automatically registers with JetBrains Gateway
+4. **Installation location**: `/home/coder/.cache/JetBrains/RemoteDev/dist/IU-{build_number}`
 
 <details>
-<summary><strong>Troubleshooting VSCode Connection Issues</strong></summary>
+summary><strong>Managing IntelliJ Installation</strong></summary>
 
-| Issue | Solution |
-|-------|----------|
-| **Connection timeout** | Ensure your network allows WebSocket connections to the RDX domain |
-| **Extension installation fails** | Check workspace has internet access via proxy configuration |
-| **"Version mismatch" errors** | Rare with new init-container approach; contact support if persistent |
-| **Slow file operations** | Workspace may be under resource pressure; consider upgrading VM size |
+- **Adding IntelliJ later**: Edit workspace settings and add "intellij" to `selected_tools`
+- **Removing IntelliJ**: Remove "intellij" from `selected_tools` to free up resources
+- **Storage cleanup**: Uninstallation automatically removes the 1.7GB binary
+- **Version updates**: Handled automatically by RDX operations team
 </details>
 
-## Using IntelliJ IDEA
+## IDE Version Management
 
-### Prerequisites
+### Evergreen Updates
 
-**You must have IntelliJ IDEA installed locally** to use JetBrains Gateway for remote development.
+RDX provides automatic IDE updates without workspace downtime:
 
 <details>
-summary><strong>Local IntelliJ Requirements</strong></summary>
+<summary><strong>How Updates Work</strong></summary>
 
-- **IntelliJ IDEA** (Community or Ultimate edition)
-- **JetBrains Gateway** plugin (usually bundled with recent versions)
-- **Network access** to your RDX workspace
-- **No version matching required**: Local and remote IntelliJ versions can differ
+1. **New IDE versions** are built into the init-container image via CI/CD pipeline
+2. **Existing workspaces** continue operating with their current version
+3. **New workspaces** automatically receive the latest IDE version
+4. **No user action required** for updates
+5. **Version rollback** is possible if issues are detected
+
+```plaintext
+Update Timeline Example:
+Day 1: IntelliJ 2025.2.6.1 is current
+Day 15: Operations team releases IntelliJ 2025.2.7.0
+Day 15+: New workspaces get 2025.2.7.0
+Day 15+: Existing workspaces keep 2025.2.6.1 until restart
+```
 </details>
+
+### Version Compatibility
+
+| Component | Version Management | User Impact |
+|-----------|-------------------|-------------|
+| **VSCode Server** | Automatic updates | No action required |
+| **IntelliJ** | Automatic updates | No action required |
+| **Extensions/Plugins** | User-managed | Install/update as needed |
+| **Development Tools** | Template-defined | Updated with template changes |

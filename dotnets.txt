@@ -1,55 +1,51 @@
-### Step-by-Step Workspace Creation
+### Cost Management
 
-1. **Access RDX Portal**: Navigate to the RDX web interface
-2. **Select Template**: Choose from available templates based on your task
-3. **Configure Parameters**:
-   - Enter workspace name
-   - Select tenant from dropdown
-   - Adjust CPU, memory, and storage as needed
-   - Provide GitLab token
-   - Add optional repository URLs
-4. **Review Entitlements**: Verify automatically injected capabilities
-5. **Create Workspace**: Click "Create" and wait for provisioning (typically 2-5 minutes)
+- **Use Deploy-Self-Service** for cost-sensitive operations
+- **Set appropriate TTL** to auto-stop inactive workspaces
+- **Monitor usage patterns** and adjust resource allocations
+- **Delete unused workspaces** regularly
+- **Leverage tenant-based resource pooling** for team efficiency
+
+## Frequently Asked Questions
 
 <details>
-summary><strong>Workspace Creation Tips</strong></summary>
+<summary><strong>Q: Can I switch templates after creating a workspace?</strong></summary>
 
-- **Name Convention**: Use descriptive names like `project-feature-branch`
-- **Resource Sizing**: Start with recommended defaults, adjust based on usage
-- **GitLab Token**: Use a token with "api" and "read_repository" scope
-- **Dotfiles**: Use your personal dotfiles repo for custom shell configurations
-- **Tenant Selection**: Choose the tenant matching your team/project requirements
+**A:** No, templates cannot be changed after workspace creation. You would need to create a new workspace with the desired template and migrate your work. However, you can adjust resources and some parameters on existing workspaces.
 </details>
 
-### Workspace Management
+<details>
+<summary><strong>Q: What happens if I select the wrong tenant?</strong></summary>
 
-| Action | How To | Notes |
-|--------|--------|-------|
-| **Start/Stop** | Portal toggle or auto-stop after inactivity | Saves resources when not in use |
-| **Resize** | Edit workspace parameters | Some changes require restart |
-| **Clone** | Create copy from existing workspace | Useful for testing configurations |
-| **Delete** | Remove from portal | Irreversible - backup code first |
-| **Share** | Generate shareable link | Granular permission controls |
-
-## Best Practices
-
-### Template Selection Guidelines
-
-1. **Start General**: Begin with RDX-General unless you have specific analytics needs
-2. **Specialize Gradually**: Move to specialized templates as requirements become clear
-3. **Consider Team Needs**: Choose templates that match your team's common workflows
-4. **Evaluate Resource Usage**: Monitor workspace metrics and adjust template/resource selection
-
-### Resource Optimization
+**A:** Your workspace will deploy to the infrastructure associated with that tenant. If you need a different tenant, you'll need to create a new workspace. Contact support if you need assistance with tenant selection.
+</details>
 
 <details>
-<summary><strong>Resource Recommendations</strong></summary>
+<summary><strong>Q: How do I get access to specialized templates like RDX-Analysis?</strong></summary>
 
-| Workload Type | CPU | Memory | Storage | Recommended Template |
-|---------------|-----|--------|---------|---------------------|
-| **Light Development** | 2-4 cores | 4-8GB | 20GB | RDX-General |
-| **Medium Development** | 4-8 cores | 8-16GB | 40GB | RDX-General |
-| **Heavy Development** | 8+ cores | 16+GB | 80GB+ | RDX-General |
-| **Data Analysis** | 4-8 cores | 16-32GB | 100GB+ | RDX-Analysis |
-| **Quick Tasks** | 1 core | 2GB | 1GB | Deploy-Self-Service |
+**A:** Specialized templates require additional entitlements. Submit a request through the Request Portal, and your manager will review and approve based on your role requirements.
+</details>
+
+<details>
+<summary><strong>Q: Can I customize a template for my team's specific needs?</strong></summary>
+
+**A:** Yes, teams can request custom template configurations through the RDX engineering team. Common customizations include pre-installed packages, specific tool versions, or custom environment configurations.
+</details>
+
+<details>
+<summary><strong>Q: How are template updates handled?</strong></summary>
+
+**A:** Template updates are managed by the RDX engineering team through CI/CD pipelines. Updates are automatically deployed to development environments for testing before promotion to production. Existing workspaces continue with their current versions until recreated.
+</details>
+
+<details>
+<summary><strong>Q: What's the difference between tenants and templates?</strong></summary>
+
+**A:** Tenants determine **where** your workspace runs (which infrastructure/region), while templates determine **what** tools and configurations are available in your workspace. You select both during workspace creation.
+</details>
+
+<details>
+<summary><strong>Q: How do capabilities differ from templates?</strong></summary>
+
+**A:** Templates provide the base environment (like RDX-General or RDX-Analysis), while capabilities are additional features injected based on your entitlements (like AI tools, security scanning, etc.). Think of templates as the vehicle and capabilities as the optional features added to that vehicle.
 </details>

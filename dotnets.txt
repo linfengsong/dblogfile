@@ -1,53 +1,57 @@
-### Template-Specific Parameters
+
+### Automatic Capability Assignment
+
+Based on your entitlements, capabilities are automatically injected into your workspace:
+
+| Capability | Description | How It's Added |
+|------------|-------------|----------------|
+| **AI** | AI/ML tooling and GPU access | Based on AI entitlement |
+| **Advanced Analytics** | Additional data science tools | Based on analytics role |
+| **Security Tools** | Security scanning and analysis | Based on security clearance |
+| **Compliance Tools** | Regulatory compliance tooling | Based on compliance requirements |
 
 <details>
-summary><strong>RDX-General Additional Parameters</strong></summary>
+<summary><strong>How Capability Injection Works</strong></summary>
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| **selected_tools** | Array of tools to enable (e.g., ["intellij"]) | ["vscode"] |
-| **enable_docker** | Enable Docker daemon in workspace | false |
-| **additional_storage** | Extra storage beyond base allocation | 0GB |
+1. **Entitlement Check**: During workspace creation, RDX checks your SES entitlements
+2. **Capability Mapping**: Maps entitlements to specific capabilities
+3. **Tool Injection**: Appropriate tools and configurations are added to your workspace
+4. **Resource Adjustment**: Additional resources (like GPUs) are allocated if needed
+
+**Example**: If you have "AI" entitlement, your workspace automatically gets:
+- NVIDIA GPU access
+- AI/ML frameworks (TensorFlow, PyTorch)
+- Model training tools
+- Additional memory allocation
 </details>
+
+## SES Entitlements Integration
+
+### Entitlement-Based Access
+
+Your template access and capabilities are determined by SES (Service Entitlement System):
 
 <details>
-<summary><strong>RDX-Analysis Additional Parameters</strong></summary>
+<summary><strong>Default Entitlements</strong></summary>
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| **conda_environment** | Pre-configured Conda environment | "base" |
-| **jupyter_lab_extensions** | Additional JupyterLab extensions | [] |
-| **data_volume_size** | Size of attached data volume | 50GB |
+All users approved for RDX access automatically receive:
+- **RDX-General template** within their default tenant
+- **Basic capabilities** (standard development tools)
+
+**Specialized templates require additional entitlements:**
+- **RDX-Analysis**: Requires "Analytics" entitlement
+- **Specialized tenants**: Require specific team/role entitlements
+
+**Request Process:** Additional entitlements can be requested through the Request Portal.
 </details>
 
-## Tenant-Based Workspace Deployment
+### Template ID Format
 
-### How Tenants Work
+Templates are identified using the format: `${tenant}_${template}`
 
-Your workspace location is automatically determined by your selected tenant:
+**Examples:**
+- `default_rdx-general` - General template in default tenant
+- `tenant1_elastic` - Elastic template in tenant1
+- `region-us-east-1_rdx-analysis` - Analysis template in US East region
 
-1. **Tenant Selection**: Choose your tenant from the dropdown (populated from your entitlements)
-2. **Automatic Deployment**: Workspace deploys to the infrastructure associated with that tenant
-3. **Resource Isolation**: Each tenant has dedicated resources and configurations
-
-<details>
-summary><strong>Available Tenants</strong></summary>
-
-| Tenant | Purpose | Infrastructure Location |
-|--------|---------|-------------------------|
-| **default** | General development | Primary AWS region |
-| **region-*** | Regional-specific work | Corresponding AWS region |
-| **tenant1** | Specialized team | Dedicated infrastructure |
-| **tenant2** | Another specialized team | Dedicated infrastructure |
-
-> **Note**: Your available tenants are determined by your SES entitlements. Contact your manager if you need access to additional tenants.
-</details>
-
-### Tenant Benefits
-
-- **Consistent Environments**: Same tools and configurations across your team
-- **Data Sovereignty**: Workspaces deploy to appropriate regions based on data requirements
-- **Resource Optimization**: Efficient use of shared infrastructure
-- **Security Boundaries**: Isolated environments for different business units
-
-## Capability Injection
+## Creating and Managing Workspaces

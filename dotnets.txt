@@ -1,60 +1,107 @@
-### Connecting via JetBrains Gateway
 
-1. **Ensure IntelliJ is installed locally** with JetBrains Gateway
-2. **From RDX portal**, click "Connect" and select "IntelliJ"
-3. **Copy the connection parameters** or use the direct link
-4. **JetBrains Gateway will automatically**:
-   - Detect the remote IntelliJ installation
-   - Establish a secure connection
-   - Launch the remote IDE interface
+## Best Practices
 
-### Workspace Configuration for IntelliJ
+### IDE Selection Guidance
 
-When you select IntelliJ during workspace creation:
+| Use Case | Recommended IDE | Notes |
+|----------|----------------|-------|
+| **Python/JavaScript/TypeScript** | VS Code | Lightweight, excellent language support |
+| **Java/Kotlin/Scala** | IntelliJ | Superior Java tooling, refactoring |
+| **AI/ML with Jupyter** | VS Code | Integrated notebook support |
+| **Polyglot projects** | Either | Both support multiple languages |
+| **Resource-constrained** | VS Code | Lower memory footprint |
 
-1. **Automatic resource allocation**: Workspace receives minimum 10GB VM, 8GB RAM
-2. **IntelliJ binary provisioning**: 1.7GB IDE package downloaded during startup
-3. **Auto-registration**: Remote IntelliJ automatically registers with JetBrains Gateway
-4. **Installation location**: `/home/coder/.cache/JetBrains/RemoteDev/dist/IU-{build_number}`
+### Performance Optimization
 
-<details>
-summary><strong>Managing IntelliJ Installation</strong></summary>
-
-- **Adding IntelliJ later**: Edit workspace settings and add "intellij" to `selected_tools`
-- **Removing IntelliJ**: Remove "intellij" from `selected_tools` to free up resources
-- **Storage cleanup**: Uninstallation automatically removes the 1.7GB binary
-- **Version updates**: Handled automatically by RDX operations team
-</details>
-
-## IDE Version Management
-
-### Evergreen Updates
-
-RDX provides automatic IDE updates without workspace downtime:
+1. **Use warm starts**: Restart workspace instead of creating new when possible
+2. **Right-size resources**: Select appropriate VM size for your workload
+3. **Monitor resource usage**: Use workspace metrics to identify bottlenecks
+4. **Clean up unused workspaces**: Delete inactive workspaces to free resources
 
 <details>
-<summary><strong>How Updates Work</strong></summary>
+<summary><strong>Resource Monitoring Tips</strong></summary>
 
-1. **New IDE versions** are built into the init-container image via CI/CD pipeline
-2. **Existing workspaces** continue operating with their current version
-3. **New workspaces** automatically receive the latest IDE version
-4. **No user action required** for updates
-5. **Version rollback** is possible if issues are detected
-
-```plaintext
-Update Timeline Example:
-Day 1: IntelliJ 2025.2.6.1 is current
-Day 15: Operations team releases IntelliJ 2025.2.7.0
-Day 15+: New workspaces get 2025.2.7.0
-Day 15+: Existing workspaces keep 2025.2.6.1 until restart
-```
+- **Check `/proc/meminfo`** for memory usage
+- **Use `nvidia-smi`** for GPU utilization
+- **Monitor `/home/coder`** storage with `df -h`
+- **RDX portal** shows real-time CPU/memory metrics
 </details>
 
-### Version Compatibility
+## Troubleshooting Common Issues
 
-| Component | Version Management | User Impact |
-|-----------|-------------------|-------------|
-| **VSCode Server** | Automatic updates | No action required |
-| **IntelliJ** | Automatic updates | No action required |
-| **Extensions/Plugins** | User-managed | Install/update as needed |
-| **Development Tools** | Template-defined | Updated with template changes |
+### Connection Problems
+
+| Symptom | Likely Cause | Solution |
+|---------|--------------|----------|
+| **"Cannot connect to workspace"** | Network/firewall | Verify network allows connections to RDX domain |
+| **JetBrains Gateway fails** | Local IntelliJ missing | Install IntelliJ locally with Gateway plugin |
+| **VSCode browser connection fails** | Browser restrictions | Try different browser or use desktop client |
+
+### Performance Issues
+
+| Symptom | Likely Cause | Solution |
+|---------|--------------|----------|
+| **Slow IDE startup** | Cold start | First startup takes ~61s; subsequent are near-instant |
+| **High memory usage** | Insufficient resources | Upgrade workspace VM size |
+| **GPU not detected** | Resource allocation | Ensure GPU-enabled template selected |
+
+### IDE-Specific Issues
+
+<details>
+<summary><strong>IntelliJ Issues</strong></summary>
+
+- **"Remote IDE not found"**: Wait for IntelliJ extraction to complete (58s on cold start)
+- **Plugin compatibility**: Some plugins may not support remote development
+- **Indexing slow**: Initial project indexing may take time with large codebases
+</details>
+
+<details>
+<summary><strong>VS Code Issues</strong></summary>
+
+- **Extension host terminated**: Workspace may be out of memory; increase resources
+- **Terminal not responding**: Check workspace health in RDX portal
+- **File sync delays**: Network latency between client and workspace
+</details>
+
+## Frequently Asked Questions
+
+<details>
+summary><strong>Q: Can I use both VSCode and IntelliJ in the same workspace?</strong></summary>
+
+**A:** Yes, you can select both IDEs during workspace creation. The workspace will provision both binaries, though this increases storage requirements.
+</details>
+
+<details>
+<summary><strong>Q: How do I update my IDE to the latest version?</strong></strong></summary>
+
+**A:** IDE updates are automatic. New workspaces receive the latest version. Existing workspaces continue with their current version until you create a new workspace or the operations team triggers an update cycle.
+</details>
+
+<details>
+summary><strong>Q: What happens to my settings and extensions?</strong></summary>
+
+**A:** Both VSCode and IntelliJ settings/extensions are stored in your home directory (`/home/coder`) and persist across workspace restarts. They are tied to your user account, not the IDE version.
+</details>
+
+<details>
+<summary><strong>Q: Can I install custom IDE versions?</strong></summary>
+
+**A:** No, RDX provides standardized, supported IDE versions. Custom versions would break the evergreen update model and N-1 caching. If you need a specific version, contact the RDX team.
+</details>
+
+<details>
+<summary><strong>Q: How is this different from the old S3-based approach?</strong></summary>
+
+**A:** The new init-container approach:
+- Works identically across all environments (AWS, on-premise, etc.)
+- No S3 dependency or organizational policy restrictions
+- Faster startup (no download latency)
+- Better version management with N-1 caching
+- Lower operational overhead
+</details>
+
+<details>
+<summary><strong>Q: What if I need an IDE not currently supported?</strong></summary>
+
+**A:** Contact the RDX team with your use case. The architecture supports adding new IDEs via the same init-container pattern.
+</details>

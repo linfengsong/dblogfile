@@ -1,1 +1,41 @@
-test
+
+# RDX - Remote Development Anywhere: IDE User Guide
+
+## Overview
+
+RDX (Remote Development Anywhere) provides secure, high-performance development environments with integrated IDE support. This guide explains how to use Visual Studio Code and IntelliJ IDEA within RDX workspaces.
+
+<details>
+<summary><strong>Key Benefits</strong></summary>
+
+- **Consistent Environments**: Eliminate "works on my machine" issues with standardized toolchains
+- **GPU-Accelerated Development**: Access powerful NVIDIA GPU clusters for AI/ML workloads
+- **Flexible IDE Choice**: Choose between VSCode and IntelliJ based on your project needs
+- **Fast Startup**: N-1 version caching enables near-instant workspace restarts
+- **Automatic Updates**: IDE versions are evergreen and updated automatically
+- **Anywhere Access**: Works across AWS, Azure, OpenShift, and on-premise infrastructure
+</details>
+
+## IDE Selection and Setup
+
+### Creating a Workspace with IDE Support
+
+When creating a new RDX workspace, you can select your preferred IDE:
+
+1. **Navigate to the RDX portal** and select "Create Workspace"
+2. **Choose your template** (e.g., `rdx-standard`)
+3. **Select IDE(s)** from the available options:
+   - **Visual Studio Code**: Lightweight, extensible editor
+   - **IntelliJ IDEA**: Full-featured Java/IDE environment
+4. **Configure resources** (automatically adjusted based on IDE selection)
+
+<details>
+<summary><strong>Resource Requirements</strong></summary>
+
+| IDE | Minimum VM Size | Memory | Storage | Notes |
+|-----|-----------------|--------|---------|-------|
+| **VSCode Only** | 4GB VM | 4GB RAM | 20GB | Baseline configuration |
+| **IntelliJ** | 10GB VM | 8GB RAM | 40GB | Includes 1.7GB IntelliJ binary |
+
+> **Note**: IntelliJ workspaces automatically receive additional resources to accommodate the larger IDE footprint and Java development requirements.
+</details>

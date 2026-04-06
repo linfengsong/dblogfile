@@ -1,41 +1,60 @@
+### First-Time Startup Performance
 
-# RDX - Remote Development Anywhere: IDE User Guide
-
-## Overview
-
-RDX (Remote Development Anywhere) provides secure, high-performance development environments with integrated IDE support. This guide explains how to use Visual Studio Code and IntelliJ IDEA within RDX workspaces.
+| Scenario | Expected Time | What Happens |
+|----------|---------------|--------------|
+| **Cold Start** (new workspace) | ~61 seconds | IDE binaries are extracted from the init-container |
+| **VSCode extraction** | ~3.5 seconds | Minimal overhead for VSCode provisioning |
+| **IntelliJ extraction** | ~58 seconds | Larger binary size requires more time |
+| **Warm Start** (restart) | ~0 seconds | N-1 version caching bypasses extraction |
 
 <details>
-<summary><strong>Key Benefits</strong></summary>
+<summary><strong>How N-1 Caching Works</strong></summary>
 
-- **Consistent Environments**: Eliminate "works on my machine" issues with standardized toolchains
-- **GPU-Accelerated Development**: Access powerful NVIDIA GPU clusters for AI/ML workloads
-- **Flexible IDE Choice**: Choose between VSCode and IntelliJ based on your project needs
-- **Fast Startup**: N-1 version caching enables near-instant workspace restarts
-- **Automatic Updates**: IDE versions are evergreen and updated automatically
-- **Anywhere Access**: Works across AWS, Azure, OpenShift, and on-premise infrastructure
+RDX uses a `VERSION` file tracking system to detect when IDE versions haven't changed:
+
+1. On first workspace creation, IDE binaries are extracted and a version fingerprint is stored
+2. On subsequent restarts, RDX compares the current version with the cached version
+3. If identical, extraction is skipped entirely
+4. This enables **near-instant workspace restarts** after initial provisioning
 </details>
 
-## IDE Selection and Setup
+## Using Visual Studio Code
 
-### Creating a Workspace with IDE Support
+### Connecting to VSCode
 
-When creating a new RDX workspace, you can select your preferred IDE:
+1. **From the RDX portal**, click "Connect" on your workspace
+2. **Select "VS Code"** as your connection method
+3. **Open in browser** or use the provided connection URL
 
-1. **Navigate to the RDX portal** and select "Create Workspace"
-2. **Choose your template** (e.g., `rdx-standard`)
-3. **Select IDE(s)** from the available options:
-   - **Visual Studio Code**: Lightweight, extensible editor
-   - **IntelliJ IDEA**: Full-featured Java/IDE environment
-4. **Configure resources** (automatically adjusted based on IDE selection)
+### Key Features
+
+- **Full Extension Support**: Install any VS Code extension from the marketplace
+- **Integrated Terminal**: Access to container shell with your development tools
+- **Remote Development**: All code execution happens in the remote workspace
+- **GPU Access**: Direct access to NVIDIA GPUs for AI/ML workloads
 
 <details>
-<summary><strong>Resource Requirements</strong></summary>
+<summary><strong>Troubleshooting VSCode Connection Issues</strong></summary>
 
-| IDE | Minimum VM Size | Memory | Storage | Notes |
-|-----|-----------------|--------|---------|-------|
-| **VSCode Only** | 4GB VM | 4GB RAM | 20GB | Baseline configuration |
-| **IntelliJ** | 10GB VM | 8GB RAM | 40GB | Includes 1.7GB IntelliJ binary |
+| Issue | Solution |
+|-------|----------|
+| **Connection timeout** | Ensure your network allows WebSocket connections to the RDX domain |
+| **Extension installation fails** | Check workspace has internet access via proxy configuration |
+| **"Version mismatch" errors** | Rare with new init-container approach; contact support if persistent |
+| **Slow file operations** | Workspace may be under resource pressure; consider upgrading VM size |
+</details>
 
-> **Note**: IntelliJ workspaces automatically receive additional resources to accommodate the larger IDE footprint and Java development requirements.
+## Using IntelliJ IDEA
+
+### Prerequisites
+
+**You must have IntelliJ IDEA installed locally** to use JetBrains Gateway for remote development.
+
+<details>
+summary><strong>Local IntelliJ Requirements</strong></summary>
+
+- **IntelliJ IDEA** (Community or Ultimate edition)
+- **JetBrains Gateway** plugin (usually bundled with recent versions)
+- **Network access** to your RDX workspace
+- **No version matching required**: Local and remote IntelliJ versions can differ
 </details>

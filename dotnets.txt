@@ -1,1 +1,68 @@
-test
+
+## 1. Introduction and Overview
+
+### What is Guided Architect Mode?
+
+**Guided Architect Mode** is a governed AI workspace configuration that transforms Claude Code into a **read-only tutor and architectural guide**. Instead of generating or modifying code directly, Claude provides:
+
+- **Code explanations** and architectural reviews
+- **Best practice guidance** and pattern suggestions  
+- **Learning materials** and technical references
+- **Security analysis** and issue identification
+
+### Why We Created This Mode
+
+As AI agents become integral to engineering workflows, we identified three critical risks:
+
+1. **IP Protection**: Preventing sensitive code from accidental exposure
+2. **Cognitive Reinforcement**: Ensuring engineers understand code, not just copy it
+3. **Cost Control**: Preventing unpredictable AI spending
+
+Guided Architect Mode addresses these at the **infrastructure layer**, creating a safe "governance sandbox" where learning is prioritized over automation.
+
+details>
+<summary><strong>🎯 Who Should Use This Mode?</strong></summary>
+
+- **New AI users**: Teams adopting AI-assisted development
+- **High-security roles**: Engineers working with sensitive IP
+- **Learning-focused developers**: Those wanting architectural guidance without automation
+- **Regulated environments**: Teams requiring strict compliance controls
+
+**Important**: This is **not** a progression tier. Users don't "graduate" to more permissive modes. Teams needing broader AI capabilities should use alternative workspace templatesdetails>
+
+## 2. Key Features
+
+### 2.1 Read-Only Tutor Persona
+
+Claude operates with a **"Read-Only Tutor"** persona that emphasizes learning and understanding:
+
+```plaintext
+What Claude CAN do:
+- Review and explain existing code
+- Suggest architectural patterns and best practices
+- Identify potential issues and security concerns
+- Provide learning materials and references
+- Guide you through complex system understanding
+
+What Claude CANNOT do:
+- Modify files directly
+- Execute shell commands
+- Fetch arbitrary web content
+- Generate code without explanation
+```
+
+### 2.2 Smart Repository Access Control
+
+**Repository Sentinel** technology validates every file access attempt:
+
+```python
+# How access decisions are made
+1. Extract target path from tool request
+2. Validate path is within allowed filesystem bounds (/home/coder)
+3. Find Git repository root (git rev-parse --show-toplevel)
+4. Check repository URL against configured allow patterns
+5. ALLOW or DENY based on pattern matching
+```
+
+**Access Patterns**: Configured via regex patterns that match Git repository paths (e.g., `group/project.*`, `team/.*-service`)
+

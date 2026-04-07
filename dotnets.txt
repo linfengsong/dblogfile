@@ -1,68 +1,62 @@
+### 2.3 Financial Governance
 
-## 1. Introduction and Overview
+**Phase 1 (Guided Architect Mode) Quota**:
 
-### What is Guided Architect Mode?
+| Deployment Model | AI License | Weekly Budget | Daily Budget |
+|-----------------|------------|---------------|--------------|
+| Free Tier | No | $10 | $2 (5-day week) |
+| Developer Namespace | No | $10 | $2 (5-day week) |
+| Dedicated Tenant | Possible | $10 (default) | $2 (5-day week) |
+| Dedicated AI License | Yes | Unrestricted/team-defined | Custom |
 
-**Guided Architect Mode** is a governed AI workspace configuration that transforms Claude Code into a **read-only tutor and architectural guide**. Instead of generating or modifying code directly, Claude provides:
+**Budget Mechanics**:
+- **Soft Alert**: Warning at 80% of quota ($8 spent)
+- **Hard Limit**: Complete block at 100% quota ($10 spent)
+- **Reset**: Every Monday (start of work week)
 
-- **Code explanations** and architectural reviews
-- **Best practice guidance** and pattern suggestions  
-- **Learning materials** and technical references
-- **Security analysis** and issue identification
+### 2.4 Tool Whitelist/Blacklist
 
-### Why We Created This Mode
+| Allowed Tools | Purpose | Blocked Tools | Reason |
+|---------------|---------|---------------|--------|
+| `read` | File content analysis | `write` | Prevents code modification |
+| `ls` | Directory listing | `edit` | Prevents file changes |
+| `grep` | Pattern searching | `bash` | Prevents shell execution |
+| `glob` | File pattern matching | `webfetch` | Prevents external data access |
+| | | `task` | Prevents automated workflows |
 
-As AI agents become integral to engineering workflows, we identified three critical risks:
+## 3. Getting Started
 
-1. **IP Protection**: Preventing sensitive code from accidental exposure
-2. **Cognitive Reinforcement**: Ensuring engineers understand code, not just copy it
-3. **Cost Control**: Preventing unpredictable AI spending
+### 3.1 Workspace Provisioning
 
-Guided Architect Mode addresses these at the **infrastructure layer**, creating a safe "governance sandbox" where learning is prioritized over automation.
+When your administrator creates a Guided Architect Mode workspace:
 
-details>
-<summary><strong>🎯 Who Should Use This Mode?</strong></summary>
+1. **Template Selection**: "Guided Architect" template is chosen
+2. **Configuration Applied**:
+   - Managed settings JSON enforces read-only mode
+   - Repository allow patterns configured
+   - LiteLLM virtual key with $10/week quota created
+   - CLAUDE.md persona mounted
+3. **Workspace Launch**: You receive access to your governed workspace
 
-- **New AI users**: Teams adopting AI-assisted development
-- **High-security roles**: Engineers working with sensitive IP
-- **Learning-focused developers**: Those wanting architectural guidance without automation
-- **Regulated environments**: Teams requiring strict compliance controls
+### 3.2 First-Time Setupdetails>
+<summary><strong>🔄 Accessing Authorized Repsummary>
 
-**Important**: This is **not** a progression tier. Users don't "graduate" to more permissive modes. Teams needing broader AI capabilities should use alternative workspace templatesdetails>
+1. **Clone authorized repositories** into your workspace:
+   ```bash
+   # Only repositories matching your allow patterns will be accessible
+   git clone https://gitlab.example.com/team/authorized-project.git
+   ```
 
-## 2. Key Features
+2. **Verify repository access**:
+   ```bash
+   # Ask Claude about repository structure
+   "Claude, can you explain the structure of this project?"
+   
+   # If access is granted, Claude will analyze the code
+   # If denied, you'll receive an educational message
+   ```
 
-### 2.1 Read-Only Tutor Persona
-
-Claude operates with a **"Read-Only Tutor"** persona that emphasizes learning and understanding:
-
-```plaintext
-What Claude CAN do:
-- Review and explain existing code
-- Suggest architectural patterns and best practices
-- Identify potential issues and security concerns
-- Provide learning materials and references
-- Guide you through complex system understanding
-
-What Claude CANNOT do:
-- Modify files directly
-- Execute shell commands
-- Fetch arbitrary web content
-- Generate code without explanation
-```
-
-### 2.2 Smart Repository Access Control
-
-**Repository Sentinel** technology validates every file access attempt:
-
-```python
-# How access decisions are made
-1. Extract target path from tool request
-2. Validate path is within allowed filesystem bounds (/home/coder)
-3. Find Git repository root (git rev-parse --show-toplevel)
-4. Check repository URL against configured allow patterns
-5. ALLOW or DENY based on pattern matching
-```
-
-**Access Patterns**: Configured via regex patterns that match Git repository paths (e.g., `group/project.*`, `team/.*-service`)
-
+3. **Working with multiple repos**:
+   - Each repository is validated independently
+   - Access decisions are cached per session for performance
+   - Changing directories doesn't affect validationdetails>

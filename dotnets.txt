@@ -1,85 +1,191 @@
-## 4. How to Use Guided Architect Mode
+## 5. Understanding Access Control
 
-### 4.1 Effective Interaction Patterns
+### 5.1 How Repository Validation Works
 
-**Instead of asking Claude to write code, ask for understanding:**
+The system validates access through a multi-step process:
 
-| Instead Of... | Try This... |
-|---------------|-------------|
-| "Write a function to process user data" | "Explain the patterns we should use for user data processing" |
-| "Fix this bug" | "Help me understand what might be causing this issue" |
-| "Implement feature X" | "What architectural approach should we take for feature X?" |
-| "Optimize this query" | "Review this query and suggest optimization strategies" |
+```mermaid
+graph TD
+    A[Tool Request] --> B[Path Extraction]
+    B --> C[Filesystem Jail Check]
+    C --> D{Git Repository?}
+    D -->|No| E[ACCESS DENIED<br/>Not in Git repo]
+    D -->|Yes| F[Git Root Resolution]
+    F --> G[Cache Check]
+    G --> H{Cache Hit?}
+    H -->|Yes| I[Return Cached Decision]
+    H -->|No| J[Git Remote Extraction]
+    J --> K[Pattern Matching]
+    K --> L{Pattern Match?}
+    L -->|Yes| M[ACCESS ALLOWED]
+    L -->|No| N[ACCESS DENIED]
+    M --> O[Update Cache]
+    N --> O
+```
 
-### 4.2 Common Use Casesdetails>
-<summary><strong>🔍 Code Review Assistance</strong></summary>
+### 5.2 Configuring Access Patterns
+
+**Administrators** configure access via regex patterns in the workspace ConfigMap:
+
+```yaml
+# Example allow patterns
+allowed_patterns:
+  # All repositories in 'engineering' group
+  - "^engineering/.*$"
+  
+  # Specific project and its forks
+  - "^team/core-service(@.*)?$"
+  
+  # All frontend projects
+  - "^.*/frontend-.*$"
+```
+
+**Pattern Examples**:
+- `^engineering/.*$` - All repos in engineering group
+- `^team/project-name$` - Specific project only
+- `^.*-service$` - All repositories ending with "-service"
+- `^team/.*@v2$` - Specific branch pattern
+
+## 6. Budget and Cost Management
+
+### 6.1 Understanding Your Quota
+
+**Default Budget**: $10 per week, resetting every Monday
 
 ```plaintext
-"Claude, please review this Python function for:
-1. Potential security issues
-2. Performance bottlenecks  
-3. Compliance with our team's style guide
-4. Alternative approaches worth considering"
-
-Claude will provide:
-- Line-by-line analysis with explanations
-- Security vulnerability identification
-- Performance improvement suggestions
-- Links to relevant documentation
-- Questions to consider before implementation
+Weekly Breakdown:
+Monday:    $2.00 budget
+Tuesday:   $2.00 budget  
+Wednesday: $2.00 budget
+Thursday:  $2.00 budget
+Friday:    $2.00 budget
+Weekend:   No budget consumption (read-only mode still available)
 ```
+
+### 6.2 Monitoring Your Usage
+
+**Soft Alert (80% of quota)**:
+```plaintext
+⚠️ WEEKLY AI BUDGET APPROACHING LIMIT
+
+You've used $8.00 of your $10.00 weekly budget for this workspace.
+
+Your next request may trigger quota limits. Consider:
+• Batching related questions into single requests
+• Waiting until your quota resets (every Monday)
+• Requesting a quota increase from your team Lead
+
+Current session cost: $0.47
+```
+
+**Hard Limit (quota exceeded)**:
+```plaintext
+🚫 WEEKLY AI BUDGET EXCEEDED
+
+You've reached your $10.00 weekly limit for this workspace.
+
+Options:
+1. Continue working without AI assistance until Monday
+2. Request temporary quota increase from team lead
+3. Use alternative workspace with different budget allocation
+
+Budget resets: Monday 00:00 UTC
+```
+
+### 6.3 Cost Optimization Tipsdetails>
+<summary><strong>💡 Maximizing Your $10 Weeklysummary>
+
+1. **Batch Related Questions**:
+   ```plaintext
+   Instead of:
+   "Explain function A"
+   (wait for response)
+   "Now explain function B"
+   
+   Do:
+   "Please explain functions A, B, and C and how they interact"
+   ```
+
+2. **Use Targeted Requests**:
+   ```plaintext
+   Instead of:
+   "Review this entire file" (1000 lines)
+   
+   Do:
+   "Review the authentication logic in lines 150-300"
+   ```
+
+3. **Prepare Context First**:
+   ```plaintext
+   "I'm working on the user profile feature. 
+   First, help me understand the existing patterns, then
+   review my implementation approach."
+   ```
+
+4. **Leverage Cached Responses**:
+   - Repository access decisions are cached per session
+   - Repeated analysis of the same code costs less
+   - Plan related analysis in single sessions
+   ```
+
+**Estimated Query Costs**:
+- Code explanation (50 lines): $0.02-$0.05
+- Architectural review: $0.10-$0.20  
+- Full file analysis: $0.15-$0.30
+- System walkthrough: $0.25-$0.50details>
+
+## 7. Troubleshooting and FAQs
+
+### 7.1 Common Issues and Solutions
+
+| Issue | Possible Cause | Solution |
+|-------|---------------|----------|
+| "ACCESS DENIED: Repository Governance" | Repository not in allow patterns | Check with admin about access configuration |
+| "Tool not available" | Tool is in blacklist | Use alternative approach or request tool whitelist |
+| "Budget exceeded" | Reached $10 weekly limit | Wait until Monday or request quota increase |
+| "No Git repository found" | File not in tracked Git repo | Move file to authorized repository |
+| "Path traversal attempt blocked" | Trying to access outside `/home/coder` | Stay within workspace directory bounds |
+
+### 7.2 Frequently Asked Questions
+
+<detailsstrong>❓ Why can't Claude write code for me?</strong></summary>
+
+**Learning Accelerates Ownership**: When you author code based on architectural guidance, you build deeper understanding and ownership of the solution. This leads to better maintenance, debugging, and future development.
+
+**Quality Improves with Review**: Your own critical evaluation, combined with peer review, catches issues that AI-first workflows often miss. Claude's role is to prepare you for effective review, not replace it.
+
+**Compliance Requires Intention**: Certain codebases have regulatory or security requirements that mandate human authorship and review cyclesdetails>
+
+<detailsstrong>❓ How are access decisions cached?</strong></summary>
+
+Access decisions are cached **in-memory only** for security:
+
+- **Scope**: Single Claude Code session only
+- **Storage**: Process memory, not disk
+- **Security**: User cannot tamper with cache decisions
+- **Reset**: Cache cleared when Claude process ends
+- **Performance**: ~10-50ms overhead reduced to ~1-5ms after cache hit
+
+This prevents privilege escalation while maintaining performance for repeated repository access.
 </detailsdetails>
-<summary><strong>🏗️ Architectural Guidance</strong></summary>
+<summary><strong>❓ Can I request additional tools or access?</strong></summary>
 
-```plaintext
-"Claude, we need to add caching to our user service. 
-What patterns should we consider, and what are the trade-offs?"
+Yes, through proper channels:
 
-Claude will provide:
-- Pattern options (Redis vs. in-memory, write-through vs. write-behind)
-- Implementation considerations for our stack
-- Potential pitfalls and mitigation strategies
-- References to existing implementations in our codebase
-- Questions to answer before deciding
-details>
+1. **Repository Access**: Contact your team lead or architect to discuss adding repositories to the allow patterns
+2. **Tool Access**: Some tools may be enabled for specific use cases with security review
+3. **Budget Increase**: Teams with dedicated AI licenses can define custom budgets
 
-<detailsstrong>📚 Learning and Onsummary>
+All requests follow the governance framework to maintain security and compliance standardsdetails>
 
-```plaintext
-"Claude, I'm new to our payment processing system.
-Can you walk me through how authorization flows work?"
+<detailsstrong>❓ What happens if I try to bypass restrictions?</strong></summary>
 
-Claude will provide:
-- System overview with key components
-- Flow diagrams (explained in text)
-- Entry points and integration patterns
-- Common debugging approaches
-- Team-specific conventions to know
-details>
+The system is designed with **multiple defense layers**:
 
-### 4.3 Understanding Rejection Messages
+1. **Managed Physics**: Tools disabled at runtime level
+2. **Bypass Prevention**: `disableBypassPermissionsNode` prevents circumvention
+3. **Filesystem Jail**: Paths outside `/home/coder` immediately rejected
+4. **Credential Scrubbing**: Tokens redacted from all outputs
 
-When Claude cannot access a repository or tool, you'll receive **educational messages**:
-
-```plaintext
-ACCESS DENIED: Repository Governance
-
-The repository 'team/restricted-project' is not currently authorized 
-for AI analysis in this workspace.
-
-Why this matters:
-• Intellectual Property Protection: This ensures proprietary algorithms 
-  and business logic remain within controlled environments
-• Compliance Requirements: Certain codebases have regulatory constraints 
-  on AI processing
-• Team Governance: Your architect team defines which repositories are 
-  AI-accessible based on security classifications
-
-What you can do:
-1. Request repository authorization through your team lead
-2. Work with the code locally without AI assistance  
-3. Ask about architectural patterns that might apply (without accessing 
-   the specific code)
-
-Learn more about our governance approach in /home/coder/CLAUDE.md
-```
+Attempts to bypass are logged and may trigger security reviews. The educational focus means we'd rather explain why restrictions exist than punish attempts.
+</details>

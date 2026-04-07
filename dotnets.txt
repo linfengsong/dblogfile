@@ -1,191 +1,141 @@
-## 5. Understanding Access Control
+## 8. Future Plans and Roadmap
 
-### 5.1 How Repository Validation Works
+### 8.1 Phase 2+ Evolution
 
-The system validates access through a multi-step process:
+While Guided Architect Mode remains focused on read-only learning, future phases will expand capabilities for licensed environments:
 
-```mermaid
-graph TD
-    A[Tool Request] --> B[Path Extraction]
-    B --> C[Filesystem Jail Check]
-    C --> D{Git Repository?}
-    D -->|No| E[ACCESS DENIED<br/>Not in Git repo]
-    D -->|Yes| F[Git Root Resolution]
-    F --> G[Cache Check]
-    G --> H{Cache Hit?}
-    H -->|Yes| I[Return Cached Decision]
-    H -->|No| J[Git Remote Extraction]
-    J --> K[Pattern Matching]
-    K --> L{Pattern Match?}
-    L -->|Yes| M[ACCESS ALLOWED]
-    L -->|No| N[ACCESS DENIED]
-    M --> O[Update Cache]
-    N --> O
-```
+| Phase | Capabilities | Governance Model |
+|-------|-------------|------------------|
+| **Phase 1 (Current)** | Read-only analysis, $10/week quota | Strict, learning-focused |
+| **Phase 2** | Controlled write operations, team budgets | Role-based with oversight |
+| **Phase 3** | Full AI pair programming, custom models | Policy-as-code with audits |
 
-### 5.2 Configuring Access Patterns
+### 8.2 Upcoming Enhancements
 
-**Administrators** configure access via regex patterns in the workspace ConfigMap:
+<detailsstrong>🔮 Plannedsummary>
 
-```yaml
-# Example allow patterns
-allowed_patterns:
-  # All repositories in 'engineering' group
-  - "^engineering/.*$"
-  
-  # Specific project and its forks
-  - "^team/core-service(@.*)?$"
-  
-  # All frontend projects
-  - "^.*/frontend-.*$"
-```
+**Q3 2026**:
+- Dynamic pattern synchronization (beyond static ConfigMaps)
+- Team-level budget pooling and management
+- Enhanced educational content in rejection messages
+- Performance optimization for large repository scans
 
-**Pattern Examples**:
-- `^engineering/.*$` - All repos in engineering group
-- `^team/project-name$` - Specific project only
-- `^.*-service$` - All repositories ending with "-service"
-- `^team/.*@v2$` - Specific branch pattern
+**Q4 2026**:
+- Integration with team knowledge bases
+- Customizable persona templates per project type
+- Advanced cost analytics and forecasting
+- Browser extension for web-based guidance
 
-## 6. Budget and Cost Management
-
-### 6.1 Understanding Your Quota
-
-**Default Budget**: $10 per week, resetting every Monday
-
-```plaintext
-Weekly Breakdown:
-Monday:    $2.00 budget
-Tuesday:   $2.00 budget  
-Wednesday: $2.00 budget
-Thursday:  $2.00 budget
-Friday:    $2.00 budget
-Weekend:   No budget consumption (read-only mode still available)
-```
-
-### 6.2 Monitoring Your Usage
-
-**Soft Alert (80% of quota)**:
-```plaintext
-⚠️ WEEKLY AI BUDGET APPROACHING LIMIT
-
-You've used $8.00 of your $10.00 weekly budget for this workspace.
-
-Your next request may trigger quota limits. Consider:
-• Batching related questions into single requests
-• Waiting until your quota resets (every Monday)
-• Requesting a quota increase from your team Lead
-
-Current session cost: $0.47
-```
-
-**Hard Limit (quota exceeded)**:
-```plaintext
-🚫 WEEKLY AI BUDGET EXCEEDED
-
-You've reached your $10.00 weekly limit for this workspace.
-
-Options:
-1. Continue working without AI assistance until Monday
-2. Request temporary quota increase from team lead
-3. Use alternative workspace with different budget allocation
-
-Budget resets: Monday 00:00 UTC
-```
-
-### 6.3 Cost Optimization Tipsdetails>
-<summary><strong>💡 Maximizing Your $10 Weeklysummary>
-
-1. **Batch Related Questions**:
-   ```plaintext
-   Instead of:
-   "Explain function A"
-   (wait for response)
-   "Now explain function B"
-   
-   Do:
-   "Please explain functions A, B, and C and how they interact"
-   ```
-
-2. **Use Targeted Requests**:
-   ```plaintext
-   Instead of:
-   "Review this entire file" (1000 lines)
-   
-   Do:
-   "Review the authentication logic in lines 150-300"
-   ```
-
-3. **Prepare Context First**:
-   ```plaintext
-   "I'm working on the user profile feature. 
-   First, help me understand the existing patterns, then
-   review my implementation approach."
-   ```
-
-4. **Leverage Cached Responses**:
-   - Repository access decisions are cached per session
-   - Repeated analysis of the same code costs less
-   - Plan related analysis in single sessions
-   ```
-
-**Estimated Query Costs**:
-- Code explanation (50 lines): $0.02-$0.05
-- Architectural review: $0.10-$0.20  
-- Full file analysis: $0.15-$0.30
-- System walkthrough: $0.25-$0.50details>
-
-## 7. Troubleshooting and FAQs
-
-### 7.1 Common Issues and Solutions
-
-| Issue | Possible Cause | Solution |
-|-------|---------------|----------|
-| "ACCESS DENIED: Repository Governance" | Repository not in allow patterns | Check with admin about access configuration |
-| "Tool not available" | Tool is in blacklist | Use alternative approach or request tool whitelist |
-| "Budget exceeded" | Reached $10 weekly limit | Wait until Monday or request quota increase |
-| "No Git repository found" | File not in tracked Git repo | Move file to authorized repository |
-| "Path traversal attempt blocked" | Trying to access outside `/home/coder` | Stay within workspace directory bounds |
-
-### 7.2 Frequently Asked Questions
-
-<detailsstrong>❓ Why can't Claude write code for me?</strong></summary>
-
-**Learning Accelerates Ownership**: When you author code based on architectural guidance, you build deeper understanding and ownership of the solution. This leads to better maintenance, debugging, and future development.
-
-**Quality Improves with Review**: Your own critical evaluation, combined with peer review, catches issues that AI-first workflows often miss. Claude's role is to prepare you for effective review, not replace it.
-
-**Compliance Requires Intention**: Certain codebases have regulatory or security requirements that mandate human authorship and review cyclesdetails>
-
-<detailsstrong>❓ How are access decisions cached?</strong></summary>
-
-Access decisions are cached **in-memory only** for security:
-
-- **Scope**: Single Claude Code session only
-- **Storage**: Process memory, not disk
-- **Security**: User cannot tamper with cache decisions
-- **Reset**: Cache cleared when Claude process ends
-- **Performance**: ~10-50ms overhead reduced to ~1-5ms after cache hit
-
-This prevents privilege escalation while maintaining performance for repeated repository access.
-</detailsdetails>
-<summary><strong>❓ Can I request additional tools or access?</strong></summary>
-
-Yes, through proper channels:
-
-1. **Repository Access**: Contact your team lead or architect to discuss adding repositories to the allow patterns
-2. **Tool Access**: Some tools may be enabled for specific use cases with security review
-3. **Budget Increase**: Teams with dedicated AI licenses can define custom budgets
-
-All requests follow the governance framework to maintain security and compliance standardsdetails>
-
-<detailsstrong>❓ What happens if I try to bypass restrictions?</strong></summary>
-
-The system is designed with **multiple defense layers**:
-
-1. **Managed Physics**: Tools disabled at runtime level
-2. **Bypass Prevention**: `disableBypassPermissionsNode` prevents circumvention
-3. **Filesystem Jail**: Paths outside `/home/coder` immediately rejected
-4. **Credential Scrubbing**: Tokens redacted from all outputs
-
-Attempts to bypass are logged and may trigger security reviews. The educational focus means we'd rather explain why restrictions exist than punish attempts.
+**2027 Roadmap**:
+- AI-assisted code review workflows
+- Architecture decision record integration
+- Compliance automation for regulated industries
+- Cross-repository pattern analysis
 </details>
+
+### 8.3 Feedback and Contribution
+
+We're evolving Guided Architect Mode based on user experience:
+
+**Feedback Channels**:
+1. **In-workspace feedback**: Use the feedback tool in your workspace
+2. **Team retrospectives**: Discuss AI assistance effectiveness in team meetings
+3. **Governance review sessions**: Quarterly reviews of access patterns and quotas
+4. **Learning effectiveness surveys**: Monthly surveys on knowledge retention
+
+**Success Metrics We Track**:
+- Code review quality improvements
+- Time to competency for new team members
+- Security issue detection rates
+- Budget utilization patterns
+- User satisfaction with educational content
+
+## 9. Security and Compliance
+
+### 9.1 Security Architecture
+
+Guided Architect Mode implements **defense-in-depth**:
+
+| Layer | Protection | Implementation |
+|-------|------------|----------------|
+| **Physical** | Filesystem jail | Path confinement to `/home/coder` |
+| **Repository** | Smart allow/deny | Regex pattern matching on Git URLs |
+| **Tool** | Runtime enforcement | Managed settings JSON |
+| **Credential** | Token redaction | `glpat-*` pattern scrubbing |
+| **Financial** | Hard quotas | LiteLLM virtual keys with limits |
+| **Audit** | Complete logging | All tool calls with context |
+
+### 9.2 Compliance Assurance
+
+**Automated Governance**: Policies enforced at infrastructure layer ensure consistent compliance across all users.
+
+**Audit Trail**: Every access decision is logged with:
+- Timestamp and user identity
+- Target repository and path
+- Access decision (ALLOW/DENY)
+- Pattern matched (if allowed)
+- Cache status (hit/miss)
+
+**Regular Reviews**:
+- Monthly security posture reviews
+- Quarterly access pattern audits  
+- Annual compliance certification updates
+
+### 9.3 Data Protection
+
+**What's Protected**:
+- Source code IP through repository access control
+- Credentials through automatic redaction
+- Financial data through quota enforcement
+- User privacy through minimal data collection
+
+**What's Logged**:
+- Access decisions and patterns
+- Budget consumption metrics
+- Tool usage statistics
+- Educational interaction patterns
+
+**Retention Policy**:
+- Security logs: 90 days
+- Budget logs: 12 months (aggregated)
+- Access patterns: 30 days (detailed), 12 months (aggregated)
+
+---
+
+## Appendix: Quick Start Commands
+
+### Testing Repository Access
+```bash
+# Check if repository is accessible
+cd /path/to/repository
+echo "Claude, what's the main entry point of this project?"
+
+# Test specific file analysis
+echo "Claude, explain the architecture of src/main.js"
+```
+
+### Budget Monitoring
+```bash
+# Check current budget (via Claude)
+echo "Claude, what's my current AI budget status?"
+
+# View governance configuration
+cat /home/coder/CLAUDE.md
+```
+
+### Effective Prompt Templates
+```bash
+# Architectural review template
+echo "Claude, review this code for:
+1. Security considerations
+2. Performance implications  
+3. Maintainability concerns
+4. Alternative approaches"
+
+# Learning template  
+echo "Claude, I'm learning about [topic]. 
+Can you explain the key concepts and point me to 
+relevant code examples in our codebase?"
+```
+
+---

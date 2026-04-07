@@ -1,62 +1,85 @@
-### 2.3 Financial Governance
+## 4. How to Use Guided Architect Mode
 
-**Phase 1 (Guided Architect Mode) Quota**:
+### 4.1 Effective Interaction Patterns
 
-| Deployment Model | AI License | Weekly Budget | Daily Budget |
-|-----------------|------------|---------------|--------------|
-| Free Tier | No | $10 | $2 (5-day week) |
-| Developer Namespace | No | $10 | $2 (5-day week) |
-| Dedicated Tenant | Possible | $10 (default) | $2 (5-day week) |
-| Dedicated AI License | Yes | Unrestricted/team-defined | Custom |
+**Instead of asking Claude to write code, ask for understanding:**
 
-**Budget Mechanics**:
-- **Soft Alert**: Warning at 80% of quota ($8 spent)
-- **Hard Limit**: Complete block at 100% quota ($10 spent)
-- **Reset**: Every Monday (start of work week)
+| Instead Of... | Try This... |
+|---------------|-------------|
+| "Write a function to process user data" | "Explain the patterns we should use for user data processing" |
+| "Fix this bug" | "Help me understand what might be causing this issue" |
+| "Implement feature X" | "What architectural approach should we take for feature X?" |
+| "Optimize this query" | "Review this query and suggest optimization strategies" |
 
-### 2.4 Tool Whitelist/Blacklist
+### 4.2 Common Use Casesdetails>
+<summary><strong>🔍 Code Review Assistance</strong></summary>
 
-| Allowed Tools | Purpose | Blocked Tools | Reason |
-|---------------|---------|---------------|--------|
-| `read` | File content analysis | `write` | Prevents code modification |
-| `ls` | Directory listing | `edit` | Prevents file changes |
-| `grep` | Pattern searching | `bash` | Prevents shell execution |
-| `glob` | File pattern matching | `webfetch` | Prevents external data access |
-| | | `task` | Prevents automated workflows |
+```plaintext
+"Claude, please review this Python function for:
+1. Potential security issues
+2. Performance bottlenecks  
+3. Compliance with our team's style guide
+4. Alternative approaches worth considering"
 
-## 3. Getting Started
+Claude will provide:
+- Line-by-line analysis with explanations
+- Security vulnerability identification
+- Performance improvement suggestions
+- Links to relevant documentation
+- Questions to consider before implementation
+```
+</detailsdetails>
+<summary><strong>🏗️ Architectural Guidance</strong></summary>
 
-### 3.1 Workspace Provisioning
+```plaintext
+"Claude, we need to add caching to our user service. 
+What patterns should we consider, and what are the trade-offs?"
 
-When your administrator creates a Guided Architect Mode workspace:
+Claude will provide:
+- Pattern options (Redis vs. in-memory, write-through vs. write-behind)
+- Implementation considerations for our stack
+- Potential pitfalls and mitigation strategies
+- References to existing implementations in our codebase
+- Questions to answer before deciding
+details>
 
-1. **Template Selection**: "Guided Architect" template is chosen
-2. **Configuration Applied**:
-   - Managed settings JSON enforces read-only mode
-   - Repository allow patterns configured
-   - LiteLLM virtual key with $10/week quota created
-   - CLAUDE.md persona mounted
-3. **Workspace Launch**: You receive access to your governed workspace
+<detailsstrong>📚 Learning and Onsummary>
 
-### 3.2 First-Time Setupdetails>
-<summary><strong>🔄 Accessing Authorized Repsummary>
+```plaintext
+"Claude, I'm new to our payment processing system.
+Can you walk me through how authorization flows work?"
 
-1. **Clone authorized repositories** into your workspace:
-   ```bash
-   # Only repositories matching your allow patterns will be accessible
-   git clone https://gitlab.example.com/team/authorized-project.git
-   ```
+Claude will provide:
+- System overview with key components
+- Flow diagrams (explained in text)
+- Entry points and integration patterns
+- Common debugging approaches
+- Team-specific conventions to know
+details>
 
-2. **Verify repository access**:
-   ```bash
-   # Ask Claude about repository structure
-   "Claude, can you explain the structure of this project?"
-   
-   # If access is granted, Claude will analyze the code
-   # If denied, you'll receive an educational message
-   ```
+### 4.3 Understanding Rejection Messages
 
-3. **Working with multiple repos**:
-   - Each repository is validated independently
-   - Access decisions are cached per session for performance
-   - Changing directories doesn't affect validationdetails>
+When Claude cannot access a repository or tool, you'll receive **educational messages**:
+
+```plaintext
+ACCESS DENIED: Repository Governance
+
+The repository 'team/restricted-project' is not currently authorized 
+for AI analysis in this workspace.
+
+Why this matters:
+• Intellectual Property Protection: This ensures proprietary algorithms 
+  and business logic remain within controlled environments
+• Compliance Requirements: Certain codebases have regulatory constraints 
+  on AI processing
+• Team Governance: Your architect team defines which repositories are 
+  AI-accessible based on security classifications
+
+What you can do:
+1. Request repository authorization through your team lead
+2. Work with the code locally without AI assistance  
+3. Ask about architectural patterns that might apply (without accessing 
+   the specific code)
+
+Learn more about our governance approach in /home/coder/CLAUDE.md
+```
